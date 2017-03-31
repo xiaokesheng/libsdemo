@@ -17,6 +17,7 @@ import com.zxb.libsdemo.view.ImageCaptureView;
 import com.zxb.libsdemo.view.rangebar.RangeBar;
 
 /**
+ * 测试滑动条
  * Created by mrzhou on 2017/3/30.
  */
 public class TestRangeBarActivity extends Activity implements View.OnClickListener {
