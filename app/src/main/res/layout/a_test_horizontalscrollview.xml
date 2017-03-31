@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.zxb.libsdemo.view.SyncLinearLayout
+        android:id="@+id/sll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvLeft"
+                android:layout_width="1000dp"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+
+        <com.zxb.libsdemo.view.HorizontalScrollViewX
+            android:id="@+id/hsv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvTest"
+                    android:layout_width="1000dp"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+        </com.zxb.libsdemo.view.HorizontalScrollViewX>
+
+    </com.zxb.libsdemo.view.SyncLinearLayout>
+</LinearLayout>

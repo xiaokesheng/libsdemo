@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    >
+
+    <com.zxb.libsdemo.view.PieChart
+        android:id="@+id/Pie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_weight="100"
+        custom:shownText="true"
+        custom:labelHeight="20dp"
+        custom:labelWidth="110dp"
+        android:visibility="gone"
+        custom:labelY="85dp"
+        custom:labelPosition="left"
+        custom:highlightStrength="1.12"
+        android:background="@android:color/white"
+        custom:pieRotation="0"
+        custom:labelColor="@android:color/black"
+        custom:autoCenterPointerInSlice="true"
+        custom:pointerRadius="4dp"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <Button
+                android:id="@+id/Reset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:visibility="gone"
+                android:text="Reset"
+                />
+            <Button
+                android:id="@+id/btnTestTouch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                android:text="Test Touch"
+                />
+            <Button
+                android:id="@+id/btnTestMaterial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                android:text="Test Material"
+                />
+
+            <Button
+                android:id="@+id/btnTestXfermode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                android:text="Test Xfermode"
+                />
+
+            <CheckBox
+                android:layout_width="50dp"
+                android:visibility="gone"
+                android:layout_height="50dp"
+                android:checked="true"/>
+
+            <Button
+                android:id="@+id/btnTestSurfaceView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Test SurfaceView"
+                />
+
+            <Button
+                android:id="@+id/btnTestFileSystem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:text="Test FileSystem"
+                />
+
+            <Button
+                android:id="@+id/btnTestGallery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Gallery"
+                />
+
+            <Button
+                android:id="@+id/btnTestLineView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test LineView"
+                />
+
+            <Button
+                android:id="@+id/btnTestSDCardPath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test SDCardPath"
+                />
+
+            <Button
+                android:id="@+id/btnTestViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test ViewPager"
+                />
+
+            <Button
+                android:id="@+id/btnTestHorizontalView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test HorizontalScrollView"
+                />
+
+            <Button
+                android:id="@+id/btnTestLineBgView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test LineBgView"
+                />
+            <Button
+                android:id="@+id/btnTestView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test View"
+                />
+            <Button
+                android:id="@+id/btnTestBitmap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Bitmap"
+                />
+            <Button
+                android:id="@+id/btnTestMedia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Media"
+                />
+            <Button
+                android:id="@+id/btnTestMux"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Mux"
+                />
+            <Button
+                android:id="@+id/btnTextMix"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test music mix"
+                />
+            <Button
+                android:id="@+id/btnTestTouchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test TouchView"
+                />
+            <Button
+                android:id="@+id/btnTestRangeBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Rangebar"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

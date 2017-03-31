@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="310dp"
+                android:background="#389cff"
+                >
+
+                <com.zxb.libsdemo.view.HorizontalScrollViewX
+                    android:id="@+id/hsvTest"
+                    android:layout_width="match_parent"
+                    android:scrollbars="none"
+                    android:layout_height="210dp">
+
+                    <com.zxb.libsdemo.view.NewLineView
+                        android:id="@+id/nlvTest"
+                        android:layout_width="match_parent"
+                        android:layout_height="210dp"
+                        />
+                </com.zxb.libsdemo.view.HorizontalScrollViewX>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_below="@id/hsvTest"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    >
+
+                    <TextView
+                        android:id="@+id/tvZoomLittle"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:text="缩小"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvZoomMedium"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:text="中间"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvZoomLarge"
+                        android:layout_width="100dp"
+                        android:layout_height="60dp"
+                        android:text="放大"
+                        android:textColor="#ffffff"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                        />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="match_parent"
+                    android:background="#ff0000"
+                    android:layout_centerHorizontal="true"
+                    />
+
+                <View
+                    android:id="@+id/vPointCircle"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/shape_circle_point"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>

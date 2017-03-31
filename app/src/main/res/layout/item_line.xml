@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.zxb.libsdemo.view.LineView
+        android:id="@+id/lvItem"
+        android:layout_width="40dp"
+        android:layout_height="match_parent" />
+
+    <View
+        android:id="@+id/vLineMinimum"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>
