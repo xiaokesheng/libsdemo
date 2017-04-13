@@ -48,12 +48,12 @@ public class TestArrayPointsLineActivity extends Activity {
             @Override
             public void onClick(View v) {
                 float[] mPoints = aptvLine.getPoints();
-                J.j(mPoints);
+//                J.j(mPoints);
                 Matrix matrix = new Matrix();
                 matrix.setScale(0.9f, 0.9f, 200, 0);
                 matrix.mapPoints(mPoints);
                 aptvLine.setPoints(mPoints);
-                J.j(mPoints);
+//                J.j(mPoints);
             }
         });
 

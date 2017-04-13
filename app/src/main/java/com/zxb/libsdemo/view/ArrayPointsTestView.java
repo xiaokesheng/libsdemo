@@ -7,11 +7,14 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.zxb.libsdemo.model.Point;
 import com.zxb.libsdemo.util.J;
+
+import java.util.ArrayList;
 
 /**
  * Created by mrzhou on 2017/4/12.
@@ -23,8 +26,6 @@ public class ArrayPointsTestView extends View {
     protected RectF mContentRect = new RectF();
 
     private float[] mPoints;
-
-    private float[] mOther;
 
     private int lineColor;
 
@@ -46,6 +47,8 @@ public class ArrayPointsTestView extends View {
 
     private int touchMode;
 
+    private ArrayList<Point> pointsList;
+
     private static final int MODE_DRAG = 1;
     private static final int MODE_ZOOM = 2;
     private static final int MODE_NONE = 3;
@@ -65,6 +68,7 @@ public class ArrayPointsTestView extends View {
 
     private void init() {
         touchMode = 3;
+        pointsList = new ArrayList<>();
         mPoints = new float[]{
                 0, 600, 100, 500,
                 200, 0, 100, 500,
@@ -88,7 +92,29 @@ public class ArrayPointsTestView extends View {
                 1900, 200, 2000, 250,
                 2000, 250, 2100, 260
         };
-        mOther = mPoints.clone();
+
+        pointsList.add(new Point(0, 600));
+        pointsList.add(new Point(100, 500));
+        pointsList.add(new Point(200, 0));
+        pointsList.add(new Point(300, 800));
+        pointsList.add(new Point(400, 600));
+        pointsList.add(new Point(500, 750));
+        pointsList.add(new Point(600, 300));
+        pointsList.add(new Point(700, 300));
+        pointsList.add(new Point(800, 600));
+        pointsList.add(new Point(900, 200));
+        pointsList.add(new Point(1000, 300));
+        pointsList.add(new Point(1100, 400));
+        pointsList.add(new Point(1200, 200));
+        pointsList.add(new Point(1300, 500));
+        pointsList.add(new Point(1400, 600));
+        pointsList.add(new Point(1500, 200));
+        pointsList.add(new Point(1600, 600));
+        pointsList.add(new Point(1700, 150));
+        pointsList.add(new Point(1800, 210));
+        pointsList.add(new Point(1900, 200));
+        pointsList.add(new Point(2000, 250));
+        pointsList.add(new Point(2100, 260));
 
         lineColor = Color.parseColor("#389cff");
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -115,8 +141,33 @@ public class ArrayPointsTestView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawLines(mPoints
-                , mLinePaint);
+//        canvas.drawLines(mPoints, mLinePaint);
+
+        int k = 0;
+        for (int i = 0; i < pointsList.size() - 1; i++) {
+            float[] point = new float[4];
+            point[0] = pointsList.get(i).x;
+            point[1] = pointsList.get(i).y;
+            point[2] = pointsList.get(i + 1).x;
+            point[3] = pointsList.get(i + 1).y;
+            switch (touchMode) {
+                case MODE_DRAG:
+                    mTranslateMatrix.mapPoints(point);
+//                    mTouch.mapPoints(point);
+                    break;
+                case MODE_ZOOM:
+                    mScaleMatrix.mapPoints(point);
+//                    mTouch.mapPoints(point);
+                    break;
+                case MODE_NONE:
+                    mTouch.mapPoints(point);
+                    break;
+            }
+//            mTouch.mapPoints(point);
+            canvas.drawLines(point, mLinePaint);
+            k++;
+        }
+        J.j("drawTimes", "drawLinesCount: " + k);
     }
 
     @Override
@@ -128,7 +179,7 @@ public class ArrayPointsTestView extends View {
                 if (null != mDragListener) {
                     mDragListener.start();
                 }
-                mSavedMatrix.set(mTranslateMatrix);
+                mSavedMatrix.set(mTouch);
                 startPoint.x = event.getX();
                 startPoint.y = event.getY();
                 break;
@@ -140,13 +191,8 @@ public class ArrayPointsTestView extends View {
                     startPoint.x = event.getX();
                     startPoint.y = event.getY();
 
-                    // get the distance between the pointers on the x-axis
                     mSavedXDist = getXDist(event);
-
-                    // get the distance between the pointers on the y-axis
                     mSavedYDist = getYDist(event);
-
-                    // get the total distance between the pointers
                     mSavedDist = spacing(event);
 
                     float x = event.getX(0) + event.getX(1);
@@ -162,15 +208,12 @@ public class ArrayPointsTestView extends View {
                     mTranslateMatrix.set(mSavedMatrix);
                     dx = event.getX() - startPoint.x;
                     dy = event.getY() - startPoint.y;
-                    mTranslateMatrix.postTranslate(dx, dy);
-//                if (null != mDragListener) {
-//                    mDragListener.drag(dx, dy);
-//                }
-                    startPoint.x = event.getX();
-                    startPoint.y = event.getY();
+                    mTranslateMatrix.postTranslate(dx, 0);
+//                    startPoint.x = event.getX();
+//                    startPoint.y = event.getY();
 
                     mTouch.set(mTranslateMatrix);
-                    limitTransAndScale(mTouch, mContentRect);
+//                    limitTransAndScale(mTouch, mContentRect);
                     mTranslateMatrix.mapPoints(mPoints);
                     invalidate();
                     mTranslateMatrix.set(mTouch);
@@ -182,10 +225,10 @@ public class ArrayPointsTestView extends View {
                     float scaleY = 1;
                     mScaleMatrix.set(mSavedMatrix);
                     mScaleMatrix.postScale(scaleX, scaleY, centerPoint.x, centerPoint.y);
-                    mSavedDist = totalDist;
+//                    mSavedDist = totalDist;
 
                     mTouch.set(mScaleMatrix);
-                    limitTransAndScale(mTouch, mContentRect);
+//                    limitTransAndScale(mTouch, mContentRect);
                     mScaleMatrix.mapPoints(mPoints);
                     invalidate();
                     mScaleMatrix.set(mTouch);
@@ -196,11 +239,6 @@ public class ArrayPointsTestView extends View {
                 touchMode = MODE_NONE;
                 break;
         }
-//        mTouch.set(mTranslateMatrix);
-//        limitTransAndScale(mTouch, mContentRect);
-//        mTranslateMatrix.mapPoints(mPoints);
-//        invalidate();
-//        mTranslateMatrix.set(mTouch);
         return true;
     }
 
