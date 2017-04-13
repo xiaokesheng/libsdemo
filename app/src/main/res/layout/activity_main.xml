@@ -178,6 +178,13 @@
                 android:text="Test Rangebar"
                 />
 
+            <Button
+                android:id="@+id/btnTestArrayPoints"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test ArrayPoints"
+                />
+
         </LinearLayout>
 
     </ScrollView>

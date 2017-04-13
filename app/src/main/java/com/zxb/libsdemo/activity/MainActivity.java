@@ -48,6 +48,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     Button btnTestRangeBar;
 
+    Button btnTestArrayPoints;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +73,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnTextMix = (Button) findViewById(R.id.btnTextMix);
         btnTestTouchView = (Button) findViewById(R.id.btnTestTouchView);
         btnTestRangeBar = (Button) findViewById(R.id.btnTestRangeBar);
+        btnTestArrayPoints = (Button) findViewById(R.id.btnTestArrayPoints);
 
         Resources res = getResources();
 
@@ -111,7 +114,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Util.setClickListener(this, btnTestFileSystem, btnTestGallery, btnTestLineView);
         Util.setClickListener(this, btnTestSDCardPath, btnTestViewPager, btnTestHorizontalView);
         Util.setClickListener(this, btnTestLineBgView, btnTestView, btnTestBitmap, btnTestMedia, btnTestMux);
-        Util.setClickListener(this, btnTextMix, btnTestTouchView, btnTestRangeBar);
+        Util.setClickListener(this, btnTextMix, btnTestTouchView, btnTestRangeBar, btnTestArrayPoints);
     }
 
     @Override
@@ -170,6 +173,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnTestRangeBar:
                 startActivity(new Intent(this, TestRangeBarActivity.class));
+                break;
+            case R.id.btnTestArrayPoints:
+                startActivity(new Intent(this, TestArrayPointsLineActivity.class));
                 break;
         }
     }
