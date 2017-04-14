@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.zxb.libsdemo.model.LineBound;
 import com.zxb.libsdemo.model.Point;
 import com.zxb.libsdemo.util.J;
 
@@ -53,6 +54,8 @@ public class ArrayPointsTestView extends View {
     private static final int MODE_ZOOM = 2;
     private static final int MODE_NONE = 3;
 
+    public LineBound mBound;
+
     public ArrayPointsTestView(Context context) {
         this(context, null);
     }
@@ -69,6 +72,7 @@ public class ArrayPointsTestView extends View {
     private void init() {
         touchMode = 3;
         pointsList = new ArrayList<>();
+        mBound = new LineBound();
         mPoints = new float[]{
                 0, 600, 100, 500,
                 200, 0, 100, 500,
@@ -163,11 +167,82 @@ public class ArrayPointsTestView extends View {
                     mTouch.mapPoints(point);
                     break;
             }
-//            mTouch.mapPoints(point);
-            canvas.drawLines(point, mLinePaint);
-            k++;
+
+            if (point[0] >= 0) {
+                if (i > 0) {
+                    mBound.leftIndex = i - 1;
+                } else {
+                    mBound.leftIndex = 0;
+                }
+
+                float max = point[1];
+                float min = point[1];
+                for (int j = i; j < pointsList.size() - 1; j++) {
+                    float[] pointB = new float[4];
+                    pointB[0] = pointsList.get(j).x;
+                    pointB[1] = pointsList.get(j).y;
+                    pointB[2] = pointsList.get(j + 1).x;
+                    pointB[3] = pointsList.get(j + 1).y;
+                    switch (touchMode) {
+                        case MODE_DRAG:
+                            mTranslateMatrix.mapPoints(point);
+                            break;
+                        case MODE_ZOOM:
+                            mScaleMatrix.mapPoints(point);
+                            break;
+                        case MODE_NONE:
+                            mTouch.mapPoints(point);
+                            break;
+                    }
+                    if (j > i) {
+                        if (max < pointB[1]) {
+                            max = pointB[1];
+                        }
+                        if (min > pointB[1]) {
+                            min = pointB[1];
+                        }
+                    }
+                    if (pointB[0] >= 1080) {
+                        mBound.rightIndex = j;
+                    }
+                    if (mBound.rightIndex > 0) {
+                        break;
+                    }
+                }
+                mBound.topPixels = min;
+                mBound.bottomPixels = max;
+            }
+            if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
+                break;
+            }
         }
-        J.j("drawTimes", "drawLinesCount: " + k);
+
+        if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
+            for (int i = mBound.leftIndex; i <= mBound.rightIndex; i++) {
+                float[] point = new float[4];
+                point[0] = pointsList.get(i).x;
+                point[1] = pointsList.get(i).y;
+                point[2] = pointsList.get(i + 1).x;
+                point[3] = pointsList.get(i + 1).y;
+                switch (touchMode) {
+                    case MODE_DRAG:
+                        mTranslateMatrix.mapPoints(point);
+//                    mTouch.mapPoints(point);
+                        break;
+                    case MODE_ZOOM:
+                        mScaleMatrix.mapPoints(point);
+//                    mTouch.mapPoints(point);
+                        break;
+                    case MODE_NONE:
+                        mTouch.mapPoints(point);
+                        break;
+                }
+                canvas.drawLines(point, mLinePaint);
+                k++;
+            }
+            J.j("drawTimes", "drawLinesCount: " + k);
+            J.j("drawTimes", mBound.toString());
+        }
     }
 
     @Override
