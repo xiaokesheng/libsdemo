@@ -2,11 +2,14 @@ package com.zxb.libsdemo.util;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.zxb.libsdemo.model.PointC;
+
+import java.util.ArrayList;
 
 /**
  * Created by mrzhou on 16/5/25.
@@ -80,5 +83,23 @@ public class Util {
     public static int px2dip(float pxValue) {
         final float scale = Resources.getSystem().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
+    }
+
+    public static void handleValues(ArrayList<PointC> values) {
+        float min = values.get(0).yValue;
+        float max = values.get(0).yValue;
+        for (PointC item : values) {
+            if (min >= item.yValue) {
+                min = item.yValue;
+            }
+            if (max <= item.yValue) {
+                max = item.yValue;
+            }
+        }
+        float scale = (max - min) / dip2px(300);
+        for (PointC item : values) {
+            item.x = item.xValue;
+            item.y = item.yValue / scale;
+        }
     }
 }

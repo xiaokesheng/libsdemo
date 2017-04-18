@@ -7,15 +7,16 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.zxb.libsdemo.model.LineBound;
-import com.zxb.libsdemo.model.Point;
+import com.zxb.libsdemo.model.PointC;
 import com.zxb.libsdemo.util.J;
+import com.zxb.libsdemo.util.Util;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by mrzhou on 2017/4/12.
@@ -30,15 +31,17 @@ public class ArrayPointsTestView extends View {
 
     private int lineColor;
 
-    private Point startPoint;
-    private Point lastPoint;
-    private Point centerPoint;
+    private PointC startPoint;
+    private PointC lastPoint;
+    private PointC centerPoint;
 
     private float dx, dy;
 
     private Matrix mTranslateMatrix;
     private Matrix mSavedMatrix;
     private Matrix mScaleMatrix;
+
+    private Matrix mYScaleMatrix;
 
     private Matrix mTouch;
 
@@ -48,7 +51,8 @@ public class ArrayPointsTestView extends View {
 
     private int touchMode;
 
-    private ArrayList<Point> pointsList;
+    private ArrayList<PointC> pointsList;
+    private ArrayList<PointC> pointsListC;
 
     private static final int MODE_DRAG = 1;
     private static final int MODE_ZOOM = 2;
@@ -72,6 +76,7 @@ public class ArrayPointsTestView extends View {
     private void init() {
         touchMode = 3;
         pointsList = new ArrayList<>();
+        pointsListC = new ArrayList<>();
         mBound = new LineBound();
         mPoints = new float[]{
                 0, 600, 100, 500,
@@ -97,40 +102,100 @@ public class ArrayPointsTestView extends View {
                 2000, 250, 2100, 260
         };
 
-        pointsList.add(new Point(0, 600));
-        pointsList.add(new Point(100, 500));
-        pointsList.add(new Point(200, 0));
-        pointsList.add(new Point(300, 800));
-        pointsList.add(new Point(400, 600));
-        pointsList.add(new Point(500, 750));
-        pointsList.add(new Point(600, 300));
-        pointsList.add(new Point(700, 300));
-        pointsList.add(new Point(800, 600));
-        pointsList.add(new Point(900, 200));
-        pointsList.add(new Point(1000, 300));
-        pointsList.add(new Point(1100, 400));
-        pointsList.add(new Point(1200, 200));
-        pointsList.add(new Point(1300, 500));
-        pointsList.add(new Point(1400, 600));
-        pointsList.add(new Point(1500, 200));
-        pointsList.add(new Point(1600, 600));
-        pointsList.add(new Point(1700, 150));
-        pointsList.add(new Point(1800, 210));
-        pointsList.add(new Point(1900, 200));
-        pointsList.add(new Point(2000, 250));
-        pointsList.add(new Point(2100, 260));
+        pointsList.add(new PointC(0, 600));
+        pointsList.add(new PointC(100, 500));
+        pointsList.add(new PointC(200, 0));
+        pointsList.add(new PointC(300, 800));
+        pointsList.add(new PointC(400, 600));
+        pointsList.add(new PointC(500, 750));
+        pointsList.add(new PointC(600, 300));
+        pointsList.add(new PointC(700, 300));
+        pointsList.add(new PointC(800, 600));
+        pointsList.add(new PointC(900, 200));
+        pointsList.add(new PointC(1000, 500));
+        pointsList.add(new PointC(1100, 400));
+        pointsList.add(new PointC(1200, 200));
+        pointsList.add(new PointC(1300, 500));
+        pointsList.add(new PointC(1400, 600));
+        pointsList.add(new PointC(1500, 200));
+        pointsList.add(new PointC(1600, 600));
+        pointsList.add(new PointC(1700, 150));
+        pointsList.add(new PointC(1800, 210));
+        pointsList.add(new PointC(1900, 200));
+        pointsList.add(new PointC(2000, 250));
+        pointsList.add(new PointC(2100, 260));
+        pointsList.add(new PointC(500 + 1700, 750 * new Random().nextFloat()));
+        pointsList.add(new PointC(600 + 1700, 300 * new Random().nextFloat()));
+        pointsList.add(new PointC(700 + 1700, 300 * new Random().nextFloat()));
+        pointsList.add(new PointC(800 + 1700, 600 * new Random().nextFloat()));
+        pointsList.add(new PointC(900 + 1700, 200 * new Random().nextFloat()));
+        pointsList.add(new PointC(1000 + 1700, 500 * new Random().nextFloat()));
+        pointsList.add(new PointC(1100 + 1700, 400 * new Random().nextFloat()));
+        pointsList.add(new PointC(1200 + 1700, 200 * new Random().nextFloat()));
+        pointsList.add(new PointC(1300 + 1700, 500 * new Random().nextFloat()));
+        pointsList.add(new PointC(1400 + 1700, 600 * new Random().nextFloat()));
+        pointsList.add(new PointC(1500 + 1700, 200 * new Random().nextFloat()));
+        pointsList.add(new PointC(1600 + 1700, 600 * new Random().nextFloat()));
+        pointsList.add(new PointC(1700 + 1700, 150 * new Random().nextFloat()));
+        pointsList.add(new PointC(1800 + 1700, 210 * new Random().nextFloat()));
+        pointsList.add(new PointC(1900 + 1700, 200 * new Random().nextFloat()));
+        pointsList.add(new PointC(2000 + 1700, 250 * new Random().nextFloat()));
+        pointsList.add(new PointC(2100 + 1700, 260 * new Random().nextFloat()));
+
+        pointsList.add(new PointC(0, 600 * 2 + 120));
+        pointsList.add(new PointC(100, 500 * 2 + 120));
+        pointsList.add(new PointC(200, 0 * 2 + 120));
+        pointsList.add(new PointC(300, 800 * 2 + 120));
+        pointsList.add(new PointC(400, 600 * 2 + 120));
+        pointsList.add(new PointC(500, 750 * 2 + 120));
+        pointsList.add(new PointC(600, 300 * 2 + 120));
+        pointsList.add(new PointC(700, 300 * 2 + 120));
+        pointsList.add(new PointC(800, 600 * 2 + 120));
+        pointsList.add(new PointC(900, 200 * 2 + 120));
+        pointsList.add(new PointC(1000, 500 * 2 + 120));
+        pointsList.add(new PointC(1100, 400 * 2 + 120));
+        pointsList.add(new PointC(1200, 200 * 2 + 120));
+        pointsList.add(new PointC(1300, 500 * 2 + 120));
+        pointsList.add(new PointC(1400, 600 * 2 + 120));
+        pointsList.add(new PointC(1500, 200 * 2 + 120));
+        pointsList.add(new PointC(1600, 600 * 2 + 120));
+        pointsList.add(new PointC(1700, 150 * 2 + 120));
+        pointsList.add(new PointC(1800, 210 * 2 + 120));
+        pointsList.add(new PointC(1900, 200 * 2 + 120));
+        pointsList.add(new PointC(2000, 250 * 2 + 120));
+        pointsList.add(new PointC(2100, 260 * 2 + 120));
+        pointsList.add(new PointC(500 + 1700, 750 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(600 + 1700, 300 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(700 + 1700, 300 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(800 + 1700, 600 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(900 + 1700, 200 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1000 + 1700, 500 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1100 + 1700, 400 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1200 + 1700, 200 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1300 + 1700, 500 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1400 + 1700, 600 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1500 + 1700, 200 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1600 + 1700, 600 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1700 + 1700, 150 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1800 + 1700, 210 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(1900 + 1700, 200 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(2000 + 1700, 250 * new Random().nextFloat() * 2));
+        pointsList.add(new PointC(2100 + 1700, 260 * new Random().nextFloat() * 2));
+
+        Util.handleValues(pointsList);
 
         lineColor = Color.parseColor("#389cff");
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint.setColor(lineColor);
         mLinePaint.setStrokeWidth(5);
-        startPoint = new Point();
-        centerPoint = new Point();
+        startPoint = new PointC();
+        centerPoint = new PointC();
 
         mTranslateMatrix = new Matrix();
         mSavedMatrix = new Matrix();
         mScaleMatrix = new Matrix();
         mTouch = new Matrix();
+        mYScaleMatrix = new Matrix();
     }
 
     public float[] getPoints() {
@@ -150,99 +215,97 @@ public class ArrayPointsTestView extends View {
         int k = 0;
         for (int i = 0; i < pointsList.size() - 1; i++) {
             float[] point = new float[4];
-            point[0] = pointsList.get(i).x;
-            point[1] = pointsList.get(i).y;
-            point[2] = pointsList.get(i + 1).x;
-            point[3] = pointsList.get(i + 1).y;
-            switch (touchMode) {
-                case MODE_DRAG:
-                    mTranslateMatrix.mapPoints(point);
-//                    mTouch.mapPoints(point);
-                    break;
-                case MODE_ZOOM:
-                    mScaleMatrix.mapPoints(point);
-//                    mTouch.mapPoints(point);
-                    break;
-                case MODE_NONE:
-                    mTouch.mapPoints(point);
-                    break;
-            }
-
-            if (point[0] >= 0) {
-                if (i > 0) {
-                    mBound.leftIndex = i - 1;
-                } else {
-                    mBound.leftIndex = 0;
-                }
-
-                float max = point[1];
-                float min = point[1];
-                for (int j = i; j < pointsList.size() - 1; j++) {
-                    float[] pointB = new float[4];
-                    pointB[0] = pointsList.get(j).x;
-                    pointB[1] = pointsList.get(j).y;
-                    pointB[2] = pointsList.get(j + 1).x;
-                    pointB[3] = pointsList.get(j + 1).y;
-                    switch (touchMode) {
-                        case MODE_DRAG:
-                            mTranslateMatrix.mapPoints(point);
-                            break;
-                        case MODE_ZOOM:
-                            mScaleMatrix.mapPoints(point);
-                            break;
-                        case MODE_NONE:
-                            mTouch.mapPoints(point);
-                            break;
-                    }
-                    if (j > i) {
-                        if (max < pointB[1]) {
-                            max = pointB[1];
-                        }
-                        if (min > pointB[1]) {
-                            min = pointB[1];
-                        }
-                    }
-                    if (pointB[0] >= 1080) {
-                        mBound.rightIndex = j;
-                    }
-                    if (mBound.rightIndex > 0) {
-                        break;
-                    }
-                }
-                mBound.topPixels = min;
-                mBound.bottomPixels = max;
-            }
-            if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
+            mapPoint(point, i);
+            if (handleBound(point, i, mBound)) {
+                continue;
+            } else {
                 break;
             }
         }
 
         if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
+            float deltaHeight = mBound.bottomPixels - mBound.topPixels;
+            float yScale = totalHeight / deltaHeight;
+            float yPoint;
+
+            if (mBound.bottomPixels - mBound.topPixels == initialHeight) {
+                yPoint = mBound.bottomPixels;
+            } else {
+                yPoint = mBound.topPixels * initialHeight / (initialHeight - mBound.bottomPixels + mBound.topPixels);
+            }
             for (int i = mBound.leftIndex; i <= mBound.rightIndex; i++) {
                 float[] point = new float[4];
-                point[0] = pointsList.get(i).x;
-                point[1] = pointsList.get(i).y;
-                point[2] = pointsList.get(i + 1).x;
-                point[3] = pointsList.get(i + 1).y;
-                switch (touchMode) {
-                    case MODE_DRAG:
-                        mTranslateMatrix.mapPoints(point);
-//                    mTouch.mapPoints(point);
-                        break;
-                    case MODE_ZOOM:
-                        mScaleMatrix.mapPoints(point);
-//                    mTouch.mapPoints(point);
-                        break;
-                    case MODE_NONE:
-                        mTouch.mapPoints(point);
-                        break;
-                }
+                mapPoint(point, i);
+                mYScaleMatrix.postScale(1, yScale, 0, yPoint);
+                mYScaleMatrix.mapPoints(point);
+                mYScaleMatrix.reset();
                 canvas.drawLines(point, mLinePaint);
                 k++;
             }
-            J.j("drawTimes", "drawLinesCount: " + k);
-            J.j("drawTimes", mBound.toString());
         }
+    }
+
+    float totalHeight = Util.dip2px(300);
+    float initialHeight = Util.dip2px(300);
+
+
+    private float[] mapPoint(float[] point, int i) {
+        point[0] = pointsList.get(i).x;
+        point[1] = pointsList.get(i).y;
+        point[2] = pointsList.get(i + 1).x;
+        point[3] = pointsList.get(i + 1).y;
+        switch (touchMode) {
+            case MODE_DRAG:
+                mTranslateMatrix.mapPoints(point);
+                break;
+            case MODE_ZOOM:
+                mScaleMatrix.mapPoints(point);
+                break;
+            case MODE_NONE:
+                mTouch.mapPoints(point);
+                break;
+        }
+        return point;
+    }
+
+    private boolean handleBound(float[] point, int i, LineBound mBound) {
+        if (point[0] >= 0) {
+            if (i > 0) {
+                mBound.leftIndex = i - 1;
+            } else {
+                mBound.leftIndex = 0;
+            }
+
+            float max = pointsList.get(mBound.leftIndex).y;
+            float min = max;
+
+            for (int j = mBound.leftIndex + 1; j < pointsList.size() - 1; j++) {
+                float[] pointB = new float[4];
+                mapPoint(pointB, j);
+                if (j >= mBound.leftIndex + 1) {
+                    if (max < pointB[1]) {
+                        max = pointB[1];
+                    }
+                    if (min > pointB[1]) {
+                        min = pointB[1];
+                    }
+                }
+                if (pointB[0] >= 1080) {
+                    mBound.rightIndex = j - 1;
+                    break;
+                }
+
+            }
+            mBound.topPixels = min;
+//                mBound.bottomPixels = max;
+            mBound.bottomPixels = 1800;
+        } else {
+            return true;
+        }
+        if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -251,9 +314,6 @@ public class ArrayPointsTestView extends View {
             case MotionEvent.ACTION_DOWN:
                 touchMode = MODE_DRAG;
                 J.j("TOUCHMOVE", "down");
-                if (null != mDragListener) {
-                    mDragListener.start();
-                }
                 mSavedMatrix.set(mTouch);
                 startPoint.x = event.getX();
                 startPoint.y = event.getY();
@@ -316,21 +376,6 @@ public class ArrayPointsTestView extends View {
         }
         return true;
     }
-
-    OnDragListener mDragListener;
-
-    public interface OnDragListener {
-        void drag(float dx, float dy);
-
-        void start();
-
-        void end();
-    }
-
-    public void setDragListener(OnDragListener listener) {
-        this.mDragListener = listener;
-    }
-
 
     /**
      * buffer for storing the 9 matrix values of a 3x3 matrix
