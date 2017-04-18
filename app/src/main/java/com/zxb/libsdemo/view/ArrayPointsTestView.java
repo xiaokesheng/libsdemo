@@ -313,13 +313,11 @@ public class ArrayPointsTestView extends View {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 touchMode = MODE_DRAG;
-                J.j("TOUCHMOVE", "down");
                 mSavedMatrix.set(mTouch);
                 startPoint.x = event.getX();
                 startPoint.y = event.getY();
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
-                J.j("TOUCHMOVE", "pointerDown");
                 if (event.getPointerCount() >= 2) {
                     touchMode = MODE_ZOOM;
                     mSavedMatrix.set(mTranslateMatrix);
@@ -337,33 +335,25 @@ public class ArrayPointsTestView extends View {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                J.j("TOUCHMOVE", "move");
                 if (touchMode == MODE_DRAG) {
-                    J.j("TOUCHMOVE", "move_drag");
                     mTranslateMatrix.set(mSavedMatrix);
                     dx = event.getX() - startPoint.x;
                     dy = event.getY() - startPoint.y;
                     mTranslateMatrix.postTranslate(dx, 0);
-//                    startPoint.x = event.getX();
-//                    startPoint.y = event.getY();
 
                     mTouch.set(mTranslateMatrix);
-//                    limitTransAndScale(mTouch, mContentRect);
                     mTranslateMatrix.mapPoints(mPoints);
                     invalidate();
                     mTranslateMatrix.set(mTouch);
                 } else if (touchMode == MODE_ZOOM) {
-                    J.j("TOUCHMOVE", "move_zoom");
                     float totalDist = spacing(event);
                     float scale = totalDist / mSavedDist;
                     float scaleX = scale;
                     float scaleY = 1;
                     mScaleMatrix.set(mSavedMatrix);
                     mScaleMatrix.postScale(scaleX, scaleY, centerPoint.x, centerPoint.y);
-//                    mSavedDist = totalDist;
 
                     mTouch.set(mScaleMatrix);
-//                    limitTransAndScale(mTouch, mContentRect);
                     mScaleMatrix.mapPoints(mPoints);
                     invalidate();
                     mScaleMatrix.set(mTouch);
