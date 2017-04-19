@@ -5,14 +5,14 @@ package com.zxb.libsdemo.model;
  */
 public class PointC {
     public float x;
-    public float y;
+    public float yPixels;
 
     public float xValue;
     public float yValue;
 
-    public PointC(float x, float y) {
-        this.xValue = x;
-        this.yValue = y;
+    public PointC(float xValue, float yValue) {
+        this.xValue = xValue;
+        this.yValue = yValue;
     }
 
     public PointC() {
@@ -21,6 +21,6 @@ public class PointC {
 
     @Override
     public String toString() {
-        return "x:" + x + ", y:" + y;
+        return "x:" + x + ", y:" + yPixels;
     }
 }

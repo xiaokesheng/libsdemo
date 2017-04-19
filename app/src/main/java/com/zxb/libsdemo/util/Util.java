@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.zxb.libsdemo.model.PointC;
+import com.zxb.libsdemo.view.points.MinMax;
 
 import java.util.ArrayList;
 
@@ -85,21 +86,25 @@ public class Util {
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static void handleValues(ArrayList<PointC> values) {
-        float min = values.get(0).yValue;
-        float max = values.get(0).yValue;
-        for (PointC item : values) {
-            if (min >= item.yValue) {
-                min = item.yValue;
-            }
-            if (max <= item.yValue) {
-                max = item.yValue;
+    public static void handleValues(float totalHeight, ArrayList<PointC>... values) {
+        MinMax minMax = new MinMax();
+        for (ArrayList<PointC> list : values) {
+            for (PointC item : list) {
+                if (minMax.min >= item.yValue) {
+                    minMax.min = item.yValue;
+                }
+                if (minMax.max <= item.yValue) {
+                    minMax.max = item.yValue;
+                }
             }
         }
-        float scale = (max - min) / dip2px(300);
-        for (PointC item : values) {
-            item.x = item.xValue;
-            item.y = item.yValue / scale;
+        float scale = (minMax.max - minMax.min) / totalHeight;
+        for (ArrayList<PointC> list : values) {
+            for (PointC item : list) {
+                item.x = item.xValue;
+//                item.yPixels = totalHeight * (minMax.max - item.yValue) / (item.yValue * (minMax.max - minMax.min));
+                item.yPixels = (minMax.max - item.yValue) / scale;
+            }
         }
     }
 }

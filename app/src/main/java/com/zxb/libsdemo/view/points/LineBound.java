@@ -1,4 +1,4 @@
-package com.zxb.libsdemo.model;
+package com.zxb.libsdemo.view.points;
 
 /**
  * Created by mrzhou on 2017/4/14.
@@ -12,6 +12,12 @@ public class LineBound {
 
     public float topPixels;
     public float bottomPixels;
+
+    public int topIndex;
+    public int bottomIndex;
+
+    public float realMaxValue;
+    public float realMinValue;
 
     public LineBound() {
 

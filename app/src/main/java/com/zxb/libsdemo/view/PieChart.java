@@ -990,12 +990,12 @@ public class PieChart extends ViewGroup {
     }
 
     /**
-     * Helper method for translating (x,y) scroll vectors into scalar rotation of the pie.
+     * Helper method for translating (x,yPixels) scroll vectors into scalar rotation of the pie.
      *
      * @param dx The x component of the current scroll vector.
-     * @param dy The y component of the current scroll vector.
+     * @param dy The yPixels component of the current scroll vector.
      * @param x  The x position of the current touch, relative to the pie center.
-     * @param y  The y position of the current touch, relative to the pie center.
+     * @param y  The yPixels position of the current touch, relative to the pie center.
      * @return The scalar representing the change in angular position for this scroll.
      */
     private static float vectorToScalarScroll(float dx, float dy, float x, float y) {
@@ -1003,7 +1003,7 @@ public class PieChart extends ViewGroup {
         float l = (float) Math.sqrt(dx * dx + dy * dy);
 
         // decide if the scalar should be negative or positive by finding
-        // the dot product of the vector perpendicular to (x,y). 
+        // the dot product of the vector perpendicular to (x,yPixels).
         float crossX = -y;
         float crossY = x;
 

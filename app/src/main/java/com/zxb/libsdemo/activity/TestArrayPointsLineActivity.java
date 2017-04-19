@@ -9,7 +9,7 @@ import android.widget.Button;
 
 import com.zxb.libsdemo.R;
 import com.zxb.libsdemo.util.J;
-import com.zxb.libsdemo.view.ArrayPointsTestView;
+import com.zxb.libsdemo.view.points.ArrayPointsTestView;
 
 /**
  * Created by mrzhou on 2017/4/12.
@@ -43,52 +43,5 @@ public class TestArrayPointsLineActivity extends Activity {
         mTranslateMatrix = new Matrix();
         mSavedMatrix = new Matrix();
         mTouch = new Matrix();
-
-        btnMax.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                float[] mPoints = aptvLine.getPoints();
-//                J.j(mPoints);
-                Matrix matrix = new Matrix();
-                matrix.setScale(0.9f, 0.9f, 200, 0);
-                matrix.mapPoints(mPoints);
-                aptvLine.setPoints(mPoints);
-//                J.j(mPoints);
-            }
-        });
-
-        btnMin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                float[] mPoints = aptvLine.getPoints();
-                Matrix matrix = new Matrix();
-                matrix.setScale(1.1f, 1.1f, 200, 0);
-                matrix.mapPoints(mPoints);
-                aptvLine.setPoints(mPoints);
-            }
-        });
-
-//        aptvLine.setDragListener(new ArrayPointsTestView.OnDragListener() {
-//            @Override
-//            public void drag(float dx, float dy) {
-//                mTranslateMatrix.set(mSavedMatrix);
-//                float[] mPoints = aptvLine.getPoints();
-//                mTranslateMatrix.postTranslate(dx, 0);
-//                mTranslateMatrix.mapPoints(mPoints);
-//                aptvLine.setPoints(mPoints);
-//            }
-//
-//            @Override
-//            public void start() {
-//                mSavedMatrix.set(mTranslateMatrix);
-//            }
-//
-//            @Override
-//            public void end() {
-//                mTouch.set(mTranslateMatrix);
-//                aptvLine.limitTransAndScale(mTouch, mContentRect);
-//                mTranslateMatrix.set(mTouch);
-//            }
-//        });
     }
 }
