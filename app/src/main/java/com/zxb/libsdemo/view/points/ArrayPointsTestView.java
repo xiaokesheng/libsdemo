@@ -25,6 +25,7 @@ public class ArrayPointsTestView extends View {
     private Paint mLinePaint;
     private Paint mBgLinePaint;
     private Paint mTextPaint;
+    private Paint mTipPaint;
 
     protected RectF mContentRect = new RectF();
 
@@ -77,6 +78,10 @@ public class ArrayPointsTestView extends View {
 
     private float verticalDividedCount;
     private float itemHeight;
+
+    private float currentX;
+
+    RectF rect = new RectF();
 
     public ArrayPointsTestView(Context context) {
         this(context, null);
@@ -211,6 +216,7 @@ public class ArrayPointsTestView extends View {
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(Util.dip2px(15));
         mTextPaint.setColor(Color.parseColor("#ffffff"));
+        mTipPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
         startPoint = new PointC();
         centerPoint = new PointC();
@@ -236,8 +242,8 @@ public class ArrayPointsTestView extends View {
             }
         }
 
-        drawLines(canvas, pointsList, "#389cff");
-        drawLines(canvas, pointsListC, "#ff0000");
+        drawLines(canvas, pointsList, "#389cff", false);
+        drawLines(canvas, pointsListC, "#ff0000", true);
 
         for (int i = 0; i <= verticalDividedCount; i++) {
             float y = i * itemHeight + mTopMargin;
@@ -245,9 +251,15 @@ public class ArrayPointsTestView extends View {
             canvas.drawText(String.valueOf(mBound.realMaxValue - (mBound.realMaxValue - mBound.realMinValue) / 4f * i), 40, y + Util.dip2px(8), mTextPaint);
         }
 
+        if (touchMode == MODE_FLING) {
+            mLinePaint.setColor(Color.parseColor("#ffff00"));
+            canvas.drawLine(currentX, mTopMargin, currentX, mTopMargin + lineAreaHeight, mLinePaint);
+        }
+
+        drawTips(canvas, pointsList, pointsListC);
     }
 
-    private void drawLines(Canvas canvas, ArrayList<PointC> pointList, String color) {
+    private void drawLines(Canvas canvas, ArrayList<PointC> pointList, String color, boolean isLast) {
         mLinePaint.setColor(Color.parseColor(color));
         if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
             float deltaHeight = mBound.bottomPixels - mBound.topPixels;
@@ -270,11 +282,65 @@ public class ArrayPointsTestView extends View {
                 point[1] += mTopMargin;
                 point[3] += mTopMargin;
                 canvas.drawLines(point, mLinePaint);
-                canvas.drawText(String.valueOf(pointList.get(i).yValue), point[0], point[1], mTextPaint);
                 canvas.drawCircle(point[0], point[1], Util.dip2px(2), mLinePaint);
                 if (i == mBound.rightIndex) {
                     canvas.drawCircle(point[2], point[3], Util.dip2px(2), mLinePaint);
-                    canvas.drawText(String.valueOf(pointList.get(i + 1).yValue), point[2], point[3], mTextPaint);
+                }
+
+                if (touchMode == MODE_FLING) {
+                    if (Math.abs(currentX - point[0]) <= 10) {
+                        canvas.drawCircle(point[0], point[1], Util.dip2px(10), mLinePaint);
+                    }
+                }
+            }
+        }
+    }
+
+    private void drawTips(Canvas canvas, ArrayList<PointC>... pointList) {
+        if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
+            float deltaHeight = mBound.bottomPixels - mBound.topPixels;
+            float yScale = totalHeight / deltaHeight;
+            float yPoint;
+
+            if (mBound.bottomPixels - mBound.topPixels == lineAreaHeight) {
+                yPoint = mBound.bottomPixels;
+            } else {
+                yPoint = mBound.topPixels * lineAreaHeight / (lineAreaHeight - mBound.bottomPixels + mBound.topPixels);
+            }
+            for (int i = mBound.leftIndex; i <= mBound.rightIndex; i++) {
+                float[] point = new float[4];
+                mapPoint(pointList[0], point, i);
+                mYScaleMatrix.postScale(1, yScale, 0, yPoint);
+                mYScaleMatrix.mapPoints(point);
+                mYScaleMatrix.reset();
+                point[0] += mLeftWidth;
+                point[2] += mLeftWidth;
+
+                if (touchMode == MODE_FLING) {
+                    if (Math.abs(currentX - point[0]) <= 10) {
+                        rect.top = mTopMargin;
+                        if (currentX < mLeftWidth + lineAreaWidth / 2) {
+                            rect.left = currentX + 12;
+                            rect.right = rect.left + 350;
+                        } else {
+                            rect.right = currentX - 12;
+                            rect.left = rect.right - 350;
+                        }
+                        rect.bottom = rect.top + 250;
+                        mTipPaint.setColor(Color.parseColor("#66389cff"));
+                        canvas.drawRoundRect(rect, 10, 10, mTipPaint);
+
+                        mTipPaint.setTextSize(30);
+                        mTipPaint.setColor(Color.parseColor("#ffffff"));
+                        canvas.drawText("2017-21-24", rect.left + 25, rect.top + 40, mTipPaint);
+                        canvas.drawText("鼎泰新材" + pointList[0].get(i).yValue, rect.left + 60, rect.top + 100, mTipPaint);
+                        canvas.drawText("交通运输" + pointList[1].get(i).yValue, rect.left + 60, rect.top + 140, mTipPaint);
+
+                        mTipPaint.setColor(Color.parseColor("#389cff"));
+                        canvas.drawCircle(rect.left + 25 + 15, rect.top + 100 - 15, 15, mTipPaint);
+                        mTipPaint.setColor(Color.parseColor("#ff0000"));
+                        canvas.drawCircle(rect.left + 25 + 15, rect.top + 140 - 15, 15, mTipPaint);
+                    }
                 }
             }
         }
@@ -293,6 +359,7 @@ public class ArrayPointsTestView extends View {
                 mScaleMatrix.mapPoints(point);
                 break;
             case MODE_NONE:
+            case MODE_FLING:
                 mTouch.mapPoints(point);
                 break;
         }
@@ -362,10 +429,17 @@ public class ArrayPointsTestView extends View {
             case MotionEvent.ACTION_DOWN:
                 J.j("TouchEvent", "down---");
                 hasTouch = true;
-                touchMode = MODE_DRAG;
+                if (touchMode == MODE_FLING) {
+
+                } else {
+                    touchMode = MODE_DRAG;
+
+                }
                 mSavedMatrix.set(mTouch);
                 startPoint.x = event.getX();
                 startPoint.yPixels = event.getY();
+                currentX = event.getX();
+                invalidate();
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 J.j("TouchEvent", "pointer down---");
@@ -388,43 +462,50 @@ public class ArrayPointsTestView extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 hasMoved = true;
-                J.j("TouchEvent", "move---");
-                if (touchMode == MODE_DRAG) {
-                    mTranslateMatrix.set(mSavedMatrix);
-                    dx = event.getX() - startPoint.x;
-                    dy = event.getY() - startPoint.yPixels;
-                    mTranslateMatrix.postTranslate(dx, 0);
+                currentX = event.getX();
+                if (touchMode == MODE_FLING) {
 
-                    mTouch.set(mTranslateMatrix);
                     invalidate();
-                    mTranslateMatrix.set(mTouch);
-                } else if (touchMode == MODE_ZOOM) {
-                    float totalDist = spacing(event);
-                    float scale = totalDist / mSavedDist;
-                    float scaleX = scale;
-                    float scaleY = 1;
-                    mScaleMatrix.set(mSavedMatrix);
-                    mScaleMatrix.postScale(scaleX, scaleY, centerPoint.x, centerPoint.yPixels);
-                    mTouch.set(mScaleMatrix);
-                    invalidate();
-                    mScaleMatrix.set(mTouch);
+                } else {
+                    J.j("TouchEvent", "move---");
+                    if (touchMode == MODE_DRAG) {
+                        mTranslateMatrix.set(mSavedMatrix);
+                        dx = event.getX() - startPoint.x;
+                        dy = event.getY() - startPoint.yPixels;
+                        mTranslateMatrix.postTranslate(dx, 0);
+
+                        mTouch.set(mTranslateMatrix);
+                        invalidate();
+                        mTranslateMatrix.set(mTouch);
+                    } else if (touchMode == MODE_ZOOM) {
+                        float totalDist = spacing(event);
+                        float scale = totalDist / mSavedDist;
+                        float scaleX = scale;
+                        float scaleY = 1;
+                        mScaleMatrix.set(mSavedMatrix);
+                        mScaleMatrix.postScale(scaleX, scaleY, centerPoint.x, centerPoint.yPixels);
+                        mTouch.set(mScaleMatrix);
+                        invalidate();
+                        mScaleMatrix.set(mTouch);
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 J.j("TouchEvent", "up---");
-                if (touchMode == MODE_FLING) {
-
-                } else {
-                    if (hasTouch) {
-                        if (hasMoved) {
+                if (hasTouch) {
+                    if (!hasMoved) {
+                        if (touchMode == MODE_FLING) {
                             touchMode = MODE_NONE;
                         } else {
                             touchMode = MODE_FLING;
                         }
+                    } else {
+                        // touch mode不变
                     }
-                    hasTouch = false;
-                    hasMoved = false;
                 }
+                hasTouch = false;
+                hasMoved = false;
+                invalidate();
                 break;
             case MotionEvent.ACTION_POINTER_UP:
                 touchMode = MODE_NONE;
