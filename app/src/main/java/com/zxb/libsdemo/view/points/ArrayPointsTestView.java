@@ -256,7 +256,9 @@ public class ArrayPointsTestView extends View {
             canvas.drawLine(currentX, mTopMargin, currentX, mTopMargin + lineAreaHeight, mLinePaint);
         }
 
-        drawTips(canvas, pointsList, pointsListC);
+        if (touchMode == MODE_FLING) {
+            drawTips(canvas, pointsList, pointsListC);
+        }
     }
 
     private void drawLines(Canvas canvas, ArrayList<PointC> pointList, String color, boolean isLast) {
@@ -288,8 +290,15 @@ public class ArrayPointsTestView extends View {
                 }
 
                 if (touchMode == MODE_FLING) {
-                    if (Math.abs(currentX - point[0]) <= 10) {
-                        canvas.drawCircle(point[0], point[1], Util.dip2px(10), mLinePaint);
+                    int startIndex;
+                    if (currentX > point[0] && currentX <= point[2]) {
+                        if (point[2] - currentX < currentX - point[0]) {
+                            startIndex = i + 1;
+                            canvas.drawCircle(point[2], point[3], Util.dip2px(10), mLinePaint);
+                        } else {
+                            startIndex = i;
+                            canvas.drawCircle(point[0], point[1], Util.dip2px(10), mLinePaint);
+                        }
                     }
                 }
             }
@@ -317,7 +326,13 @@ public class ArrayPointsTestView extends View {
                 point[2] += mLeftWidth;
 
                 if (touchMode == MODE_FLING) {
-                    if (Math.abs(currentX - point[0]) <= 10) {
+                    int startIndex;
+                    if (currentX > point[0] && currentX <= point[2]) {
+                        if (point[2] - currentX < currentX - point[0]) {
+                            startIndex = i + 1;
+                        } else {
+                            startIndex = i;
+                        }
                         rect.top = mTopMargin;
                         if (currentX < mLeftWidth + lineAreaWidth / 2) {
                             rect.left = currentX + 12;
@@ -333,8 +348,8 @@ public class ArrayPointsTestView extends View {
                         mTipPaint.setTextSize(30);
                         mTipPaint.setColor(Color.parseColor("#ffffff"));
                         canvas.drawText("2017-21-24", rect.left + 25, rect.top + 40, mTipPaint);
-                        canvas.drawText("鼎泰新材" + pointList[0].get(i).yValue, rect.left + 60, rect.top + 100, mTipPaint);
-                        canvas.drawText("交通运输" + pointList[1].get(i).yValue, rect.left + 60, rect.top + 140, mTipPaint);
+                        canvas.drawText("鼎泰新材" + pointList[0].get(startIndex).yValue, rect.left + 60, rect.top + 100, mTipPaint);
+                        canvas.drawText("交通运输" + pointList[1].get(startIndex).yValue, rect.left + 60, rect.top + 140, mTipPaint);
 
                         mTipPaint.setColor(Color.parseColor("#389cff"));
                         canvas.drawCircle(rect.left + 25 + 15, rect.top + 100 - 15, 15, mTipPaint);
