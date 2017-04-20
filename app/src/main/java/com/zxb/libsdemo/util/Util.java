@@ -102,7 +102,6 @@ public class Util {
         for (ArrayList<PointC> list : values) {
             for (PointC item : list) {
                 item.x = item.xValue;
-//                item.yPixels = totalHeight * (minMax.max - item.yValue) / (item.yValue * (minMax.max - minMax.min));
                 item.yPixels = (minMax.max - item.yValue) / scale;
             }
         }

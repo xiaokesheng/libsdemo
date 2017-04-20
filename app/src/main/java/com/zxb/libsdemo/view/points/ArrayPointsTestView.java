@@ -81,6 +81,10 @@ public class ArrayPointsTestView extends View {
 
     private float currentX;
 
+    private float[] matrixValues = new float[9];
+
+    private boolean isLeft;
+
     RectF rect = new RectF();
 
     public ArrayPointsTestView(Context context) {
@@ -105,6 +109,8 @@ public class ArrayPointsTestView extends View {
     }
 
     private void init() {
+
+        isLeft = true;
 
         mLeftWidth = Util.dip2px(60);
         mBottomHeight = Util.dip2px(50);
@@ -163,6 +169,45 @@ public class ArrayPointsTestView extends View {
         pointsList.add(new PointC(1900 + 1700, 200 * new Random().nextFloat()));
         pointsList.add(new PointC(2000 + 1700, 250 * new Random().nextFloat()));
         pointsList.add(new PointC(2100 + 1700, 260 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 0, 600));
+        pointsList.add(new PointC(3900 + 100, 500));
+        pointsList.add(new PointC(3900 + 200, 900));
+        pointsList.add(new PointC(3900 + 300, 800));
+        pointsList.add(new PointC(3900 + 400, 600));
+        pointsList.add(new PointC(3900 + 500, 750));
+        pointsList.add(new PointC(3900 + 600, 300));
+        pointsList.add(new PointC(3900 + 700, 300));
+        pointsList.add(new PointC(3900 + 800, 600));
+        pointsList.add(new PointC(3900 + 900, 200));
+        pointsList.add(new PointC(3900 + 1000, 500));
+        pointsList.add(new PointC(3900 + 1100, 400));
+        pointsList.add(new PointC(3900 + 1200, 200));
+        pointsList.add(new PointC(3900 + 1300, 500));
+        pointsList.add(new PointC(3900 + 1400, 600));
+        pointsList.add(new PointC(3900 + 1500, 200));
+        pointsList.add(new PointC(3900 + 1600, 600));
+        pointsList.add(new PointC(3900 + 1700, 150));
+        pointsList.add(new PointC(3900 + 1800, 210));
+        pointsList.add(new PointC(3900 + 1900, 200));
+        pointsList.add(new PointC(3900 + 2000, 250));
+        pointsList.add(new PointC(3900 + 2100, 260));
+        pointsList.add(new PointC(3900 + 500 + 1700, 750 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 600 + 1700, 300 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 700 + 1700, 300 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 800 + 1700, 600 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 900 + 1700, 200 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1000 + 1700, 500 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1100 + 1700, 400 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1200 + 1700, 200 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1300 + 1700, 500 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1400 + 1700, 600 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1500 + 1700, 200 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1600 + 1700, 600 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1700 + 1700, 150 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1800 + 1700, 210 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 1900 + 1700, 200 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 2000 + 1700, 250 * new Random().nextFloat()));
+        pointsList.add(new PointC(3900 + 2100 + 1700, 260 * new Random().nextFloat()));
 
         pointsListC.add(new PointC(0, 600 * 2 + 420));
         pointsListC.add(new PointC(100, 500 * 2 + 420));
@@ -203,6 +248,45 @@ public class ArrayPointsTestView extends View {
         pointsListC.add(new PointC(1900 + 1700, 200 * new Random().nextFloat() * 3));
         pointsListC.add(new PointC(2000 + 1700, 250 * new Random().nextFloat() * 3));
         pointsListC.add(new PointC(2100 + 1700, 260 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 0, 600 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 100, 500 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 200, 1200));
+        pointsListC.add(new PointC(3900 + 300, 800 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 400, 600 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 500, 750 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 600, 300 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 700, 300 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 800, 600 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 900, 200 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1000, 500 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1100, 400 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1200, 200 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1300, 500 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1400, 600 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1500, 200 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1600, 600 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1700, 150 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1800, 210 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 1900, 200 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 2000, 250 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 2100, 260 * 2 + 420));
+        pointsListC.add(new PointC(3900 + 500 + 1700, 750 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 600 + 1700, 300 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 700 + 1700, 300 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 800 + 1700, 600 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 900 + 1700, 200 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1000 + 1700, 500 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1100 + 1700, 400 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1200 + 1700, 200 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1300 + 1700, 500 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1400 + 1700, 600 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1500 + 1700, 200 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1600 + 1700, 600 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1700 + 1700, 150 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1800 + 1700, 210 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 1900 + 1700, 200 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 2000 + 1700, 250 * new Random().nextFloat() * 3));
+        pointsListC.add(new PointC(3900 + 2100 + 1700, 260 * new Random().nextFloat() * 3));
 
         Util.handleValues(lineAreaHeight, pointsList, pointsListC);
 
@@ -484,21 +568,42 @@ public class ArrayPointsTestView extends View {
                 } else {
                     J.j("TouchEvent", "move---");
                     if (touchMode == MODE_DRAG) {
-                        mTranslateMatrix.set(mSavedMatrix);
                         dx = event.getX() - startPoint.x;
                         dy = event.getY() - startPoint.yPixels;
-                        mTranslateMatrix.postTranslate(dx, 0);
+                        if (isLeft) {
+                            if (dx > 0) {
+                                return true;
+                            } else {
 
+                            }
+                        }
+                        mTranslateMatrix.set(mSavedMatrix);
+                        mTranslateMatrix.postTranslate(dx, 0);
                         mTouch.set(mTranslateMatrix);
+                        mTranslateMatrix.getValues(matrixValues);
+                        J.j("transX", "matrix->transX: " + matrixValues[2]);
+                        if (matrixValues[2] >= 0) {
+                            isLeft = true;
+                        } else {
+                            isLeft = false;
+                        }
                         invalidate();
                         mTranslateMatrix.set(mTouch);
                     } else if (touchMode == MODE_ZOOM) {
                         float totalDist = spacing(event);
                         float scale = totalDist / mSavedDist;
                         float scaleX = scale;
+                        J.j("scaleX", "scaleX: " + scaleX);
                         float scaleY = 1;
+                        mScaleMatrix.getValues(matrixValues);
+                        J.j("scaleX", "matrix->scaleX: " + matrixValues[0]);
+                        if (matrixValues[0] > 1) {
+                            scaleX = 1;
+                        }
                         mScaleMatrix.set(mSavedMatrix);
                         mScaleMatrix.postScale(scaleX, scaleY, centerPoint.x, centerPoint.yPixels);
+
+
                         mTouch.set(mScaleMatrix);
                         invalidate();
                         mScaleMatrix.set(mTouch);
