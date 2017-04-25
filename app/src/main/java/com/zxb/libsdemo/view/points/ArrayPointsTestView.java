@@ -516,7 +516,6 @@ public class ArrayPointsTestView extends View {
             }
         }
 
-
         J.j("minMax", "maxIndex = " + minMax.maxIndex + ", value: " + minMax.realMaxValue);
         J.j("minMax", "minIndex = " + minMax.minIndex + ", value: " + minMax.realMinValue);
     }
