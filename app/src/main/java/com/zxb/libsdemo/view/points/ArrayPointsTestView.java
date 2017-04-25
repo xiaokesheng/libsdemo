@@ -238,8 +238,7 @@ public class ArrayPointsTestView extends View {
                         }
                     }
                 }
-
-                if (i == pointList.size() - 3) {
+                if (i == pointList.size() - 2) {
                     J.j("pointRight", "x: " + point[2]);
 //                    J.j("pointRight", "i, " + i + ", number: " + pointList.size());
 //                    J.j("pointRight", "lineArea : " + lineAreaWidth);
@@ -338,8 +337,6 @@ public class ArrayPointsTestView extends View {
             mBound.bottomIndex = minMax.minIndex;
             mBound.realMaxValue = minMax.realMaxValue;
             mBound.realMinValue = minMax.realMinValue;
-            J.j("minMax", "-->maxIndex = " + mBound.topIndex + ", value: " + mBound.realMaxValue);
-            J.j("minMax", "-->minIndex = " + mBound.bottomIndex + ", value: " + mBound.realMinValue);
         } else {
             return true;
         }
@@ -357,7 +354,6 @@ public class ArrayPointsTestView extends View {
                 if (minMax.max < point[1]) {
                     minMax.max = point[1];
                     minMax.minIndex = j;
-                    J.j("minMaxReal", "minMax.minIndex: " + j + ", value: " + pointsList.get(j).yValue);
                     minMax.realMinValue = pointsList.get(minMax.minIndex).yValue;
                 }
                 if (minMax.min > point[1]) {
@@ -366,8 +362,8 @@ public class ArrayPointsTestView extends View {
                     minMax.realMaxValue = pointsList.get(minMax.maxIndex).yValue;
                 }
             }
-            if (point[0] >= lineAreaWidth - mRightWidth) {
-                mBound.rightIndex = j - 1;
+            if (point[2] >= lineAreaWidth - mRightWidth) {
+                mBound.rightIndex = j;
                 break;
             }
         }
@@ -487,6 +483,9 @@ public class ArrayPointsTestView extends View {
                 }
                 hasTouch = false;
                 hasMoved = false;
+                if (isLeft) {
+                    J.j("isLeft", "isLeft=============");
+                }
                 invalidate();
                 break;
             case MotionEvent.ACTION_POINTER_UP:
