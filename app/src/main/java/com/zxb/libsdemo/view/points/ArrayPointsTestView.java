@@ -26,8 +26,10 @@ public class ArrayPointsTestView extends View {
     private Paint mBgLinePaint;
     private Paint mTextPaint;
     private Paint mTipPaint;
+    private Paint mTipLinePaint;
 
     protected RectF mContentRect = new RectF();
+    protected RectF mLeftBg = new RectF();
 
     private int lineColor;
 
@@ -49,13 +51,17 @@ public class ArrayPointsTestView extends View {
 
     private int touchMode;
 
-    private ArrayList<PointC> pointsList;
-    private ArrayList<PointC> pointsListC;
+    private ArrayList<PointC> pointsList = new ArrayList<>();
+    private ArrayList<PointC> pointsListC = new ArrayList<>();
+    private String tag1;
+    private String tag2;
 
     private static final int MODE_DRAG = 1;
     private static final int MODE_ZOOM = 2;
     private static final int MODE_NONE = 3;
     private static final int MODE_FLING = 4;
+
+    private static final int ITEM_WIDTH = 100;
 
     private boolean hasMoved;
     private boolean hasTouch;
@@ -112,15 +118,29 @@ public class ArrayPointsTestView extends View {
         init();
     }
 
-    private void init() {
+    public void setPointsList(ArrayList<PointC> list1, ArrayList<PointC> list2, String tag1, String tag2) {
+        this.pointsList = list1;
+        this.pointsListC = list2;
+        this.tag1 = tag1;
+        this.tag2 = tag2;
+        init();
+        invalidate();
+    }
 
+    public void setPointsList(ArrayList<PointC> list1) {
+        this.pointsList = list1;
+    }
+
+
+    private void init() {
         isLeft = true;
         isRight = false;
 
-        mLeftWidth = Util.dip2px(60);
+        mLeftWidth = Util.dip2px(45);
         mBottomHeight = Util.dip2px(50);
         mTopMargin = Util.dip2px(25);
         mRightWidth = Util.dip2px(0);
+        mLeftBg = new RectF(0, 0, mLeftWidth, initialHeight);
 
         lineAreaHeight = initialHeight - mBottomHeight - mTopMargin;
         totalHeight = lineAreaHeight;
@@ -130,28 +150,30 @@ public class ArrayPointsTestView extends View {
         itemHeight = lineAreaHeight / verticalDividedCount;
 
         touchMode = MODE_NONE;
-        pointsList = new ArrayList<>();
-        pointsListC = new ArrayList<>();
+
         mBound = new LineBound();
         minMax = new MinMax();
 
-        initializePointsList();
+//        initializePointsList();
 
         minScale = lineAreaWidth * 2 / (pointsList.size() * 100);
 
-        Util.handleValues(lineAreaHeight, pointsList, pointsListC);
+        Util.handleValues(lineAreaHeight, ITEM_WIDTH, pointsList, pointsListC);
 
-        lineColor = Color.parseColor("#389cff");
+        lineColor = Color.parseColor("#38bd7f");
         mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLinePaint.setColor(lineColor);
         mLinePaint.setStrokeWidth(5);
         mBgLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBgLinePaint.setColor(Color.parseColor("#7c8594"));
+        mBgLinePaint.setColor(Color.parseColor("#f0f2f5"));
         mBgLinePaint.setStrokeWidth(1);
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(Util.dip2px(15));
-        mTextPaint.setColor(Color.parseColor("#ffffff"));
+        mTextPaint.setColor(Color.parseColor("#7e8694"));
         mTipPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTipLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mTipLinePaint.setColor(Color.parseColor("#4e5661"));
+        mTipLinePaint.setStrokeWidth(1);
 
         startPoint = new PointC();
         centerPoint = new PointC();
@@ -166,6 +188,7 @@ public class ArrayPointsTestView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        canvas.drawColor(Color.parseColor("#ffffff"));
 
         for (int i = 0; i < pointsList.size() - 1; i++) {
             float[] point = new float[4];
@@ -177,22 +200,59 @@ public class ArrayPointsTestView extends View {
             }
         }
 
-        drawLines(canvas, pointsList, "#389cff", false);
-        drawLines(canvas, pointsListC, "#ff0000", true);
-
+        // 画背景线 5条
         for (int i = 0; i <= verticalDividedCount; i++) {
             float y = i * itemHeight + mTopMargin;
             canvas.drawLine(mLeftWidth, y, mLeftWidth + lineAreaWidth, y, mBgLinePaint);
-            canvas.drawText(String.valueOf(mBound.realMaxValue - (mBound.realMaxValue - mBound.realMinValue) / 4f * i), 40, y + Util.dip2px(8), mTextPaint);
+
         }
 
+        // 当显示tip滑动时,画竖线
         if (touchMode == MODE_FLING) {
-            mLinePaint.setColor(Color.parseColor("#ffff00"));
-            canvas.drawLine(currentX, mTopMargin, currentX, mTopMargin + lineAreaHeight, mLinePaint);
+            mLinePaint.setColor(Color.parseColor("#4e5661"));
+            canvas.drawLine(currentX, mTopMargin, currentX, mTopMargin + lineAreaHeight, mTipLinePaint);
         }
 
+        // 画折线
+        drawLines(canvas, pointsList, "#38bd7f", false);
+        drawLines(canvas, pointsListC, "#38a2ff", true);
+
+        // 画左边的矩形框
+        mTextPaint.setColor(Color.parseColor("#ffffff"));
+        canvas.drawRect(mLeftBg, mTextPaint);
+
+        // 画背景线左边的字
+        for (int i = 0; i <= verticalDividedCount; i++) {
+            float y = i * itemHeight + mTopMargin;
+            mTextPaint.setColor(Color.parseColor("#7e8694"));
+            mTextPaint.setTextSize(Util.dip2px(9));
+            canvas.drawText(
+                    String.valueOf(Util.formatDouble(mBound.realMaxValue - (mBound.realMaxValue - mBound.realMinValue) / 4f * i, 2)),
+                    40, y + Util.dip2px(2),
+                    mTextPaint);
+        }
+
+        // 画蓝色tip
         if (touchMode == MODE_FLING) {
             drawTips(canvas, pointsList, pointsListC);
+        }
+
+        // 画底部日期
+        drawBottomTips(canvas, pointsList);
+    }
+
+    private void drawBottomTips(Canvas canvas, ArrayList<PointC> pointList) {
+        int delta = (mBound.rightIndex - mBound.leftIndex) / 7;
+        mTextPaint.setColor(Color.parseColor("#7e8694"));
+        mTextPaint.setTextSize(Util.dip2px(9));
+        for (int i = mBound.leftIndex + 1; i < mBound.rightIndex; i = i + delta + 2) {
+            float[] point = new float[4];
+            mapPoint(pointList, point, i);
+            canvas.drawText(
+                    pointList.get(i).xValue,
+                    point[0] + mLeftWidth - Util.dip2px(20),
+                    initialHeight - mBottomHeight + Util.dip2px(30),
+                    mTextPaint);
         }
     }
 
@@ -220,10 +280,10 @@ public class ArrayPointsTestView extends View {
                 point[3] += mTopMargin;
                 canvas.drawLines(point, mLinePaint);
                 canvas.drawCircle(point[0], point[1], Util.dip2px(2), mLinePaint);
-                canvas.drawText(String.valueOf(i), point[0], point[1], mTextPaint);
+//                canvas.drawText(String.valueOf(i), point[0], point[1], mTextPaint);
                 if (i == mBound.rightIndex) {
                     canvas.drawCircle(point[2], point[3], Util.dip2px(2), mLinePaint);
-                    canvas.drawText(String.valueOf(i + 1), point[2], point[3], mTextPaint);
+//                    canvas.drawText(String.valueOf(i + 1), point[2], point[3], mTextPaint);
                 }
 
                 if (touchMode == MODE_FLING) {
@@ -231,17 +291,15 @@ public class ArrayPointsTestView extends View {
                     if (currentX > point[0] && currentX <= point[2]) {
                         if (point[2] - currentX < currentX - point[0]) {
                             startIndex = i + 1;
-                            canvas.drawCircle(point[2], point[3], Util.dip2px(10), mLinePaint);
+                            canvas.drawCircle(point[2], point[3], 16, mLinePaint);
                         } else {
                             startIndex = i;
-                            canvas.drawCircle(point[0], point[1], Util.dip2px(10), mLinePaint);
+                            canvas.drawCircle(point[0], point[1], 16, mLinePaint);
                         }
                     }
                 }
                 if (i == pointList.size() - 2) {
                     J.j("pointRight", "x: " + point[2]);
-//                    J.j("pointRight", "i, " + i + ", number: " + pointList.size());
-//                    J.j("pointRight", "lineArea : " + lineAreaWidth);
                     if (point[2] < initialWidth - mRightWidth) {
                         // 右侧滑到头了
                         isRightEdge = true;
@@ -291,18 +349,18 @@ public class ArrayPointsTestView extends View {
                             rect.left = rect.right - 350;
                         }
                         rect.bottom = rect.top + 250;
-                        mTipPaint.setColor(Color.parseColor("#66389cff"));
+                        mTipPaint.setColor(Color.parseColor("#e009599f"));
                         canvas.drawRoundRect(rect, 10, 10, mTipPaint);
 
                         mTipPaint.setTextSize(30);
                         mTipPaint.setColor(Color.parseColor("#ffffff"));
-                        canvas.drawText("2017-21-24", rect.left + 25, rect.top + 40, mTipPaint);
-                        canvas.drawText("鼎泰新材" + pointList[0].get(startIndex).yValue, rect.left + 60, rect.top + 100, mTipPaint);
-                        canvas.drawText("交通运输" + pointList[1].get(startIndex).yValue, rect.left + 60, rect.top + 140, mTipPaint);
+                        canvas.drawText(pointList[0].get(startIndex).xValue, rect.left + 25, rect.top + 40, mTipPaint);
+                        canvas.drawText(tag1 + pointList[0].get(startIndex).yValue, rect.left + 60, rect.top + 100, mTipPaint);
+                        canvas.drawText(tag2 + pointList[1].get(startIndex).yValue, rect.left + 60, rect.top + 140, mTipPaint);
 
-                        mTipPaint.setColor(Color.parseColor("#389cff"));
+                        mTipPaint.setColor(Color.parseColor("#38bd7f"));
                         canvas.drawCircle(rect.left + 25 + 15, rect.top + 100 - 15, 15, mTipPaint);
-                        mTipPaint.setColor(Color.parseColor("#ff0000"));
+                        mTipPaint.setColor(Color.parseColor("#38a2ff"));
                         canvas.drawCircle(rect.left + 25 + 15, rect.top + 140 - 15, 15, mTipPaint);
                     }
                 }
@@ -359,6 +417,16 @@ public class ArrayPointsTestView extends View {
                 if (minMax.min > point[1]) {
                     minMax.min = point[1];
                     minMax.maxIndex = j;
+                    minMax.realMaxValue = pointsList.get(minMax.maxIndex).yValue;
+                }
+                if (minMax.max < point[3]) {
+                    minMax.max = point[3];
+                    minMax.minIndex = j + 1;
+                    minMax.realMinValue = pointsList.get(minMax.minIndex).yValue;
+                }
+                if (minMax.min > point[3]) {
+                    minMax.min = point[3];
+                    minMax.maxIndex = j + 1;
                     minMax.realMaxValue = pointsList.get(minMax.maxIndex).yValue;
                 }
             }
@@ -624,163 +692,163 @@ public class ArrayPointsTestView extends View {
         return y;
     }
 
-    private void initializePointsList() {
-        pointsList.add(new PointC(0, 600));
-        pointsList.add(new PointC(100, 500));
-        pointsList.add(new PointC(200, 900));
-        pointsList.add(new PointC(300, 800));
-        pointsList.add(new PointC(400, 600));
-        pointsList.add(new PointC(500, 750));
-        pointsList.add(new PointC(600, 300));
-        pointsList.add(new PointC(700, 300));
-        pointsList.add(new PointC(800, 600));
-        pointsList.add(new PointC(900, 200));
-        pointsList.add(new PointC(1000, 500));
-        pointsList.add(new PointC(1100, 400));
-        pointsList.add(new PointC(1200, 200));
-        pointsList.add(new PointC(1300, 500));
-        pointsList.add(new PointC(1400, 600));
-        pointsList.add(new PointC(1500, 200));
-        pointsList.add(new PointC(1600, 600));
-        pointsList.add(new PointC(1700, 150));
-        pointsList.add(new PointC(1800, 210));
-        pointsList.add(new PointC(1900, 200));
-        pointsList.add(new PointC(2000, 250));
-        pointsList.add(new PointC(2100, 260));
-        pointsList.add(new PointC(500 + 1700, 750 * new Random().nextFloat()));
-        pointsList.add(new PointC(600 + 1700, 300 * new Random().nextFloat()));
-        pointsList.add(new PointC(700 + 1700, 300 * new Random().nextFloat()));
-        pointsList.add(new PointC(800 + 1700, 600 * new Random().nextFloat()));
-        pointsList.add(new PointC(900 + 1700, 200 * new Random().nextFloat()));
-        pointsList.add(new PointC(1000 + 1700, 500 * new Random().nextFloat()));
-        pointsList.add(new PointC(1100 + 1700, 400 * new Random().nextFloat()));
-        pointsList.add(new PointC(1200 + 1700, 200 * new Random().nextFloat()));
-        pointsList.add(new PointC(1300 + 1700, 500 * new Random().nextFloat()));
-        pointsList.add(new PointC(1400 + 1700, 600 * new Random().nextFloat()));
-        pointsList.add(new PointC(1500 + 1700, 200 * new Random().nextFloat()));
-        pointsList.add(new PointC(1600 + 1700, 600 * new Random().nextFloat()));
-        pointsList.add(new PointC(1700 + 1700, 150 * new Random().nextFloat()));
-        pointsList.add(new PointC(1800 + 1700, 210 * new Random().nextFloat()));
-        pointsList.add(new PointC(1900 + 1700, 200 * new Random().nextFloat()));
-        pointsList.add(new PointC(2000 + 1700, 250 * new Random().nextFloat()));
-        pointsList.add(new PointC(2100 + 1700, 260 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 0, 600));
-        pointsList.add(new PointC(3900 + 100, 500));
-        pointsList.add(new PointC(3900 + 200, 900));
-        pointsList.add(new PointC(3900 + 300, 800));
-        pointsList.add(new PointC(3900 + 400, 600));
-        pointsList.add(new PointC(3900 + 500, 750));
-        pointsList.add(new PointC(3900 + 600, 300));
-        pointsList.add(new PointC(3900 + 700, 300));
-        pointsList.add(new PointC(3900 + 800, 600));
-        pointsList.add(new PointC(3900 + 900, 200));
-        pointsList.add(new PointC(3900 + 1000, 500));
-        pointsList.add(new PointC(3900 + 1100, 400));
-        pointsList.add(new PointC(3900 + 1200, 200));
-        pointsList.add(new PointC(3900 + 1300, 500));
-        pointsList.add(new PointC(3900 + 1400, 600));
-        pointsList.add(new PointC(3900 + 1500, 200));
-        pointsList.add(new PointC(3900 + 1600, 600));
-        pointsList.add(new PointC(3900 + 1700, 150));
-        pointsList.add(new PointC(3900 + 1800, 210));
-        pointsList.add(new PointC(3900 + 1900, 200));
-        pointsList.add(new PointC(3900 + 2000, 250));
-        pointsList.add(new PointC(3900 + 2100, 260));
-        pointsList.add(new PointC(3900 + 500 + 1700, 750 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 600 + 1700, 300 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 700 + 1700, 300 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 800 + 1700, 600 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 900 + 1700, 200 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1000 + 1700, 500 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1100 + 1700, 400 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1200 + 1700, 200 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1300 + 1700, 500 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1400 + 1700, 600 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1500 + 1700, 200 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1600 + 1700, 600 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1700 + 1700, 150 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1800 + 1700, 210 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 1900 + 1700, 200 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 2000 + 1700, 250 * new Random().nextFloat()));
-        pointsList.add(new PointC(3900 + 2100 + 1700, 260 * new Random().nextFloat()));
-
-        pointsListC.add(new PointC(0, 600 * 2 + 420));
-        pointsListC.add(new PointC(100, 500 * 2 + 420));
-        pointsListC.add(new PointC(200, 1200));
-        pointsListC.add(new PointC(300, 800 * 2 + 420));
-        pointsListC.add(new PointC(400, 600 * 2 + 420));
-        pointsListC.add(new PointC(500, 750 * 2 + 420));
-        pointsListC.add(new PointC(600, 300 * 2 + 420));
-        pointsListC.add(new PointC(700, 300 * 2 + 420));
-        pointsListC.add(new PointC(800, 600 * 2 + 420));
-        pointsListC.add(new PointC(900, 200 * 2 + 420));
-        pointsListC.add(new PointC(1000, 500 * 2 + 420));
-        pointsListC.add(new PointC(1100, 400 * 2 + 420));
-        pointsListC.add(new PointC(1200, 200 * 2 + 420));
-        pointsListC.add(new PointC(1300, 500 * 2 + 420));
-        pointsListC.add(new PointC(1400, 600 * 2 + 420));
-        pointsListC.add(new PointC(1500, 200 * 2 + 420));
-        pointsListC.add(new PointC(1600, 600 * 2 + 420));
-        pointsListC.add(new PointC(1700, 150 * 2 + 420));
-        pointsListC.add(new PointC(1800, 210 * 2 + 420));
-        pointsListC.add(new PointC(1900, 200 * 2 + 420));
-        pointsListC.add(new PointC(2000, 250 * 2 + 420));
-        pointsListC.add(new PointC(2100, 260 * 2 + 420));
-        pointsListC.add(new PointC(500 + 1700, 750 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(600 + 1700, 300 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(700 + 1700, 300 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(800 + 1700, 600 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(900 + 1700, 200 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1000 + 1700, 500 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1100 + 1700, 400 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1200 + 1700, 200 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1300 + 1700, 500 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1400 + 1700, 600 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1500 + 1700, 200 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1600 + 1700, 600 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1700 + 1700, 150 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1800 + 1700, 210 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(1900 + 1700, 200 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(2000 + 1700, 250 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(2100 + 1700, 260 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 0, 600 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 100, 500 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 200, 1200));
-        pointsListC.add(new PointC(3900 + 300, 800 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 400, 600 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 500, 750 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 600, 300 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 700, 300 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 800, 600 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 900, 200 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1000, 500 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1100, 400 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1200, 200 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1300, 500 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1400, 600 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1500, 200 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1600, 600 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1700, 150 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1800, 210 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 1900, 200 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 2000, 250 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 2100, 260 * 2 + 420));
-        pointsListC.add(new PointC(3900 + 500 + 1700, 750 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 600 + 1700, 300 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 700 + 1700, 300 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 800 + 1700, 600 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 900 + 1700, 200 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1000 + 1700, 500 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1100 + 1700, 400 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1200 + 1700, 200 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1300 + 1700, 500 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1400 + 1700, 600 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1500 + 1700, 200 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1600 + 1700, 600 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1700 + 1700, 150 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1800 + 1700, 210 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 1900 + 1700, 200 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 2000 + 1700, 250 * new Random().nextFloat() * 3));
-        pointsListC.add(new PointC(3900 + 2100 + 1700, 260 * new Random().nextFloat() * 3));
-    }
+//    private void initializePointsList() {
+//        pointsList.add(new PointC(0, 600));
+//        pointsList.add(new PointC(100, 500));
+//        pointsList.add(new PointC(200, 900));
+//        pointsList.add(new PointC(300, 800));
+//        pointsList.add(new PointC(400, 600));
+//        pointsList.add(new PointC(500, 750));
+//        pointsList.add(new PointC(600, 300));
+//        pointsList.add(new PointC(700, 300));
+//        pointsList.add(new PointC(800, 600));
+//        pointsList.add(new PointC(900, 200));
+//        pointsList.add(new PointC(1000, 500));
+//        pointsList.add(new PointC(1100, 400));
+//        pointsList.add(new PointC(1200, 200));
+//        pointsList.add(new PointC(1300, 500));
+//        pointsList.add(new PointC(1400, 600));
+//        pointsList.add(new PointC(1500, 200));
+//        pointsList.add(new PointC(1600, 600));
+//        pointsList.add(new PointC(1700, 150));
+//        pointsList.add(new PointC(1800, 210));
+//        pointsList.add(new PointC(1900, 200));
+//        pointsList.add(new PointC(2000, 250));
+//        pointsList.add(new PointC(2100, 260));
+//        pointsList.add(new PointC(500 + 1700, 750 * new Random().nextFloat()));
+//        pointsList.add(new PointC(600 + 1700, 300 * new Random().nextFloat()));
+//        pointsList.add(new PointC(700 + 1700, 300 * new Random().nextFloat()));
+//        pointsList.add(new PointC(800 + 1700, 600 * new Random().nextFloat()));
+//        pointsList.add(new PointC(900 + 1700, 200 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1000 + 1700, 500 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1100 + 1700, 400 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1200 + 1700, 200 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1300 + 1700, 500 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1400 + 1700, 600 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1500 + 1700, 200 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1600 + 1700, 600 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1700 + 1700, 150 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1800 + 1700, 210 * new Random().nextFloat()));
+//        pointsList.add(new PointC(1900 + 1700, 200 * new Random().nextFloat()));
+//        pointsList.add(new PointC(2000 + 1700, 250 * new Random().nextFloat()));
+//        pointsList.add(new PointC(2100 + 1700, 260 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 0, 600));
+//        pointsList.add(new PointC(3900 + 100, 500));
+//        pointsList.add(new PointC(3900 + 200, 900));
+//        pointsList.add(new PointC(3900 + 300, 800));
+//        pointsList.add(new PointC(3900 + 400, 600));
+//        pointsList.add(new PointC(3900 + 500, 750));
+//        pointsList.add(new PointC(3900 + 600, 300));
+//        pointsList.add(new PointC(3900 + 700, 300));
+//        pointsList.add(new PointC(3900 + 800, 600));
+//        pointsList.add(new PointC(3900 + 900, 200));
+//        pointsList.add(new PointC(3900 + 1000, 500));
+//        pointsList.add(new PointC(3900 + 1100, 400));
+//        pointsList.add(new PointC(3900 + 1200, 200));
+//        pointsList.add(new PointC(3900 + 1300, 500));
+//        pointsList.add(new PointC(3900 + 1400, 600));
+//        pointsList.add(new PointC(3900 + 1500, 200));
+//        pointsList.add(new PointC(3900 + 1600, 600));
+//        pointsList.add(new PointC(3900 + 1700, 150));
+//        pointsList.add(new PointC(3900 + 1800, 210));
+//        pointsList.add(new PointC(3900 + 1900, 200));
+//        pointsList.add(new PointC(3900 + 2000, 250));
+//        pointsList.add(new PointC(3900 + 2100, 260));
+//        pointsList.add(new PointC(3900 + 500 + 1700, 750 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 600 + 1700, 300 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 700 + 1700, 300 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 800 + 1700, 600 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 900 + 1700, 200 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1000 + 1700, 500 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1100 + 1700, 400 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1200 + 1700, 200 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1300 + 1700, 500 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1400 + 1700, 600 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1500 + 1700, 200 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1600 + 1700, 600 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1700 + 1700, 150 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1800 + 1700, 210 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 1900 + 1700, 200 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 2000 + 1700, 250 * new Random().nextFloat()));
+//        pointsList.add(new PointC(3900 + 2100 + 1700, 260 * new Random().nextFloat()));
+//
+//        pointsListC.add(new PointC(0, 600 * 2 + 420));
+//        pointsListC.add(new PointC(100, 500 * 2 + 420));
+//        pointsListC.add(new PointC(200, 1200));
+//        pointsListC.add(new PointC(300, 800 * 2 + 420));
+//        pointsListC.add(new PointC(400, 600 * 2 + 420));
+//        pointsListC.add(new PointC(500, 750 * 2 + 420));
+//        pointsListC.add(new PointC(600, 300 * 2 + 420));
+//        pointsListC.add(new PointC(700, 300 * 2 + 420));
+//        pointsListC.add(new PointC(800, 600 * 2 + 420));
+//        pointsListC.add(new PointC(900, 200 * 2 + 420));
+//        pointsListC.add(new PointC(1000, 500 * 2 + 420));
+//        pointsListC.add(new PointC(1100, 400 * 2 + 420));
+//        pointsListC.add(new PointC(1200, 200 * 2 + 420));
+//        pointsListC.add(new PointC(1300, 500 * 2 + 420));
+//        pointsListC.add(new PointC(1400, 600 * 2 + 420));
+//        pointsListC.add(new PointC(1500, 200 * 2 + 420));
+//        pointsListC.add(new PointC(1600, 600 * 2 + 420));
+//        pointsListC.add(new PointC(1700, 150 * 2 + 420));
+//        pointsListC.add(new PointC(1800, 210 * 2 + 420));
+//        pointsListC.add(new PointC(1900, 200 * 2 + 420));
+//        pointsListC.add(new PointC(2000, 250 * 2 + 420));
+//        pointsListC.add(new PointC(2100, 260 * 2 + 420));
+//        pointsListC.add(new PointC(500 + 1700, 750 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(600 + 1700, 300 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(700 + 1700, 300 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(800 + 1700, 600 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(900 + 1700, 200 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1000 + 1700, 500 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1100 + 1700, 400 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1200 + 1700, 200 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1300 + 1700, 500 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1400 + 1700, 600 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1500 + 1700, 200 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1600 + 1700, 600 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1700 + 1700, 150 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1800 + 1700, 210 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(1900 + 1700, 200 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(2000 + 1700, 250 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(2100 + 1700, 260 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 0, 600 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 100, 500 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 200, 1200));
+//        pointsListC.add(new PointC(3900 + 300, 800 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 400, 600 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 500, 750 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 600, 300 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 700, 300 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 800, 600 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 900, 200 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1000, 500 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1100, 400 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1200, 200 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1300, 500 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1400, 600 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1500, 200 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1600, 600 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1700, 150 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1800, 210 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 1900, 200 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 2000, 250 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 2100, 260 * 2 + 420));
+//        pointsListC.add(new PointC(3900 + 500 + 1700, 750 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 600 + 1700, 300 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 700 + 1700, 300 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 800 + 1700, 600 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 900 + 1700, 200 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1000 + 1700, 500 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1100 + 1700, 400 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1200 + 1700, 200 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1300 + 1700, 500 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1400 + 1700, 600 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1500 + 1700, 200 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1600 + 1700, 600 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1700 + 1700, 150 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1800 + 1700, 210 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 1900 + 1700, 200 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 2000 + 1700, 250 * new Random().nextFloat() * 3));
+//        pointsListC.add(new PointC(3900 + 2100 + 1700, 260 * new Random().nextFloat() * 3));
+//    }
 }

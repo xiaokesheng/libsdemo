@@ -7,9 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.gson.Gson;
 import com.zxb.libsdemo.R;
+import com.zxb.libsdemo.model.FuyingItem;
+import com.zxb.libsdemo.model.PointC;
+import com.zxb.libsdemo.model.PointsLine;
 import com.zxb.libsdemo.util.J;
+import com.zxb.libsdemo.util.Util;
 import com.zxb.libsdemo.view.points.ArrayPointsTestView;
+
+import java.util.ArrayList;
 
 /**
  * Created by mrzhou on 2017/4/12.
@@ -43,5 +50,18 @@ public class TestArrayPointsLineActivity extends Activity {
         mTranslateMatrix = new Matrix();
         mSavedMatrix = new Matrix();
         mTouch = new Matrix();
+
+        String str = Util.readStrFromAssets(this, "result.txt");
+        J.j("readfromassets", str + "aa");
+
+        PointsLine result = new Gson().fromJson(str, PointsLine.class);
+        ArrayList<FuyingItem> list = (ArrayList<FuyingItem>) result.data.fyList;
+        ArrayList<PointC> list1 = new ArrayList<>();
+        ArrayList<PointC> list2 = new ArrayList<>();
+        for (FuyingItem item : list) {
+            list1.add(new PointC(item.date, Float.parseFloat(item.floatPoint)));
+            list2.add(new PointC(item.date, Float.parseFloat(item.hsPoint)));
+        }
+        aptvLine.setPointsList(list1, list2, "鼎泰新材", "交通运输");
     }
 }

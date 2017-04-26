@@ -1,6 +1,7 @@
 package com.zxb.libsdemo.util;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.Display;
@@ -10,6 +11,9 @@ import android.view.WindowManager;
 import com.zxb.libsdemo.model.PointC;
 import com.zxb.libsdemo.view.points.MinMax;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -86,7 +90,15 @@ public class Util {
         return (int) (pxValue / scale + 0.5f);
     }
 
-    public static void handleValues(float totalHeight, ArrayList<PointC>... values) {
+    public static double formatDouble(double d, int len) {
+        BigDecimal bd = new BigDecimal(d);
+        bd = bd.setScale(len, BigDecimal.ROUND_HALF_UP);
+        double result = bd.doubleValue();
+        bd = null;
+        return result;
+    }
+
+    public static void handleValues(float totalHeight, int itemWidth, ArrayList<PointC>... values) {
         MinMax minMax = new MinMax();
         for (ArrayList<PointC> list : values) {
             for (PointC item : list) {
@@ -100,10 +112,28 @@ public class Util {
         }
         float scale = (minMax.max - minMax.min) / totalHeight;
         for (ArrayList<PointC> list : values) {
+            int i = 0;
             for (PointC item : list) {
-                item.x = item.xValue;
+                item.x = i++ * itemWidth;
                 item.yPixels = (minMax.max - item.yValue) / scale;
             }
         }
+    }
+
+    public static String readStrFromAssets(Context context, String fileName) {
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getResources().getAssets().open(fileName);
+            int size = inputStream.available();
+            int len = -1;
+            byte[] bytes = new byte[size];
+            inputStream.read(bytes);
+            inputStream.close();
+            String string = new String(bytes);
+            return string;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

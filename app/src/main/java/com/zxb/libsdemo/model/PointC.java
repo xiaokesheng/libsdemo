@@ -7,10 +7,10 @@ public class PointC {
     public float x;
     public float yPixels;
 
-    public float xValue;
+    public String xValue;
     public float yValue;
 
-    public PointC(float xValue, float yValue) {
+    public PointC(String xValue, float yValue) {
         this.xValue = xValue;
         this.yValue = yValue;
     }
