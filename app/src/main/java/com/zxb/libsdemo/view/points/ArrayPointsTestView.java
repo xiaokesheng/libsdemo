@@ -245,7 +245,7 @@ public class ArrayPointsTestView extends View {
         int delta = (mBound.rightIndex - mBound.leftIndex) / 7;
         mTextPaint.setColor(Color.parseColor("#7e8694"));
         mTextPaint.setTextSize(Util.dip2px(9));
-        for (int i = mBound.leftIndex + 1; i < mBound.rightIndex; i = i + delta + 2) {
+        for (int i = mBound.leftIndex + 1; i < mBound.rightIndex; i = i + delta + 1) {
             float[] point = new float[4];
             mapPoint(pointList, point, i);
             canvas.drawText(
@@ -354,14 +354,17 @@ public class ArrayPointsTestView extends View {
 
                         mTipPaint.setTextSize(30);
                         mTipPaint.setColor(Color.parseColor("#ffffff"));
-                        canvas.drawText(pointList[0].get(startIndex).xValue, rect.left + 25, rect.top + 40, mTipPaint);
-                        canvas.drawText(tag1 + pointList[0].get(startIndex).yValue, rect.left + 60, rect.top + 100, mTipPaint);
-                        canvas.drawText(tag2 + pointList[1].get(startIndex).yValue, rect.left + 60, rect.top + 140, mTipPaint);
+                        // 日期
+                        canvas.drawText(pointList[0].get(startIndex).xValue, rect.left + 25, rect.top + 50, mTipPaint);
+                        // 项目名称
+                        canvas.drawText(tag1 + "    " + pointList[0].get(startIndex).yValue + "%", rect.left + 80, rect.top + 120, mTipPaint);
+                        // 行业
+                        canvas.drawText(tag2 + "    " + pointList[1].get(startIndex).yValue + "%", rect.left + 80, rect.top + 180, mTipPaint);
 
                         mTipPaint.setColor(Color.parseColor("#38bd7f"));
-                        canvas.drawCircle(rect.left + 25 + 15, rect.top + 100 - 15, 15, mTipPaint);
+                        canvas.drawCircle(rect.left + 25 + 15, rect.top + 120 - 10, 15, mTipPaint);
                         mTipPaint.setColor(Color.parseColor("#38a2ff"));
-                        canvas.drawCircle(rect.left + 25 + 15, rect.top + 140 - 15, 15, mTipPaint);
+                        canvas.drawCircle(rect.left + 25 + 15, rect.top + 180 - 10, 15, mTipPaint);
                     }
                 }
             }
