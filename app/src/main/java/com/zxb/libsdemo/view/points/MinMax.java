@@ -18,4 +18,9 @@ public class MinMax {
         max = -Float.MAX_VALUE;
         min = Float.MAX_VALUE;
     }
+
+    @Override
+    public String toString() {
+        return min + ", " + max + ", " + minIndex + ", " + maxIndex + ", " + realMaxValue + ", " + ", " + realMinValue;
+    }
 }

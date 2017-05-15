@@ -185,6 +185,13 @@
                 android:text="Test ArrayPoints"
                 />
 
+            <Button
+                android:id="@+id/btnTestColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Color"
+                />
+
         </LinearLayout>
 
     </ScrollView>

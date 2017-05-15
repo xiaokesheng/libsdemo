@@ -15,7 +15,6 @@ import com.zxb.libsdemo.util.J;
 import com.zxb.libsdemo.util.Util;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * Created by mrzhou on 2017/4/12.
@@ -86,14 +85,15 @@ public class ArrayPointsTestView extends View {
     private float itemHeight;
 
     private float currentX;
-
     private float minScale;
 
-    private float[] matrixValues = new float[9];
+    private float[] matrixValues = new float[]{1, 0, 0, 0, 0, 0, 0, 0, 0};
 
     private boolean isLeft;
     private boolean isRight;
     private boolean isRightEdge;
+
+    private int startDistance;
 
     RectF rect = new RectF();
 
@@ -107,7 +107,6 @@ public class ArrayPointsTestView extends View {
 
     public ArrayPointsTestView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-//        init();
     }
 
     @Override
@@ -129,8 +128,37 @@ public class ArrayPointsTestView extends View {
 
     public void setPointsList(ArrayList<PointC> list1) {
         this.pointsList = list1;
+        init();
+        invalidate();
     }
 
+    public void setStartDistance(int offset) {
+        this.startDistance = offset;
+    }
+
+    public void setStartLasted() {
+        int size = pointsList.size();
+        int visibleNumber = ((int) lineAreaWidth / (int) (ITEM_WIDTH * matrixValues[0])) + 1;
+        startDistance = ((int) (ITEM_WIDTH * matrixValues[0])) * (size - 1 - visibleNumber);
+        mTranslateMatrix.postTranslate(-startDistance, 0);
+        mTouch.postTranslate(-startDistance, 0);
+        touchMode = MODE_DRAG;
+        if (startDistance > 0) {
+            isLeft = false;
+        }
+        invalidate();
+    }
+
+    public void setStartIndex(int index) {
+        startDistance = ((int) (ITEM_WIDTH * matrixValues[0])) * (index + 1);
+        mTranslateMatrix.postTranslate(-startDistance, 0);
+        mTouch.postTranslate(-startDistance, 0);
+        touchMode = MODE_DRAG;
+        if (startDistance > 0) {
+            isLeft = false;
+        }
+        invalidate();
+    }
 
     private void init() {
         isLeft = true;
@@ -153,8 +181,6 @@ public class ArrayPointsTestView extends View {
 
         mBound = new LineBound();
         minMax = new MinMax();
-
-//        initializePointsList();
 
         minScale = lineAreaWidth * 2 / (pointsList.size() * 100);
 
@@ -199,6 +225,7 @@ public class ArrayPointsTestView extends View {
                 break;
             }
         }
+        J.j("minMax", minMax.toString());
 
         // 画背景线 5条
         for (int i = 0; i <= verticalDividedCount; i++) {
@@ -257,59 +284,66 @@ public class ArrayPointsTestView extends View {
     }
 
     private void drawLines(Canvas canvas, ArrayList<PointC> pointList, String color, boolean isLast) {
-        mLinePaint.setColor(Color.parseColor(color));
-        if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
-            float deltaHeight = mBound.bottomPixels - mBound.topPixels;
-            float yScale = totalHeight / deltaHeight;
-            float yPoint;
+        if (pointList != null && pointList.size() > 0) {
+            mLinePaint.setColor(Color.parseColor(color));
+            if (mBound.leftIndex >= 0 && mBound.rightIndex > 0) {
+                float deltaHeight = mBound.bottomPixels - mBound.topPixels;
+                float yScale = totalHeight / deltaHeight;
+                float yPoint;
 
-            if (mBound.bottomPixels - mBound.topPixels == lineAreaHeight) {
-                yPoint = mBound.bottomPixels;
-            } else {
-                yPoint = mBound.topPixels * lineAreaHeight / (lineAreaHeight - mBound.bottomPixels + mBound.topPixels);
-            }
-            for (int i = mBound.leftIndex; i <= mBound.rightIndex; i++) {
-                float[] point = new float[4];
-                mapPoint(pointList, point, i);
-                mYScaleMatrix.postScale(1, yScale, 0, yPoint);
-                mYScaleMatrix.mapPoints(point);
-                mYScaleMatrix.reset();
-                point[0] += mLeftWidth;
-                point[2] += mLeftWidth;
-                point[1] += mTopMargin;
-                point[3] += mTopMargin;
-                canvas.drawLines(point, mLinePaint);
-                canvas.drawCircle(point[0], point[1], Util.dip2px(2), mLinePaint);
-//                canvas.drawText(String.valueOf(i), point[0], point[1], mTextPaint);
-                if (i == mBound.rightIndex) {
-                    canvas.drawCircle(point[2], point[3], Util.dip2px(2), mLinePaint);
-//                    canvas.drawText(String.valueOf(i + 1), point[2], point[3], mTextPaint);
+                if (mBound.bottomPixels - mBound.topPixels == lineAreaHeight) {
+                    yPoint = mBound.bottomPixels;
+                } else {
+                    yPoint = mBound.topPixels * lineAreaHeight / (lineAreaHeight - mBound.bottomPixels + mBound.topPixels);
                 }
+                if (mBound.bottomPixels == mBound.topPixels) {
+                    yScale = 1;
+                    yPoint = 0;
+                }
+                for (int i = mBound.leftIndex; i <= mBound.rightIndex; i++) {
+                    float[] point = new float[4];
+                    mapPoint(pointList, point, i);
+                    mYScaleMatrix.postScale(1, yScale, 0, yPoint);
+                    mYScaleMatrix.mapPoints(point);
+                    mYScaleMatrix.reset();
+                    point[0] += mLeftWidth;
+                    point[2] += mLeftWidth;
+                    point[1] += mTopMargin;
+                    point[3] += mTopMargin;
+                    if (mBound.bottomPixels == mBound.topPixels) {
+                        point[1] = mTopMargin + lineAreaHeight / 2;
+                        point[3] = mTopMargin + lineAreaHeight / 2;
+                    }
+                    canvas.drawLines(point, mLinePaint);
+                    canvas.drawCircle(point[0], point[1], Util.dip2px(2), mLinePaint);
+                    if (i == mBound.rightIndex) {
+                        canvas.drawCircle(point[2], point[3], Util.dip2px(2), mLinePaint);
+                    }
 
-                if (touchMode == MODE_FLING) {
-                    int startIndex;
-                    if (currentX > point[0] && currentX <= point[2]) {
-                        if (point[2] - currentX < currentX - point[0]) {
-                            startIndex = i + 1;
-                            canvas.drawCircle(point[2], point[3], 16, mLinePaint);
+                    if (touchMode == MODE_FLING) {
+                        int startIndex;
+                        if (currentX > point[0] && currentX <= point[2]) {
+                            if (point[2] - currentX < currentX - point[0]) {
+                                startIndex = i + 1;
+                                canvas.drawCircle(point[2], point[3], 16, mLinePaint);
+                            } else {
+                                startIndex = i;
+                                canvas.drawCircle(point[0], point[1], 16, mLinePaint);
+                            }
+                        }
+                    }
+                    if (i == pointList.size() - 2) {
+                        if (point[2] < initialWidth - mRightWidth) {
+                            // 右侧滑到头了
+                            isRightEdge = true;
                         } else {
-                            startIndex = i;
-                            canvas.drawCircle(point[0], point[1], 16, mLinePaint);
+                            isRightEdge = false;
                         }
                     }
                 }
-                if (i == pointList.size() - 2) {
-                    J.j("pointRight", "x: " + point[2]);
-                    if (point[2] < initialWidth - mRightWidth) {
-                        // 右侧滑到头了
-                        isRightEdge = true;
-                    } else {
-                        isRightEdge = false;
-                    }
-                    J.j("pointRight", "total: " + (mLeftWidth + lineAreaWidth + mRightWidth));
-                }
             }
         }
+
     }
 
     private void drawTips(Canvas canvas, ArrayList<PointC>... pointList) {
@@ -476,7 +510,6 @@ public class ArrayPointsTestView extends View {
                     float y = event.getY(0) + event.getY(1);
                     centerPoint.x = (x / 2f);
                     centerPoint.yPixels = (y / 2f);
-//                    invalidate();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -554,6 +587,7 @@ public class ArrayPointsTestView extends View {
                 }
                 hasTouch = false;
                 hasMoved = false;
+                isRightEdge = false;
                 if (isLeft) {
                     J.j("isLeft", "isLeft=============");
                 }

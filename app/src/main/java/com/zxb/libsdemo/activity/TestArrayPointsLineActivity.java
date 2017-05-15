@@ -5,6 +5,7 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 
 import com.google.gson.Gson;
@@ -52,7 +53,6 @@ public class TestArrayPointsLineActivity extends Activity {
         mTouch = new Matrix();
 
         String str = Util.readStrFromAssets(this, "result.txt");
-        J.j("readfromassets", str + "aa");
 
         PointsLine result = new Gson().fromJson(str, PointsLine.class);
         ArrayList<FuyingItem> list = (ArrayList<FuyingItem>) result.data.fyList;
@@ -62,6 +62,15 @@ public class TestArrayPointsLineActivity extends Activity {
             list1.add(new PointC(item.date, Float.parseFloat(item.floatPoint)));
             list2.add(new PointC(item.date, Float.parseFloat(item.hsPoint)));
         }
-        aptvLine.setPointsList(list1, list2, "鼎泰新材", "交通运输");
+        aptvLine.setPointsList(list2);
+
+        aptvLine.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                aptvLine.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                aptvLine.setStartIndex(20);
+            }
+        });
+
     }
 }

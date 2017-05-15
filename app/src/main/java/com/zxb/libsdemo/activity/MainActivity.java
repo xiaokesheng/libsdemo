@@ -49,6 +49,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     Button btnTestRangeBar;
 
     Button btnTestArrayPoints;
+    Button btnTestColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnTestTouchView = (Button) findViewById(R.id.btnTestTouchView);
         btnTestRangeBar = (Button) findViewById(R.id.btnTestRangeBar);
         btnTestArrayPoints = (Button) findViewById(R.id.btnTestArrayPoints);
+        btnTestColor = (Button) findViewById(R.id.btnTestColor);
 
         Resources res = getResources();
 
