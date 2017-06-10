@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zxb.libsdemo.R;
+import com.zxb.libsdemo.activity.view.HistogramView;
 import com.zxb.libsdemo.line.LinePointUtil;
 import com.zxb.libsdemo.line.NewPoint;
+import com.zxb.libsdemo.model.PointC;
 import com.zxb.libsdemo.util.Util;
 import com.zxb.libsdemo.view.HorizontalScrollViewX;
 import com.zxb.libsdemo.view.NewLineView;
@@ -26,6 +29,7 @@ public class TestLineViewActivity extends Activity implements View.OnClickListen
     private TextView tvZoomLarge;
     private TextView tvZoomMedium;
     private View vPointCircle;
+    private LinearLayout llHistogram;
 
     private HorizontalScrollViewX hsvTest;
 
@@ -39,6 +43,7 @@ public class TestLineViewActivity extends Activity implements View.OnClickListen
         tvZoomLarge = (TextView) findViewById(R.id.tvZoomLarge);
         tvZoomLittle = (TextView) findViewById(R.id.tvZoomLittle);
         tvZoomMedium = (TextView) findViewById(R.id.tvZoomMedium);
+        llHistogram = (LinearLayout) findViewById(R.id.llHistogram);
 
         vPointCircle = findViewById(R.id.vPointCircle);
 
@@ -49,6 +54,8 @@ public class TestLineViewActivity extends Activity implements View.OnClickListen
         LinePointUtil.initNewLinePoints(pointList);
         nlvTest.setHorizontalScrollViewX(hsvTest);
         nlvTest.setPointList(pointList);
+
+        llHistogram.addView(new HistogramView(this, new ArrayList<PointC>()));
     }
 
     private void setListen() {

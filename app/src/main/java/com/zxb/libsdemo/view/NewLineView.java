@@ -51,7 +51,7 @@ public class NewLineView extends View {
     private Paint mStrokeLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mBgLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private Paint mTextPaint = new Paint();
+    private Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mImagePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     private Path strokePath;
@@ -410,11 +410,18 @@ public class NewLineView extends View {
                 Log.e("percentage", String.valueOf(percentage));
                 if (percentage % 5 == 0) {
 
+                    canvas.save();
+
+                    canvas.rotate(-30, mLeftRemainWidth + i * mItemWidth,
+                            mMarginTop + 5 * mItemHeight + Util.dip2px(14));
+
                     canvas.drawText(
                             String.valueOf(percentage) + "%",
                             mLeftRemainWidth + i * mItemWidth,
                             mMarginTop + 5 * mItemHeight + Util.dip2px(14),
                             mTextPaint);
+
+                    canvas.restore();
                 }
             }
         }

@@ -90,6 +90,14 @@
 
             </RelativeLayout>
 
+            <LinearLayout
+                android:id="@+id/llHistogram"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="#ffffff"
+                android:orientation="vertical"
+                />
+
         </LinearLayout>
 
     </ScrollView>
