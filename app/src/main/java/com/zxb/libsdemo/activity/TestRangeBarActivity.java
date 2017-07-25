@@ -3,6 +3,7 @@ package com.zxb.libsdemo.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zxb.libsdemo.R;
+import com.zxb.libsdemo.activity.view.CircularProgress;
 import com.zxb.libsdemo.util.Util;
 import com.zxb.libsdemo.view.ImageCaptureView;
 import com.zxb.libsdemo.view.rangebar.RangeBar;
@@ -30,6 +32,8 @@ public class TestRangeBarActivity extends Activity implements View.OnClickListen
     TextView tvCommit;
     EditText etMargin;
 
+    CircularProgress pbView;
+
     LinearLayout llImg;
     HorizontalScrollView hsvImg;
 
@@ -47,6 +51,7 @@ public class TestRangeBarActivity extends Activity implements View.OnClickListen
         tvReset = (TextView) findViewById(R.id.tvReset);
         tvCommit = (TextView) findViewById(R.id.tvCommit);
         etMargin = (EditText) findViewById(R.id.etMargin);
+        pbView = (CircularProgress) findViewById(R.id.pbView);
 
         llImg = (LinearLayout) findViewById(R.id.llImg);
         hsvImg = (HorizontalScrollView) findViewById(R.id.hsvImg);
@@ -56,6 +61,8 @@ public class TestRangeBarActivity extends Activity implements View.OnClickListen
             public void onScrollPercentage(int leftPercentage, int rightPercentage) {
                 tvLeft.setText(String.valueOf(leftPercentage));
                 tvRight.setText(String.valueOf(rightPercentage));
+//                pbView.setCurrentGlobalAngle((360f / 100f) * ((float)(leftPercentage)));
+                pbView.setPercentage(leftPercentage);
             }
         });
         rbRangeBar.setLeftPercentage(50);
@@ -70,6 +77,8 @@ public class TestRangeBarActivity extends Activity implements View.OnClickListen
                 addVideoImage(lp.leftMargin + rbRangeBar.getLeftSeekBarWidth(), lp.rightMargin + rbRangeBar.getRightSeekBarWidth());
             }
         });
+
+        Log.e("onCreate", "haha");
     }
 
     private void addVideoImage(int leftMargin, int rightMargin) {
@@ -93,7 +102,8 @@ public class TestRangeBarActivity extends Activity implements View.OnClickListen
                 rbRangeBar.resetRangeBar();
                 break;
             case R.id.tvCommit:
-                rbRangeBar.setMargin(Integer.valueOf(etMargin.getText().toString()));
+                pbView.startLoading();
+//                rbRangeBar.setMargin(Integer.valueOf(etMargin.getText().toString()));
                 break;
         }
     }

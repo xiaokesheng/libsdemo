@@ -192,6 +192,13 @@
                 android:text="Test Color"
                 />
 
+            <Button
+                android:id="@+id/btnTestWifi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test WIFI"
+                />
+
         </LinearLayout>
 
     </ScrollView>

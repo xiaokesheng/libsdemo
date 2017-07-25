@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zxb.libsdemo">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!-- SSO模块：联网 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -28,14 +28,14 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
-    <uses-permission android:name="android.permission.REAL_GET_TASKS"/>
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-permission android:name="android.permission.REAL_GET_TASKS" />
 
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:hardwareAccelerated="false"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -46,28 +46,31 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.TestTouchActivity"/>
-        <activity android:name=".activity.TestMaterialActivity"/>
-        <activity android:name=".activity.TestXfermodeActivity"/>
-        <activity android:name=".activity.TestSurfaceViewActivity"/>
-        <activity android:name=".activity.TestFileSystemActivity"/>
-        <activity android:name=".activity.TestGalleryActivity"/>
-        <activity android:name=".activity.TestLineViewActivity"/>
-        <activity android:name=".activity.TestSdCardPathActivity"/>
-        <activity android:name=".activity.TestViewPagerActivity"/>
-        <activity android:name=".activity.TestHorizontalScrollViewActivity"/>
-        <activity android:name=".activity.testhorizontal.HorizontalTestActivity"/>
-        <activity android:name=".activity.TestLineBgViewActivity"/>
-        <activity android:name=".activity.TestViewActivity"/>
-        <activity android:name=".activity.view.TestScrollerActivity"/>
-        <activity android:name=".activity.TestCreateBitmapActivity"/>
-        <activity android:name=".activity.TestMediaActivity"/>
-        <activity android:name=".activity.view.TestMuxActivity"/>
-        <activity android:name=".activity.TestAudioMixActivity"/>
-        <activity android:name=".activity.TestTouchViewActivity"/>
-        <activity android:name=".activity.TestRangeBarActivity"/>
-        <activity android:name=".activity.TestRecyclerViewActivity"/>
-        <activity android:name=".activity.TestArrayPointsLineActivity"/>
+        <activity android:name=".activity.TestTouchActivity" />
+        <activity android:name=".activity.TestMaterialActivity" />
+        <activity android:name=".activity.TestXfermodeActivity" />
+        <activity android:name=".activity.TestSurfaceViewActivity" />
+        <activity android:name=".activity.TestFileSystemActivity" />
+        <activity android:name=".activity.TestGalleryActivity" />
+        <activity android:name=".activity.TestLineViewActivity" />
+        <activity android:name=".activity.TestSdCardPathActivity" />
+        <activity android:name=".activity.TestViewPagerActivity" />
+        <activity android:name=".activity.TestHorizontalScrollViewActivity" />
+        <activity android:name=".activity.testhorizontal.HorizontalTestActivity" />
+        <activity android:name=".activity.TestLineBgViewActivity" />
+        <activity android:name=".activity.TestViewActivity" />
+        <activity android:name=".activity.view.TestScrollerActivity" />
+        <activity android:name=".activity.TestCreateBitmapActivity" />
+        <activity android:name=".activity.TestMediaActivity" />
+        <activity android:name=".activity.view.TestMuxActivity" />
+        <activity android:name=".activity.TestAudioMixActivity" />
+        <activity android:name=".activity.TestTouchViewActivity" />
+        <activity
+            android:name=".activity.TestRangeBarActivity"
+            android:screenOrientation="sensor" />
+        <activity android:name=".activity.TestRecyclerViewActivity" />
+        <activity android:name=".activity.TestArrayPointsLineActivity" />
+        <activity android:name=".activity.TestWifiActivity" />
     </application>
 
 </manifest>

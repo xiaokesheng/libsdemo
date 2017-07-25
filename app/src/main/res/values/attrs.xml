@@ -15,4 +15,9 @@
         <attr name="pointerRadius" format="dimension"/>
         <attr name="shownText" format="boolean"/>
     </declare-styleable>
+
+    <!-- 圆形进度条 -->
+    <declare-styleable name="CircularProgress">
+        <attr name="borderWidth" format="dimension" />
+    </declare-styleable>
 </resources>
