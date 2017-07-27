@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.zxb.libsdemo.R;
 import com.zxb.libsdemo.activity.view.CircularProgress;
+import com.zxb.libsdemo.util.J;
 import com.zxb.libsdemo.util.Util;
 import com.zxb.libsdemo.view.ImageCaptureView;
 import com.zxb.libsdemo.view.rangebar.RangeBar;
@@ -62,7 +63,8 @@ public class TestRangeBarActivity extends Activity implements View.OnClickListen
                 tvLeft.setText(String.valueOf(leftPercentage));
                 tvRight.setText(String.valueOf(rightPercentage));
 //                pbView.setCurrentGlobalAngle((360f / 100f) * ((float)(leftPercentage)));
-                pbView.setPercentage(leftPercentage);
+//                pbView.setPercentage(leftPercentage);
+//                J.j("onScrollPercentage", "onScroll~~~");
             }
         });
         rbRangeBar.setLeftPercentage(50);
@@ -95,11 +97,14 @@ public class TestRangeBarActivity extends Activity implements View.OnClickListen
 
     }
 
+    private int i = 0;
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvReset:
-                rbRangeBar.resetRangeBar();
+                pbView.setPercentage(i++);
+//                rbRangeBar.resetRangeBar();
                 break;
             case R.id.tvCommit:
                 pbView.startLoading();

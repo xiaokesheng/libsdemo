@@ -71,6 +71,7 @@
         <activity android:name=".activity.TestRecyclerViewActivity" />
         <activity android:name=".activity.TestArrayPointsLineActivity" />
         <activity android:name=".activity.TestWifiActivity" />
+        <activity android:name=".activity.TestElevationActivity" />
     </application>
 
 </manifest>

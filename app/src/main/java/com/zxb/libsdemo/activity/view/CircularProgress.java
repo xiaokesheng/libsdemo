@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Cap;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -124,7 +125,9 @@ public class CircularProgress extends View {
     public void startLoading() {
         isInPercentage = false;
         percentage = 0;
+        requestLayout();
         start();
+        J.j("percentage", (isInPercentage ? "true" : "false") + "inStartLo");
     }
 
     @Override
@@ -230,7 +233,7 @@ public class CircularProgress extends View {
         mObjectAnimatorSweep.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                Log.e("startAnimation", "f");
             }
 
             @Override
@@ -246,6 +249,7 @@ public class CircularProgress extends View {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 toggleAppearingMode();
+                Log.e("startAnimation", "e");
             }
         });
     }

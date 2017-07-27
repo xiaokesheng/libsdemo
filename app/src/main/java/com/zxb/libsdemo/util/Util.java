@@ -1,7 +1,6 @@
 package com.zxb.libsdemo.util;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.Display;
@@ -68,7 +67,6 @@ public class Util {
     public static void setClickListener(View.OnClickListener onClickListener, View... views) {
         if (null != views && views.length > 0) {
             for (View view : views) {
-                Log.e("setClick", "setClick");
                 view.setOnClickListener(onClickListener);
             }
         }

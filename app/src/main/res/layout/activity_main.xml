@@ -199,6 +199,13 @@
                 android:text="Test WIFI"
                 />
 
+            <Button
+                android:id="@+id/btnTestElevation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test elevation"
+                />
+
         </LinearLayout>
 
     </ScrollView>

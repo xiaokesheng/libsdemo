@@ -12,21 +12,21 @@
     </item>
     <item
         is-multidex="false"
+        jar="/Users/yufangyuan/.android/build-cache/d84e80ebbedd8714433547fd2b15865178323640/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="82ce13fd19cdfde0e392f03c27edeba8d4333648">
+        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_7429c5218979d6ce259aa1005b83878a79ba2e9e.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/yufangyuan/.android/build-cache/827e29a60cc062ccf59ed6f49e3265c6bf6de47b/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.0"
         sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
         <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_f99391f35101b24f2814f9655d42ab453c5d2e02.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/.android/build-cache/2a02da214d63923066841db487c4ec73565fa60f/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="5e412e954a24c5310a459c09870e4e2081aceb03">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_7a98905e83551bdfd92b91d60b3728dde1c8ba1b.jar" />
     </item>
     <item
         is-multidex="false"
