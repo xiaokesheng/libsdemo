@@ -33,6 +33,7 @@
 
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
@@ -72,6 +73,7 @@
         <activity android:name=".activity.TestArrayPointsLineActivity" />
         <activity android:name=".activity.TestWifiActivity" />
         <activity android:name=".activity.TestElevationActivity" />
+        <activity android:name=".activity.TestVolleyActivity" />
     </application>
 
 </manifest>

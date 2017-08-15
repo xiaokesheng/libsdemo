@@ -39,6 +39,14 @@
             >
 
             <Button
+                android:id="@+id/btTestVolley"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="Volley"
+                />
+
+            <Button
                 android:id="@+id/Reset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
