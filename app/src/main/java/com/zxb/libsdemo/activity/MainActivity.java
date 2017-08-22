@@ -54,6 +54,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     Button btnTestElevation;
     Button btnTestVolley;
+    Button btnTestHistogram;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +84,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnTestWifi = (Button) findViewById(R.id.btnTestWifi);
         btnTestElevation = (Button) findViewById(R.id.btnTestElevation);
         btnTestVolley = (Button) findViewById(R.id.btTestVolley);
+        btnTestHistogram = (Button) findViewById(R.id.btnTestHistogram);
 
         Resources res = getResources();
 
@@ -91,7 +93,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         pie.addItem("Bocephus", 3.5f, res.getColor(R.color.chartreuse));
         pie.addItem("Calliope", 2.5f, res.getColor(R.color.emerald));
         pie.addItem("Daedalus", 3, res.getColor(R.color.bluegrass));
-        pie.addItem("Euripides", 1, res. getColor(R.color.turquoise));
+        pie.addItem("Euripides", 1, res.getColor(R.color.turquoise));
         pie.addItem("Ganymede", 3, res.getColor(R.color.slate));
 
         ((Button) findViewById(R.id.Reset)).setOnClickListener(new View.OnClickListener() {
@@ -124,7 +126,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Util.setClickListener(this, btnTestSDCardPath, btnTestViewPager, btnTestHorizontalView);
         Util.setClickListener(this, btnTestLineBgView, btnTestView, btnTestBitmap, btnTestMedia, btnTestMux);
         Util.setClickListener(this, btnTextMix, btnTestTouchView, btnTestRangeBar, btnTestArrayPoints, btnTestWifi);
-        Util.setClickListener(this, btnTestElevation, btnTestVolley);
+        Util.setClickListener(this, btnTestElevation, btnTestVolley, btnTestHistogram);
     }
 
     @Override
@@ -195,6 +197,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btTestVolley:
                 startActivity(new Intent(this, TestVolleyActivity.class));
+                break;
+            case R.id.btnTestHistogram:
+                startActivity(new Intent(this, TestHistsogramViewActivity.class));
                 break;
         }
     }

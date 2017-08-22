@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#ffffff"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:text="Test Touch"
                 />
             <Button
@@ -209,6 +209,13 @@
 
             <Button
                 android:id="@+id/btnTestElevation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test elevation"
+                />
+
+            <Button
+                android:id="@+id/btnTestHistogram"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Test elevation"

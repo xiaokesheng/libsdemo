@@ -9,6 +9,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 
 /**
  * Created by mrzhou on 16/5/19.
@@ -23,26 +25,32 @@ public class TouchTestView extends View {
     private int paddingRight;
     private int paddingBottom;
 
-    private int mInitialWidth = 200;
-    private int mInitialHeight = 200;
+    private int mInitialWidth = 400;
+    private int mInitialHeight = 400;
+
+    Scroller mScroller;
+
+    Context mContext;
+
+    ScrollView sv;
 
     public TouchTestView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public TouchTestView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
         init();
     }
 
     public TouchTestView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     private void init() {
         mPaint.setColor(mColor);
+        mScroller = new Scroller(mContext);
     }
 
     @Override
@@ -85,13 +93,38 @@ public class TouchTestView extends View {
     }
 
     @Override
+    public void computeScroll() {
+        super.computeScroll();
+        if (mScroller.computeScrollOffset()) {
+            ((View) getParent()).scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            invalidate();
+        }
+    }
+
+    public void smoothScrollTo(int destX, int destY) {
+        int scrollX = getScrollX();
+        int delta = destX - scrollX;
+        mScroller.startScroll(scrollX, 0, delta, 0, 2000);
+        invalidate();
+    }
+
+    int lastX, lastY;
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
+        int x = (int) event.getX();
+        int y = (int) event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.e("motionEvent", "Down");
+                lastX = x;
+                lastY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
                 Log.e("touchEvent", "touching");
+                int offsetX = x - lastX;
+                int offsetY = y - lastY;
+//                layout(getLeft() + offsetX, getTop() + offsetY, getRight() + offsetX, getBottom() + offsetY);
                 break;
             case MotionEvent.ACTION_UP:
                 Log.e("motionEvent", "UP");
