@@ -6,14 +6,293 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:paddingLeft="45dp"
+        android:layout_marginTop="17dp"
+        android:gravity="bottom"
+        >
 
-        <com.zxb.libsdemo.view.HistogramAndLineView
-            android:id="@+id/hlvTest"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="200dp"
+            android:text="解禁规模 "
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#222845"
             />
+        <TextView
+            android:id="@+id/tvAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" -- "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#222845"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 亿元"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#222845"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单数 "
+            android:textSize="14sp"
+            android:layout_marginLeft="30dp"
+            android:textStyle="bold"
+            android:textColor="#222845"
+            />
+        <TextView
+            android:id="@+id/tvNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" -- "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#222845"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="单"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#222845"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="时间 "
+            android:layout_marginLeft="30dp"
+            android:textColor="#222845"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" -- "
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#222845"
+            />
+
+        <View android:layout_width="0dp" android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="21dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="亿元"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="right"
+                />
+            <TextView
+                android:id="@+id/tvLeft1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="right"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvLeft2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="right"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvLeft3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="right"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvLeft4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="right"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvLeft5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="right"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvLeft6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="right"
+                android:text="---"
+                android:layout_marginBottom="50dp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llHLArea"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="25dp"
+            android:orientation="vertical"
+            >
+            <com.zxb.libsdemo.view.hl.HistogramAndLineView
+                android:id="@+id/hlvView"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="单"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="left"
+                />
+            <TextView
+                android:id="@+id/tvRight1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="left"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvRight2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="left"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvRight3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="left"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvRight4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="left"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvRight5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="left"
+                android:text="---"
+                />
+            <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tvRight6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#525566"
+                android:textSize="10sp"
+                android:gravity="left"
+                android:text="---"
+                android:layout_marginBottom="50dp"
+                />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

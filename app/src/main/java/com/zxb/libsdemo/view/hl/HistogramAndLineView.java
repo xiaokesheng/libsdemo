@@ -1,9 +1,10 @@
-package com.zxb.libsdemo.view;
+package com.zxb.libsdemo.view.hl;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -19,6 +20,8 @@ import com.zxb.libsdemo.model.PointC;
 import com.zxb.libsdemo.util.J;
 import com.zxb.libsdemo.util.Util;
 
+import java.util.ArrayList;
+
 /**
  * Created by yufangyuan on 2017/8/21.
  */
@@ -30,10 +33,15 @@ public class HistogramAndLineView extends View {
     private static final int INVALID_POINTER = -1;
 
     private int mInitialHeight, mInitialWidth;
+    private int mAreaWidth, mAreaHeight;
 
     Context mContext;
 
     Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mHistogramPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mCheckLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     Rect mTempRect = new Rect();
 
@@ -51,11 +59,20 @@ public class HistogramAndLineView extends View {
 
     private VelocityTracker mVelocityTracker;
 
-    private float mScale = 1f;
+    private float mXScale = 1f;
+    private float mYScale = 1f;
 
-    String[] colors = new String[]{
-            "#FFB3A7", "#FFF143", "#A88462", "#0EB83A", "#BBCDC5", "#065279", "#815476", "#88ADA6", "#E0F0E9", "#3D3B4F", "#75664D", "#549688", "#FFFBF0", "#00BC12", "#C83C23"
-    };
+    Point currentMovePoint;
+
+    String colorHistogram = "#bad3ff";
+    String colorLine = "#1a6eff";
+
+    ArrayList<HLPoint> pList;
+
+    private int bottomHeight = Util.dip2px(50);
+
+    public int mItemWidth;
+    float mCheckRadius = Util.dip2px(8);
 
     public HistogramAndLineView(Context context) {
         this(context, null);
@@ -74,6 +91,15 @@ public class HistogramAndLineView extends View {
     private void init() {
         J.j("tag", "init---");
 
+        mAreaWidth = Util.getScreenWidth(mContext) - Util.dip2px(40) * 2;
+
+        mTextPaint.setColor(Color.parseColor("#000000"));
+        mTextPaint.setTextSize(Util.dip2px(15));
+        mLinePaint.setColor(Color.parseColor(colorLine));
+        mLinePaint.setStrokeWidth(4);
+        mCheckLinePaint.setColor(Color.parseColor("#222845"));
+        mCheckLinePaint.setStrokeWidth(1);
+
         mScroller = new OverScroller(mContext);
         setFocusable(true);
 //        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
@@ -88,19 +114,26 @@ public class HistogramAndLineView extends View {
         startPoint = new PointC();
         lastPoint = new PointC();
         centerPoint = new PointC();
+        currentMovePoint = new Point();
+
+        mItemWidth = (int) ((float) mAreaWidth / 50f);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        if (mScale > 1) {
-//            mInitialHeight = (int) (Util.dip2px(200) * (mScale * 0.9f));
-//        } else {
-//            mInitialHeight = (int) (Util.dip2px(200) * mScale);
-//        }
-        mInitialHeight = Util.dip2px(200);
-        mInitialWidth = (int) (Util.dip2px(1500) * mScale);
-        J.j("tag", "measure---");
+//        mInitialHeight = Util.dip2px(300);
+        if (pList == null || pList.size() == 0) {
+            mInitialWidth = mAreaWidth;
+        } else {
+            // TODO 处理边界问题
+            mInitialWidth = (int) (mItemWidth * pList.size() * mXScale);
+            if (mItemWidth < mAreaWidth / pList.size()) {
+                mItemWidth = mAreaWidth / pList.size();
+            }
+        }
+
+        mInitialHeight = mAreaHeight;
 
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
         int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -108,10 +141,13 @@ public class HistogramAndLineView extends View {
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
 
         if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
+            J.j("measureWidthHeight", "aa");
             setMeasuredDimension(mInitialWidth, mInitialHeight);
         } else if (widthSpecMode == MeasureSpec.AT_MOST) {
+            J.j("measureWidthHeight", "aa");
             setMeasuredDimension(mInitialWidth, heightSpecSize);
         } else if (heightSpecMode == MeasureSpec.AT_MOST) {
+            J.j("measureWidthHeight", "aa");
             setMeasuredDimension(widthSpecSize, mInitialHeight);
         }
     }
@@ -142,7 +178,7 @@ public class HistogramAndLineView extends View {
     private static final int MODE_DRAG = 1;
     private static final int MODE_ZOOM = 2;
     private static final int MODE_NONE = 3;
-    private static final int MODE_FLING = 4;
+    private static final int MODE_CHECK = 4;
 
     private float mSavedXDist = 1f;
     private float mSavedYDist = 1f;
@@ -159,6 +195,49 @@ public class HistogramAndLineView extends View {
 
     private int lastScrollX;
 
+    private boolean isLoadingLeft = false;
+    private boolean dataIsLoadOver = false;
+    private int currentPage;
+
+    public void setDataIsLoadOver(boolean isOver) {
+        this.dataIsLoadOver = isOver;
+    }
+
+    public void setPointList(ArrayList<HLPoint> pList, int areaWidth, int areaHeight) {
+        this.mAreaWidth = areaWidth;
+        this.mAreaHeight = areaHeight;
+        this.pList = pList;
+//        initListData(pList);
+        setScrollX(0);
+        requestLayout();
+        currentPage = 1;
+    }
+
+    public void addPointList(ArrayList<HLPoint> addList, int addPage) {
+        if (null != addList) {
+            int itemWidth = (int) ((float) mInitialWidth / (float) pList.size());
+            this.pList.addAll(0, addList);
+            currentPage += addPage;
+            requestLayout();
+
+            int addScrollX = itemWidth * addList.size();
+            setScrollX(addScrollX);
+            isLoadingLeft = false;
+        }
+
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+//    private void initListData(ArrayList<HLPoint> list) {
+//
+//    }
+
+    private boolean hasMoved;
+    private boolean hasTouch;
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         initVelocityTrackerIfNotExists();
@@ -168,6 +247,7 @@ public class HistogramAndLineView extends View {
 
         switch (action & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: {
+                hasTouch = true;
                 initOrResetVelocityTracker();
                 if ((mIsBeingDragged = !mScroller.isFinished())) {
                     final ViewParent parent = getParent();
@@ -194,6 +274,8 @@ public class HistogramAndLineView extends View {
                 break;
             }
             case MotionEvent.ACTION_MOVE:
+                hasMoved = true;
+                currentMovePoint.set((int) ev.getX(), (int) ev.getY());
                 if (touchMode == MODE_ZOOM) {
 //                    if (getScrollRange() < getScrollX()) {
 //                        setScrollX(getScrollRange());
@@ -202,32 +284,30 @@ public class HistogramAndLineView extends View {
 //                    }
                     float totalDist = spacing(ev);
                     float scale = totalDist / mSavedDist;
-                    mScale = scale * mLastScale;
+                    mXScale = scale * mLastScale;
                     J.j("zoom", "scale: " + String.valueOf(scale));
                     float newScrollX = (lastScrollX + centerPoint.x) * scale - centerPoint.x;
                     if (newScrollX <= 0) {
                         newScrollX = 0;
                     }
 
-//                    if (newScrollX + Util.getScreenWidth(mContext) >= mInitialWidth) {
-//                        newScrollX = mInitialWidth - Util.getScreenWidth(mContext);
-//                    }
-//                    J.j("scrollX-width", newScrollX + Util.getScreenWidth(mContext) + "px-->real");
-//                    J.j("scrollX-width", mInitialWidth + "px--initial");
-
                     J.j("scrollX-compute", "newScrollX:--" + newScrollX);
                     setScrollX((int) newScrollX);
+
                     requestLayout();
 
                     J.j("scrollX-width", getScrollRange() + "px-->range");
                     J.j("scrollX-width", getScrollX() + "px--scrollX");
-                    if (getScrollRange() <= getScrollX()) {
-                        setScrollX(getScrollRange());
-                        invalidate();
-                    } else {
-                        invalidate();
-                    }
 
+//                    if (getScrollRange() <= getScrollX()) {
+//                        setScrollX(getScrollRange());
+//                        invalidate();
+//                    } else {
+//                        invalidate();
+//                    }
+
+                } else if (touchMode == MODE_CHECK) {
+                    invalidate();
                 } else {
                     final int activePointerIndex = ev.findPointerIndex(mActivePointerId);
                     if (activePointerIndex == -1) {
@@ -271,14 +351,42 @@ public class HistogramAndLineView extends View {
                             // Break our velocity if we hit a scroll barrier.
                             mVelocityTracker.clear();
                         }
+                        computeIndex();
+
+                        if (getScrollX() == 0 && deltaX < 0 && !isLoadingLeft && !dataIsLoadOver) {
+                            isLoadingLeft = true;
+                            //
+                            if (null != mLoadLeftListener) {
+                                mLoadLeftListener.loadLeft(currentPage);
+                            }
+                        }
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if (mIsBeingDragged) {
-                    final VelocityTracker velocityTracker = mVelocityTracker;
-                    velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                    int initialVelocity = (int) velocityTracker.getXVelocity(mActivePointerId);
+                J.j("touchMove", String.valueOf(hasTouch) + ", " + String.valueOf(hasMoved) + ", " + String.valueOf(touchMode));
+                if (hasTouch) {
+                    if (!hasMoved) {
+                        if (touchMode == MODE_CHECK) {
+                            touchMode = MODE_NONE;
+                            invalidate();
+                        } else {
+                            touchMode = MODE_CHECK;
+                        }
+                    } else {
+                        // touch mode不变
+//                        touchMode = MODE_NONE;
+                    }
+                }
+                hasTouch = false;
+                hasMoved = false;
+                if (touchMode == MODE_CHECK) {
+                    break;
+                }
+                if (mIsBeingDragged && touchMode == MODE_NONE) {
+                        final VelocityTracker velocityTracker = mVelocityTracker;
+                        velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+                        int initialVelocity = (int) velocityTracker.getXVelocity(mActivePointerId);
 
 //                    if (getChildCount() > 0) {
                     if ((Math.abs(initialVelocity) > mMinimumVelocity)) {
@@ -294,13 +402,8 @@ public class HistogramAndLineView extends View {
                     mActivePointerId = INVALID_POINTER;
                     mIsBeingDragged = false;
                     recycleVelocityTracker();
-
-//                    if (mEdgeGlowLeft != null) {
-//                        mEdgeGlowLeft.onRelease();
-//                        mEdgeGlowRight.onRelease();
-//                    }
                 }
-                touchMode = MODE_NONE;
+//                touchMode = MODE_NONE;
                 break;
             case MotionEvent.ACTION_CANCEL:
                 if (mIsBeingDragged/* && getChildCount() > 0*/) {
@@ -321,9 +424,10 @@ public class HistogramAndLineView extends View {
             case MotionEvent.ACTION_POINTER_UP:
 //                onSecondaryPointerUp(ev);
                 touchMode = MODE_NONE;
-                mLastScale = mScale;
+                mLastScale = mXScale;
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
+                hasMoved = true;
                 lastScrollX = getScrollX();
                 if (ev.getPointerCount() >= 2) {
                     touchMode = MODE_ZOOM;
@@ -345,7 +449,7 @@ public class HistogramAndLineView extends View {
     }
 
     public void fling(int velocityX) {
-        int width = Util.getScreenWidth(mContext);
+        int width = mAreaWidth;
 //        int right = getChildAt(0).getWidth();
         int right = mInitialWidth;
 
@@ -371,8 +475,9 @@ public class HistogramAndLineView extends View {
 
     private int getScrollRange() {
         int scrollRange = 0;
+        // TODO 处理滑动边界问题
         scrollRange = Math.max(0,
-                mInitialWidth - Util.getScreenWidth(mContext));
+                mInitialWidth - mAreaWidth);
         J.j(TAG, "scrollRange" + scrollRange);
         return scrollRange;
     }
@@ -380,15 +485,60 @@ public class HistogramAndLineView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        for (int i = 0; i < 15; i++) {
-            mPaint.setColor(Color.parseColor(colors[i]));
-            mTempRect.left = i * mInitialWidth / 15;
-            mTempRect.top = 0;
-            mTempRect.right = (i + 1) * mInitialWidth / 15;
-            mTempRect.bottom = mInitialHeight;
+        if (areaHMaxValue == 0 && areaHMinValue == 0) {
+            computeIndex();
+        }
+        // 画背景 TODO
+        if (pList == null || pList.size() == 0) {
+            return;
+        }
+        for (int i = 0; i < pList.size(); i++) {
+            HLPoint p = pList.get(i);
+            mPaint.setColor(Color.parseColor(colorHistogram));
+            mTempRect.left = i * mInitialWidth / pList.size() + (int) (5 * mXScale);
+//            mTempRect.top = 0;
+            mTempRect.top = p.hPixels;
+            mTempRect.right = (i + 1) * mInitialWidth / pList.size() - (int) (5 * mXScale);
+            mTempRect.bottom = mInitialHeight - bottomHeight;
             canvas.drawRect(mTempRect, mPaint);
+
+            canvas.drawText(
+                    String.valueOf(i),
+                    mTempRect.left,
+                    mInitialHeight - 30,
+                    mTextPaint);
+        }
+        for (int i = 0; i < pList.size() - 1; i++) {
+            HLPoint p = pList.get(i);
+            if (i < pList.size() - 1) {
+                int startX = (int) ((float) mInitialWidth / (float) pList.size() * (i + 0.5f));
+                int startY = p.lPixels;
+                int endX = startX + mInitialWidth / pList.size();
+                int endY = pList.get(i + 1).lPixels;
+                canvas.drawLine(startX, startY, endX, endY, mLinePaint);
+            }
         }
         J.j("scrollX", getScrollX() + "--> scrollX");
+        J.j("touchMove", String.valueOf(touchMode));
+        if (touchMode == MODE_CHECK) {
+            J.j("touchMove", "drawCircle");
+            int currentIndex = getCurrentIndex();
+            if (currentIndex <= pList.size() - 1) {
+                if (null != mOnCheckListener) {
+                    mOnCheckListener.onChecked(pList.get(currentIndex));
+                }
+                int x = (int) ((float) mInitialWidth / (float) pList.size() * (currentIndex + 0.5f));
+                int y = pList.get(currentIndex).lPixels;
+                canvas.drawLine(x, 0, x, mInitialHeight - bottomHeight, mCheckLinePaint);
+                canvas.drawCircle(x, y, mCheckRadius, mLinePaint);
+            }
+        }
+    }
+
+    private int getCurrentIndex() {
+        float x = currentMovePoint.x + getScrollX();
+        int index = (int) (x / (mInitialWidth / pList.size()));
+        return index;
     }
 
     @Override
@@ -426,9 +576,92 @@ public class HistogramAndLineView extends View {
                 onScrollChanged(getScrollX(), getScrollY(), oldX, oldY);
             }
 
+
 //            if (!awakenScrollBars()) {
 //                postInvalidateOnAnimation();
 //            }
+        }
+        computeIndex();
+    }
+
+    int lastLeftIndex;
+    int lastRightIndex;
+
+    float areaHMaxValue;
+    float areaHMinValue;
+    float areaLMaxValue;
+    float areaLMinValue;
+
+    private void computeIndex() {
+        if (pList == null || pList.size() == 0) {
+            return;
+        }
+        float totalWidth = mInitialWidth;
+        float itemWidth = totalWidth / pList.size();
+        int leftIndex = (int) ((float) getScrollX() / itemWidth);
+        float leftDelta = (float)getScrollX() % (itemWidth);
+        // TODO 处理边界问题
+        int baseRightNum = (int) ((float) mAreaWidth / itemWidth);
+        int totalRemainPx = (int) ((float) mAreaWidth - baseRightNum * itemWidth);
+        if (leftDelta >= 0f) {
+            baseRightNum++;
+        }
+        if (totalRemainPx - (itemWidth - leftDelta) > 0) {
+            baseRightNum++;
+        }
+        int rightIndex = leftIndex + baseRightNum - 1;
+        J.j("scrollindex", "leftIndex: " + leftIndex + ", rightIndex: " + rightIndex);
+        J.j("rightIndex", String.valueOf(rightIndex));
+        if (rightIndex >= pList.size()) {
+            rightIndex = pList.size() - 1;
+        }
+        J.j("rightIndex", String.valueOf(rightIndex) + "a");
+        if (lastLeftIndex != leftIndex || lastRightIndex != rightIndex) {
+            getAreaMaxValue(pList, leftIndex, rightIndex);
+            invalidate();
+            lastLeftIndex = leftIndex;
+            lastRightIndex = rightIndex;
+
+            for (int i = leftIndex; i <= rightIndex; i++) {
+                HLPoint p = pList.get(i);
+                p.hPixels = (mInitialHeight - bottomHeight) - (int) ((mInitialHeight - bottomHeight) * p.hValue / areaHMaxValue);
+                p.lPixels = (mInitialHeight - bottomHeight) - (int) ((mInitialHeight - bottomHeight) * p.lValue / areaLMaxValue);
+            }
+        }
+
+
+//        J.j("scrollindex", "leftIndex: " + leftIndex + ", rightIndex: " + rightIndex);
+    }
+
+    private void getAreaMaxValue(ArrayList<HLPoint> list, int leftIndex, int rightIndex) {
+        float hMax = list.get(leftIndex).hValue;
+        float hMin = list.get(leftIndex).hValue;
+        float lMax = list.get(leftIndex).lValue;
+        float lMin = list.get(leftIndex).lValue;
+        for (int i = leftIndex; i <= rightIndex; i++) {
+            if (i == pList.size()) {
+                break;
+            }
+            if (hMax <= list.get(i).hValue) {
+                hMax = list.get(i).hValue;
+            }
+            if (hMin >= list.get(i).hValue) {
+                hMin = list.get(i).hValue;
+            }
+            if (lMax <= list.get(i).lValue) {
+                lMax = list.get(i).lValue;
+            }
+            if (lMin >= list.get(i).lValue) {
+                lMin = list.get(i).lValue;
+            }
+        }
+        areaHMaxValue = hMax;
+        areaHMinValue = hMin;
+        areaLMaxValue = lMax;
+        areaLMinValue = lMin;
+
+        if (null != mValueChangedListener) {
+            mValueChangedListener.onHLValueChanged((int) areaHMaxValue, areaLMaxValue);
         }
     }
 
@@ -481,5 +714,35 @@ public class HistogramAndLineView extends View {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
         return (float) Math.sqrt(x * x + y * y);
+    }
+
+    OnLeftLoadListener mLoadLeftListener;
+
+    public interface OnLeftLoadListener {
+        void loadLeft(int page);
+    }
+
+    public void setOnLeftLoadListener(OnLeftLoadListener listener) {
+        this.mLoadLeftListener = listener;
+    }
+
+    public interface OnMaxValueChangedListener {
+        void onHLValueChanged(int HValue, float lValue);
+    }
+
+    OnMaxValueChangedListener mValueChangedListener;
+
+    public void setOnMaxValueChangedListener(OnMaxValueChangedListener listener) {
+        this.mValueChangedListener = listener;
+    }
+
+    public interface OnCheckListener {
+        void onChecked(HLPoint point);
+    }
+
+    OnCheckListener mOnCheckListener;
+
+    public void setOnCheckListener(OnCheckListener listener) {
+        this.mOnCheckListener = listener;
     }
 }

@@ -73,7 +73,9 @@
         <activity android:name=".activity.TestWifiActivity" />
         <activity android:name=".activity.TestElevationActivity" />
         <activity android:name=".activity.TestVolleyActivity" />
-        <activity android:name=".activity.TestHistsogramViewActivity"/>
+        <activity
+            android:name=".activity.TestHistsogramViewActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>
