@@ -1,6 +1,7 @@
 package com.zxb.libsdemo.activity;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -20,6 +21,8 @@ public class TestVolleyActivity extends Activity implements View.OnClickListener
 
     TextView tvRequest;
     TextView tvResult;
+
+    AsyncTask asyncTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
