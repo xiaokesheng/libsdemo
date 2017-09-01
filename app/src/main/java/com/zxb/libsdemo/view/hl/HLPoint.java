@@ -16,4 +16,9 @@ public class HLPoint {
         this.hValue = hValue;
         this.lValue = lValue;
     }
+
+    @Override
+    public String toString() {
+        return hPixels + ", " + lPixels;
+    }
 }

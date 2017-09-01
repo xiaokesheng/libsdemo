@@ -1,8 +1,10 @@
 package com.zxb.libsdemo.activity;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,8 +20,11 @@ import com.zxb.libsdemo.util.Util;
 
 public class TestVolleyActivity extends Activity implements View.OnClickListener {
 
+    private static final String TAG = "TestVolleyActivity";
     TextView tvRequest;
     TextView tvResult;
+
+    AsyncTask async;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +35,8 @@ public class TestVolleyActivity extends Activity implements View.OnClickListener
         tvResult = (TextView) findViewById(R.id.tvResult);
 
         Util.setClickListener(this, tvRequest);
+
+        new MyAsyncTask().execute();
     }
 
     @Override
@@ -58,5 +65,49 @@ public class TestVolleyActivity extends Activity implements View.OnClickListener
             }
         };
         Req.getUrlRequest("http://138.68.2.222", listener, errorListener);
+    }
+
+    private class MyAsyncTask extends AsyncTask<Void, Integer, Void>
+    {
+
+        @Override
+        protected void onPreExecute()
+        {
+            Log.e(TAG, Thread.currentThread().getName() + " onPreExecute ");
+        }
+
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+
+            // 模拟数据的加载,耗时的任务
+            for (int i = 0; i < 100; i++)
+            {
+                try
+                {
+                    Thread.sleep(80);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                publishProgress(i);
+            }
+
+            Log.e(TAG, Thread.currentThread().getName() + " doInBackground ");
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values)
+        {
+            Log.e(TAG, Thread.currentThread().getName() + " onProgressUpdate ");
+        }
+
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            // 进行数据加载完成后的UI操作
+            Log.e(TAG, Thread.currentThread().getName() + " onPostExecute ");
+        }
     }
 }

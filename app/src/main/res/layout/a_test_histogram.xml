@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -196,7 +197,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="20dp"
             android:orientation="vertical"
             >
             <com.zxb.libsdemo.view.hl.HistogramAndLineView
@@ -295,4 +296,6 @@
                 />
         </LinearLayout>
     </LinearLayout>
+
+
 </LinearLayout>

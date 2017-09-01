@@ -14,6 +14,7 @@ import com.zxb.libsdemo.util.SrcUtil;
 import com.zxb.libsdemo.util.Util;
 import com.zxb.libsdemo.view.hl.HLPoint;
 import com.zxb.libsdemo.view.hl.HistogramAndLineView;
+import com.zxb.libsdemo.view.hl.TinyHLView;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,8 @@ public class TestHistsogramViewActivity extends Activity {
 
     HistogramAndLineView hlvView;
     LinearLayout llHLArea;
+    TinyHLView thlv;
+    LinearLayout llThlv;
 
     TextView tvLeft1;
     TextView tvLeft2;
@@ -53,6 +56,8 @@ public class TestHistsogramViewActivity extends Activity {
 
         hlvView = (HistogramAndLineView) findViewById(R.id.hlvView);
         llHLArea = (LinearLayout) findViewById(R.id.llHLArea);
+//        thlv = (TinyHLView) findViewById(R.id.thlv);
+//        llThlv = (LinearLayout) findViewById(R.id.llThlv);
 
         tvAmount = (TextView) findViewById(R.id.tvAmount);
         tvNum = (TextView) findViewById(R.id.tvNum);
@@ -85,15 +90,15 @@ public class TestHistsogramViewActivity extends Activity {
         rightList.add(tvRight5);
         rightList.add(tvRight6);
 
-        llHLArea.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                llHLArea.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                int width = llHLArea.getWidth();
-                int height = llHLArea.getHeight();
-                hlvView.setPointList(getPointList(1), width, height);
-            }
-        });
+//        llHLArea.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                llHLArea.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                int width = llHLArea.getWidth();
+//                int height = llHLArea.getHeight();
+                hlvView.setPointList(getPointList(1));
+//            }
+//        });
 
         hlvView.setOnLeftLoadListener(new HistogramAndLineView.OnLeftLoadListener() {
             @Override
@@ -106,7 +111,7 @@ public class TestHistsogramViewActivity extends Activity {
                 }
             }
         });
-        
+
         hlvView.setOnCheckListener(new HistogramAndLineView.OnCheckListener() {
             @Override
             public void onChecked(HLPoint point) {
@@ -115,7 +120,7 @@ public class TestHistsogramViewActivity extends Activity {
                 tvTime.setText(point.xString);
             }
         });
-        
+
         hlvView.setOnMaxValueChangedListener(new HistogramAndLineView.OnMaxValueChangedListener() {
             @Override
             public void onHLValueChanged(int hValue, float lValue) {
@@ -129,6 +134,41 @@ public class TestHistsogramViewActivity extends Activity {
                 }
             }
         });
+
+//        final ArrayList<HLPoint> pointList = new ArrayList<>();
+//        pointList.add(new HLPoint("", 1f, 4.1f));
+//        pointList.add(new HLPoint("", 2f, 2.1f));
+//        pointList.add(new HLPoint("", 4f, 3.1f));
+//        pointList.add(new HLPoint("", 2f, 1.1f));
+//        pointList.add(new HLPoint("", 7f, 8.1f));
+//        pointList.add(new HLPoint("", 7f, 9.1f));
+//        pointList.add(new HLPoint("", 2f, 2.1f));
+//        pointList.add(new HLPoint("", 1f, 1.1f));
+
+//        llThlv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                llThlv.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+//                thlv.setPointList(pointList, llThlv.getWidth(), llThlv.getHeight());
+//            }
+//        });
+
+        /*
+         <LinearLayout
+         android:id="@+id/llThlv"
+         android:layout_width="200dp"
+         android:layout_height="80dp"
+         android:orientation="horizontal"
+         >
+
+         <com.zxb.libsdemo.view.hl.TinyHLView
+         android:id="@+id/thlv"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent" />
+
+         </LinearLayout>
+         */
+
     }
 
     private ArrayList<HLPoint> getPointList(int page) {

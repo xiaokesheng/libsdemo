@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
+import android.text.Layout;
+import android.text.StaticLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,10 +32,16 @@ public class HistogramAndLineView extends View {
 
     private static final String TAG = "HistogramAndLineView";
 
+    public static final int MINIMUM = 1;
+    public static final int MAXIMUM = 2;
+    public static final int NORMAL = 3;
+
     private static final int INVALID_POINTER = -1;
 
     private int mInitialHeight, mInitialWidth;
-    private int mAreaWidth, mAreaHeight;
+    private int mAreaWidth = 0, mAreaHeight = 0;
+
+    private int mTopMargin;
 
     Context mContext;
 
@@ -42,6 +50,7 @@ public class HistogramAndLineView extends View {
     Paint mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mHistogramPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mCheckLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint mLightLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     Rect mTempRect = new Rect();
 
@@ -62,6 +71,8 @@ public class HistogramAndLineView extends View {
     private float mXScale = 1f;
     private float mYScale = 1f;
 
+    private float mCurrentScale = 1f;
+
     Point currentMovePoint;
 
     String colorHistogram = "#bad3ff";
@@ -71,8 +82,11 @@ public class HistogramAndLineView extends View {
 
     private int bottomHeight = Util.dip2px(50);
 
-    public int mItemWidth;
+    public float mItemWidth;
+    public float mMinimumItemWidth;
     float mCheckRadius = Util.dip2px(8);
+
+    public int scaleStatus = NORMAL;
 
     public HistogramAndLineView(Context context) {
         this(context, null);
@@ -89,12 +103,12 @@ public class HistogramAndLineView extends View {
     }
 
     private void init() {
-        J.j("tag", "init---");
+        mTopMargin = 30;
 
-        mAreaWidth = Util.getScreenWidth(mContext) - Util.dip2px(40) * 2;
-
-        mTextPaint.setColor(Color.parseColor("#000000"));
-        mTextPaint.setTextSize(Util.dip2px(15));
+        mTextPaint.setColor(Color.parseColor("#525566"));
+        mTextPaint.setTextSize(Util.dip2px(10));
+        mLightLinePaint.setColor(Color.parseColor("#ff0000"));
+        mLightLinePaint.setStrokeWidth(1);
         mLinePaint.setColor(Color.parseColor(colorLine));
         mLinePaint.setStrokeWidth(4);
         mCheckLinePaint.setColor(Color.parseColor("#222845"));
@@ -102,8 +116,6 @@ public class HistogramAndLineView extends View {
 
         mScroller = new OverScroller(mContext);
         setFocusable(true);
-//        setDescendantFocusability(FOCUS_AFTER_DESCENDANTS);
-//        setWillNotDraw(false);
         final ViewConfiguration configuration = ViewConfiguration.get(mContext);
         mTouchSlop = configuration.getScaledTouchSlop();
         mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
@@ -115,39 +127,64 @@ public class HistogramAndLineView extends View {
         lastPoint = new PointC();
         centerPoint = new PointC();
         currentMovePoint = new Point();
-
-        mItemWidth = (int) ((float) mAreaWidth / 50f);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        mInitialHeight = Util.dip2px(300);
-        if (pList == null || pList.size() == 0) {
-            mInitialWidth = mAreaWidth;
-        } else {
-            // TODO 处理边界问题
-            mInitialWidth = (int) (mItemWidth * pList.size() * mXScale);
-            if (mItemWidth < mAreaWidth / pList.size()) {
-                mItemWidth = mAreaWidth / pList.size();
-            }
-        }
-
-        mInitialHeight = mAreaHeight;
 
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
         int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
 
+        if (mAreaWidth == 0 || mAreaHeight == 0) {
+            mAreaWidth = widthSpecSize;
+            mAreaHeight = heightSpecSize;
+            mItemWidth = ((float) mAreaWidth / 24f);
+            mMinimumItemWidth = ((float) mAreaWidth) / 48f;
+        }
+
+        if (pList == null || pList.size() == 0) {
+            mInitialWidth = mAreaWidth;
+        } else {
+            mInitialWidth = (int) (mItemWidth * pList.size() * mXScale);
+            J.j("touchMode", String.valueOf(mLastScale));
+            scaleStatus = NORMAL;
+            if (mInitialWidth < mMinimumItemWidth * pList.size()) {
+                mInitialWidth = (int) (mMinimumItemWidth * pList.size());
+//                mXScale = (float) mInitialWidth / (float) (mItemWidth * pList.size());
+                scaleStatus = MINIMUM;
+                J.j("touchMode", "changeTo MINIMUM");
+                if (mCurrentScale > 1) {
+                    scaleStatus = NORMAL;
+                }
+            }
+            if (mInitialWidth > mMinimumItemWidth * pList.size() * 4) {
+                mInitialWidth = (int) (mMinimumItemWidth * pList.size() * 4);
+//                mXScale = (float) mInitialWidth / (float) (mItemWidth * pList.size());
+                scaleStatus = MAXIMUM;
+                J.j("touchMode", "changeTo MAXIMUM");
+                if (mCurrentScale < 1) {
+                    scaleStatus = NORMAL;
+                }
+            }
+        }
+
+        J.j("scrollRange", "areaWidth: " + mAreaWidth + ", mInitialWidth: " + mInitialWidth + ", mItemWidth: " + mItemWidth);
+
+        mInitialHeight = mAreaHeight;
+
+//        int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+//        int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+//        int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+//        int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+
         if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
-            J.j("measureWidthHeight", "aa");
             setMeasuredDimension(mInitialWidth, mInitialHeight);
         } else if (widthSpecMode == MeasureSpec.AT_MOST) {
-            J.j("measureWidthHeight", "aa");
             setMeasuredDimension(mInitialWidth, heightSpecSize);
         } else if (heightSpecMode == MeasureSpec.AT_MOST) {
-            J.j("measureWidthHeight", "aa");
             setMeasuredDimension(widthSpecSize, mInitialHeight);
         }
     }
@@ -208,6 +245,13 @@ public class HistogramAndLineView extends View {
         this.mAreaHeight = areaHeight;
         this.pList = pList;
 //        initListData(pList);
+        setScrollX(0);
+        requestLayout();
+        currentPage = 1;
+    }
+
+    public void setPointList(ArrayList<HLPoint> pList) {
+        this.pList = pList;
         setScrollX(0);
         requestLayout();
         currentPage = 1;
@@ -276,28 +320,44 @@ public class HistogramAndLineView extends View {
             case MotionEvent.ACTION_MOVE:
                 hasMoved = true;
                 currentMovePoint.set((int) ev.getX(), (int) ev.getY());
+                J.j("touchMode", "in move ----> " + getTouchMode());
                 if (touchMode == MODE_ZOOM) {
-//                    if (getScrollRange() < getScrollX()) {
-//                        setScrollX(getScrollRange());
-//                        invalidate();
-//                        break;
-//                    }
+                    mLastMotionX = (int) ev.getX(0);
                     float totalDist = spacing(ev);
                     float scale = totalDist / mSavedDist;
+                    J.j("touchMode", "currentScale" + scale);
+                    mCurrentScale = scale;
                     mXScale = scale * mLastScale;
-                    J.j("zoom", "scale: " + String.valueOf(scale));
+
+                    J.j("touchMode", "in move in zoom ----> " + getTouchMode());
+//                    if (scaleStatus == MINIMUM || scaleStatus == MAXIMUM) {
+//                        J.j("touchMode", "in move equal min max ----> " + getTouchMode());
+//                        scaleStatus = NORMAL;
+//                        touchMode = MODE_NONE;
+//                        return true;
+//                    }
+//                    float totalDist = spacing(ev);
+//                    float scale = totalDist / mSavedDist;
+//                    J.j("touchMode", "currentScale" + scale);
+//                    mXScale = scale * mLastScale;
+
                     float newScrollX = (lastScrollX + centerPoint.x) * scale - centerPoint.x;
                     if (newScrollX <= 0) {
                         newScrollX = 0;
                     }
 
-                    J.j("scrollX-compute", "newScrollX:--" + newScrollX);
+                    J.j("newScrollX", String.valueOf(newScrollX));
+
                     setScrollX((int) newScrollX);
 
                     requestLayout();
 
-                    J.j("scrollX-width", getScrollRange() + "px-->range");
-                    J.j("scrollX-width", getScrollX() + "px--scrollX");
+                    if (scaleStatus == MINIMUM || scaleStatus == MAXIMUM) {
+                        J.j("touchMode", "in move equal min max ----> " + getTouchMode());
+                        scaleStatus = NORMAL;
+                        touchMode = MODE_NONE;
+                        return true;
+                    }
 
 //                    if (getScrollRange() <= getScrollX()) {
 //                        setScrollX(getScrollRange());
@@ -315,10 +375,11 @@ public class HistogramAndLineView extends View {
                         break;
                     }
 
+                    J.j("pointerIndex", String.valueOf(activePointerIndex));
                     final int x = (int) ev.getX(activePointerIndex);
                     int deltaX = mLastMotionX - x;
                     if (!mIsBeingDragged && Math.abs(deltaX) > mTouchSlop) {
-                        J.j(TAG, "isDragging");
+
                         final ViewParent parent = getParent();
                         if (parent != null) {
                             parent.requestDisallowInterceptTouchEvent(true);
@@ -333,7 +394,7 @@ public class HistogramAndLineView extends View {
                         mVelocityTracker.addMovement(ev);
                     }
                     if (mIsBeingDragged) {
-                        J.j(TAG, "isDragging=====");
+
                         // Scroll to follow the motion event
                         mLastMotionX = x;
 
@@ -364,7 +425,6 @@ public class HistogramAndLineView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                J.j("touchMove", String.valueOf(hasTouch) + ", " + String.valueOf(hasMoved) + ", " + String.valueOf(touchMode));
                 if (hasTouch) {
                     if (!hasMoved) {
                         if (touchMode == MODE_CHECK) {
@@ -384,9 +444,9 @@ public class HistogramAndLineView extends View {
                     break;
                 }
                 if (mIsBeingDragged && touchMode == MODE_NONE) {
-                        final VelocityTracker velocityTracker = mVelocityTracker;
-                        velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
-                        int initialVelocity = (int) velocityTracker.getXVelocity(mActivePointerId);
+                    final VelocityTracker velocityTracker = mVelocityTracker;
+                    velocityTracker.computeCurrentVelocity(1000, mMaximumVelocity);
+                    int initialVelocity = (int) velocityTracker.getXVelocity(mActivePointerId);
 
 //                    if (getChildCount() > 0) {
                     if ((Math.abs(initialVelocity) > mMinimumVelocity)) {
@@ -478,7 +538,6 @@ public class HistogramAndLineView extends View {
         // TODO 处理滑动边界问题
         scrollRange = Math.max(0,
                 mInitialWidth - mAreaWidth);
-        J.j(TAG, "scrollRange" + scrollRange);
         return scrollRange;
     }
 
@@ -492,21 +551,44 @@ public class HistogramAndLineView extends View {
         if (pList == null || pList.size() == 0) {
             return;
         }
+
+        for (int i = 0; i < 6; i++) {
+            int startX = getScrollX();
+            int startY = i * (mInitialHeight - mTopMargin - bottomHeight) / 6 + mTopMargin;
+            int endX = startX + mAreaWidth;
+            int endY = startY;
+            canvas.drawLine(startX, startY, endX, endY, mLightLinePaint);
+        }
+
+
         for (int i = 0; i < pList.size(); i++) {
             HLPoint p = pList.get(i);
             mPaint.setColor(Color.parseColor(colorHistogram));
-            mTempRect.left = i * mInitialWidth / pList.size() + (int) (5 * mXScale);
+            mTempRect.left = (int) (((float) (i * mInitialWidth)) / pList.size() + (int) (5 * mXScale));
 //            mTempRect.top = 0;
             mTempRect.top = p.hPixels;
-            mTempRect.right = (i + 1) * mInitialWidth / pList.size() - (int) (5 * mXScale);
+            mTempRect.right = (int) (((float) ((i + 1) * mInitialWidth)) / pList.size() - (int) (5 * mXScale));
             mTempRect.bottom = mInitialHeight - bottomHeight;
             canvas.drawRect(mTempRect, mPaint);
+            if (i % 4 == 0) {
+                canvas.drawLine(mTempRect.left, mTopMargin, mTempRect.left, mInitialHeight - bottomHeight, mLightLinePaint);
+            }
 
-            canvas.drawText(
-                    String.valueOf(i),
-                    mTempRect.left,
-                    mInitialHeight - 30,
-                    mTextPaint);
+
+            if (i % 7 == 3) {
+                Rect rect = new Rect();
+                mTextPaint.getTextBounds(pList.get(i).xString, 0, pList.get(i).xString.length(), rect);
+                int deltaX = (rect.right - rect.left) / 2 - (mTempRect.right - mTempRect.left) / 2;
+                canvas.drawText(
+                        pList.get(i).xString, mTempRect.left - deltaX,
+                        mInitialHeight - bottomHeight + (rect.bottom - rect.top) + Util.dip2px(5),
+                        mTextPaint);
+            }
+//            canvas.drawText(
+//                    String.valueOf(i),
+//                    mTempRect.left,
+//                    mInitialHeight - 30,
+//                    mTextPaint);
         }
         for (int i = 0; i < pList.size() - 1; i++) {
             HLPoint p = pList.get(i);
@@ -518,10 +600,9 @@ public class HistogramAndLineView extends View {
                 canvas.drawLine(startX, startY, endX, endY, mLinePaint);
             }
         }
-        J.j("scrollX", getScrollX() + "--> scrollX");
-        J.j("touchMove", String.valueOf(touchMode));
+
         if (touchMode == MODE_CHECK) {
-            J.j("touchMove", "drawCircle");
+
             int currentIndex = getCurrentIndex();
             if (currentIndex <= pList.size() - 1) {
                 if (null != mOnCheckListener) {
@@ -537,7 +618,7 @@ public class HistogramAndLineView extends View {
 
     private int getCurrentIndex() {
         float x = currentMovePoint.x + getScrollX();
-        int index = (int) (x / (mInitialWidth / pList.size()));
+        int index = (int) (x /((float) mInitialWidth / (float) pList.size()));
         return index;
     }
 
@@ -599,7 +680,7 @@ public class HistogramAndLineView extends View {
         float totalWidth = mInitialWidth;
         float itemWidth = totalWidth / pList.size();
         int leftIndex = (int) ((float) getScrollX() / itemWidth);
-        float leftDelta = (float)getScrollX() % (itemWidth);
+        float leftDelta = (float) getScrollX() % (itemWidth);
         // TODO 处理边界问题
         int baseRightNum = (int) ((float) mAreaWidth / itemWidth);
         int totalRemainPx = (int) ((float) mAreaWidth - baseRightNum * itemWidth);
@@ -610,12 +691,12 @@ public class HistogramAndLineView extends View {
             baseRightNum++;
         }
         int rightIndex = leftIndex + baseRightNum - 1;
-        J.j("scrollindex", "leftIndex: " + leftIndex + ", rightIndex: " + rightIndex);
-        J.j("rightIndex", String.valueOf(rightIndex));
+
+
         if (rightIndex >= pList.size()) {
             rightIndex = pList.size() - 1;
         }
-        J.j("rightIndex", String.valueOf(rightIndex) + "a");
+
         if (lastLeftIndex != leftIndex || lastRightIndex != rightIndex) {
             getAreaMaxValue(pList, leftIndex, rightIndex);
             invalidate();
@@ -624,13 +705,17 @@ public class HistogramAndLineView extends View {
 
             for (int i = leftIndex; i <= rightIndex; i++) {
                 HLPoint p = pList.get(i);
-                p.hPixels = (mInitialHeight - bottomHeight) - (int) ((mInitialHeight - bottomHeight) * p.hValue / areaHMaxValue);
-                p.lPixels = (mInitialHeight - bottomHeight) - (int) ((mInitialHeight - bottomHeight) * p.lValue / areaLMaxValue);
+                p.hPixels = (mInitialHeight - bottomHeight - mTopMargin) -
+                        (int) ((mInitialHeight - bottomHeight - mTopMargin) * p.hValue / areaHMaxValue) +
+                        mTopMargin;
+
+                p.lPixels = (mInitialHeight - bottomHeight - mTopMargin) -
+                        (int) ((mInitialHeight - bottomHeight - mTopMargin) * p.lValue / areaLMaxValue) +
+                        mTopMargin;
             }
         }
 
 
-//        J.j("scrollindex", "leftIndex: " + leftIndex + ", rightIndex: " + rightIndex);
     }
 
     private void getAreaMaxValue(ArrayList<HLPoint> list, int leftIndex, int rightIndex) {
@@ -744,5 +829,19 @@ public class HistogramAndLineView extends View {
 
     public void setOnCheckListener(OnCheckListener listener) {
         this.mOnCheckListener = listener;
+    }
+
+    public String getTouchMode() {
+        switch (touchMode) {
+            case MODE_NONE:
+                return "NONE";
+            case MODE_ZOOM:
+                return "ZOOM";
+            case MODE_CHECK:
+                return "CHECK";
+            case MODE_DRAG:
+                return "DRAG";
+        }
+        return "NULL";
     }
 }

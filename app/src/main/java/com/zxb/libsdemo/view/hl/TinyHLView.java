@@ -33,11 +33,8 @@ public class TinyHLView extends View {
     float areaLMaxValue;
     float areaLMinValue;
 
-    Context mContext;
-
     Paint mLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint mHistogramPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Paint mLastPointPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     Rect mTempRect = new Rect();
 
@@ -46,8 +43,7 @@ public class TinyHLView extends View {
 
     ArrayList<HLPoint> pList;
 
-    public int mItemWidth;
-    float mLastPointRadius = Util.dip2px(8);
+    float mLastPointRadius = Util.dip2px(4);
 
     public TinyHLView(Context context) {
         this(context, null);
@@ -66,45 +62,40 @@ public class TinyHLView extends View {
         mLinePaint.setColor(Color.parseColor(colorLine));
         mLinePaint.setStrokeWidth(4);
         mHistogramPaint.setColor(Color.parseColor(colorHistogram));
-
-        mItemWidth = 46;
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (pList == null || pList.size() == 0) {
-            mInitialWidth = mAreaWidth;
-        } else {
-            mInitialWidth = (mItemWidth * pList.size());
-            if (mItemWidth < mAreaWidth / pList.size()) {
-                mItemWidth = mAreaWidth / pList.size();
-            }
-        }
-
-        mInitialHeight = mAreaHeight;
-
         int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
         int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
 
-        if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(mInitialWidth, mInitialHeight);
-        } else if (widthSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(mInitialWidth, heightSpecSize);
-        } else if (heightSpecMode == MeasureSpec.AT_MOST) {
-            setMeasuredDimension(widthSpecSize, mInitialHeight);
+//        if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
+//            setMeasuredDimension(mInitialWidth, mInitialHeight);
+//        } else if (widthSpecMode == MeasureSpec.AT_MOST) {
+//            setMeasuredDimension(mInitialWidth, heightSpecSize);
+//        } else if (heightSpecMode == MeasureSpec.AT_MOST) {
+//            setMeasuredDimension(widthSpecSize, mInitialHeight);
+//        }
+        setMeasuredDimension(widthSpecSize, heightSpecSize);
+        mInitialWidth = getMeasuredWidth();
+        mInitialHeight = getMeasuredHeight();
+
+        J.j("measureHeightWidth", mInitialHeight + ", " + mInitialWidth);
+
+        if (null != pList) {
+            computeValues(this.pList);
         }
     }
 
     public void setPointList(ArrayList<HLPoint> pList, int areaWidth, int areaHeight) {
-        this.mAreaWidth = areaWidth;
-        this.mAreaHeight = areaHeight;
         this.pList = pList;
-        computeValues(this.pList);
         requestLayout();
     }
+
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -117,9 +108,9 @@ public class TinyHLView extends View {
         }
         for (int i = 0; i < pList.size(); i++) {
             HLPoint p = pList.get(i);
-            mTempRect.left = (int) (i * mInitialWidth / pList.size() + mInitialWidth * (1 / 16f));
+            mTempRect.left = (int) (i * mInitialWidth / pList.size() + mInitialWidth * (1 / 32f));
             mTempRect.top = p.hPixels;
-            mTempRect.right = (int) ((i + 1) * mInitialWidth / pList.size() - mInitialWidth * (1 / 16f));
+            mTempRect.right = (int) ((i + 1) * mInitialWidth / pList.size() - mInitialWidth * (1 / 32f));
             mTempRect.bottom = mInitialHeight;
             canvas.drawRect(mTempRect, mHistogramPaint);
         }
@@ -141,10 +132,11 @@ public class TinyHLView extends View {
     private void computeValues(ArrayList<HLPoint> list) {
         initAreaMaxValue(list);
 
-        for (int i = 0; i <= list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             HLPoint p = list.get(i);
             p.hPixels = (mInitialHeight) - (int) ((mInitialHeight) * p.hValue / areaHMaxValue);
             p.lPixels = (mInitialHeight) - (int) ((mInitialHeight) * p.lValue / areaLMaxValue);
+            J.j("measureWidthHeight", p.toString());
         }
     }
 
