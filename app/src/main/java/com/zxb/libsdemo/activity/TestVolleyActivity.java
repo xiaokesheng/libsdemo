@@ -1,6 +1,7 @@
 package com.zxb.libsdemo.activity;
 
 import android.app.Activity;
+import android.app.IntentService;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,7 +25,7 @@ public class TestVolleyActivity extends Activity implements View.OnClickListener
     TextView tvRequest;
     TextView tvResult;
 
-    AsyncTask async;
+    IntentService service;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,27 +68,21 @@ public class TestVolleyActivity extends Activity implements View.OnClickListener
         Req.getUrlRequest("http://138.68.2.222", listener, errorListener);
     }
 
-    private class MyAsyncTask extends AsyncTask<Void, Integer, Void>
-    {
+    private class MyAsyncTask extends AsyncTask<Void, Integer, Void> {
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             Log.e(TAG, Thread.currentThread().getName() + " onPreExecute ");
         }
 
         @Override
-        protected Void doInBackground(Void... params)
-        {
+        protected Void doInBackground(Void... params) {
 
             // 模拟数据的加载,耗时的任务
-            for (int i = 0; i < 100; i++)
-            {
-                try
-                {
+            for (int i = 0; i < 100; i++) {
+                try {
                     Thread.sleep(80);
-                } catch (InterruptedException e)
-                {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 publishProgress(i);
@@ -98,14 +93,12 @@ public class TestVolleyActivity extends Activity implements View.OnClickListener
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values)
-        {
+        protected void onProgressUpdate(Integer... values) {
             Log.e(TAG, Thread.currentThread().getName() + " onProgressUpdate ");
         }
 
         @Override
-        protected void onPostExecute(Void result)
-        {
+        protected void onPostExecute(Void result) {
             // 进行数据加载完成后的UI操作
             Log.e(TAG, Thread.currentThread().getName() + " onPostExecute ");
         }

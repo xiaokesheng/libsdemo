@@ -254,6 +254,7 @@ public class DiskBasedCache implements Cache {
     }
 
     /**
+     * 精简 cache，使可以容纳指定的新增 cache
      * Prunes the cache to fit the amount of bytes specified.
      * @param neededSpace The amount of bytes we are trying to fit into the cache.
      */

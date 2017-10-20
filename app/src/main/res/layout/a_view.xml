@@ -13,4 +13,40 @@
         android:text="TEST SCROLLER"
         />
 
+    <com.zxb.libsdemo.view.VerticalProgressView
+        android:id="@+id/vpv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="30dp"
+        />
+
+    <TextView
+        android:id="@+id/tvValue"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="16dp"
+        android:background="#38a2ff"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/tvCommit"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="16dp"
+        android:background="#38a2ff"
+        android:text="commit"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:gravity="center"
+        />
+
+
+
 </LinearLayout>

@@ -3,87 +3,6 @@
 
     <item
         is-multidex="false"
-        jar="/Users/yufangyuan/.android/build-cache/8b6bf6e85b9a7335d621a4dae448ad55caef7d4e/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_16d8fba853e53878f9b215690f74eca403316ba5.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/.android/build-cache/d84e80ebbedd8714433547fd2b15865178323640/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="82ce13fd19cdfde0e392f03c27edeba8d4333648">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_7429c5218979d6ce259aa1005b83878a79ba2e9e.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/.android/build-cache/827e29a60cc062ccf59ed6f49e3265c6bf6de47b/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_f99391f35101b24f2814f9655d42ab453c5d2e02.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/.android/build-cache/8b4215a4772b6b20da0021605bca928c5e54a011/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_6173db0ab664518bea2e83abb9b55d0baff56e95.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.4/695b63d702f505b9b916e02272e3b6381bade7f/gson-2.4.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="0695b63d702f505b9b916e02272e3b6381bade7f">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/gson-2.4_6dcae883d8c6176c41cc62ef58349be0261f817e.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/software/android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/support-annotations-23.3.0_b2c0dfb74fbf2a025cffb5b5654729e7bbbcde25.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/.android/build-cache/65b4a0a6722679ce1d653c22922a55300f054df9/output/jars/libs/internal_impl-23.3.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/internal_impl-23.3.0_8b7af0fee18b2e2a90ccf7f4fce5eeb3c5852e1b.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/program/gitstudy/libsdemo/app/libs/guava-r09.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="9c8991d491d714053d300de0f8657d95780ff923">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/guava-r09_47162781548a4635d7dd8d6177b5231c5f5ae1e7.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/.android/build-cache/65b4a0a6722679ce1d653c22922a55300f054df9/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_8e0c619aab4994b7c5cb28aad7a03936c79d9745.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/Users/yufangyuan/program/gitstudy/libsdemo/app/libs/aspectjrt-1.7.3.jar"
         jumboMode="false"
         optimize="true"
@@ -111,30 +30,21 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/yufangyuan/.android/build-cache/04af3335063becd720df486a9c4fa990c3d04fc4/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_896725bf2aee3970e634e56a17df8fc4feafbad8.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Applications/Android Studio.app/Contents/gradle/m2repository/commons-io/commons-io/2.4/commons-io-2.4.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/commons-io-2.4_db9d9c7f5dc9abc44c05f9a56b43532b2a4af315.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="/Users/yufangyuan/program/gitstudy/libsdemo/android-volley/build/intermediates/bundles/default/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="25.0.0"
-        sha1="37729f00cb1ff65cdfba0af73dcccb2ec1403f53">
+        sha1="e78e10dd5e6b555c3f53f1a61132cce4f212c7f5">
         <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_a7a7f9e8f6d67507c3f9b4595edb8e77f58e1272.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/yufangyuan/program/gitstudy/libsdemo/app/libs/guava-r09.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="9c8991d491d714053d300de0f8657d95780ff923">
+        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/guava-r09_47162781548a4635d7dd8d6177b5231c5f5ae1e7.jar" />
     </item>
 
 </items>
