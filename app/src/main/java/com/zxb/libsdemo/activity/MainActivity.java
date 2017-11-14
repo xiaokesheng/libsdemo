@@ -126,7 +126,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Util.setClickListener(this, btnTestSDCardPath, btnTestViewPager, btnTestHorizontalView);
         Util.setClickListener(this, btnTestLineBgView, btnTestView, btnTestBitmap, btnTestMedia, btnTestMux);
         Util.setClickListener(this, btnTextMix, btnTestTouchView, btnTestRangeBar, btnTestArrayPoints, btnTestWifi);
-        Util.setClickListener(this, btnTestElevation, btnTestVolley, btnTestHistogram);
+        Util.setClickListener(this, btnTestElevation, btnTestVolley, btnTestHistogram, btnTestColor);
     }
 
     @Override
@@ -200,6 +200,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnTestHistogram:
                 startActivity(new Intent(this, TestHistsogramViewActivity.class));
+                break;
+            case R.id.btnTestColor:
+                startActivity(new Intent(this, TestColorActiity.class));
                 break;
         }
     }

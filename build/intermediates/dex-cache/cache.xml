@@ -3,6 +3,15 @@
 
     <item
         is-multidex="false"
+        jar="/Users/yufangyuan/program/gitstudy/libsdemo/android-volley/build/intermediates/bundles/default/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e78e10dd5e6b555c3f53f1a61132cce4f212c7f5">
+        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_a7a7f9e8f6d67507c3f9b4595edb8e77f58e1272.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/yufangyuan/program/gitstudy/libsdemo/app/libs/aspectjrt-1.7.3.jar"
         jumboMode="false"
         optimize="true"
@@ -27,15 +36,6 @@
         revision="25.0.0"
         sha1="3abc23af95f231edefd13de39ed62911f44726f7">
         <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_daa3b8a640125edd1d1d36910df51667aeb7279f.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/yufangyuan/program/gitstudy/libsdemo/android-volley/build/intermediates/bundles/default/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="25.0.0"
-        sha1="e78e10dd5e6b555c3f53f1a61132cce4f212c7f5">
-        <dex dex="/Users/yufangyuan/program/gitstudy/libsdemo/app/build/intermediates/pre-dexed/debug/classes_a7a7f9e8f6d67507c3f9b4595edb8e77f58e1272.jar" />
     </item>
     <item
         is-multidex="false"

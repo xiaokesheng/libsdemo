@@ -41,6 +41,16 @@ public class TestMediaActivity extends Activity {
         llContainer = (LinearLayout) findViewById(R.id.llContainer);
 
         ArrayList<RatioPoint> pointList = new ArrayList<>();
+        for (int i = 0; i < 1; i++) {
+            add(pointList);
+        }
+
+        RatioView view = new RatioView(this);
+        llContainer.addView(view);
+        view.setList(pointList);
+    }
+
+    private void add(ArrayList<RatioPoint> pointList) {
         pointList.add(new RatioPoint(0.99f,0.0031f,1.00f,"2017-09-13"));
         pointList.add(new RatioPoint(1.01f,0.0031f,1.00f,"2017-09-12"));
         pointList.add(new RatioPoint(1.02f,-0.001f,1.00f,"2017-09-11"));
@@ -71,10 +81,6 @@ public class TestMediaActivity extends Activity {
         pointList.add(new RatioPoint(1.01f,-0.001f,1.00f,"2017-06-28"));
         pointList.add(new RatioPoint(1.01f,-0.001f,1.50f,"2017-06-27"));
         pointList.add(new RatioPoint(1.01f,-0.001f,1.00f,"2017-06-26"));
-
-        RatioView view = new RatioView(this);
-        llContainer.addView(view);
-        view.setList(pointList);
     }
 
 }

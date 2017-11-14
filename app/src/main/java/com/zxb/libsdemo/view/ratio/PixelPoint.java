@@ -1,10 +1,12 @@
 package com.zxb.libsdemo.view.ratio;
 
+import java.io.Serializable;
+
 /**
  * Created by yufangyuan on 2017/10/20.
  */
 
-public class PixelPoint {
+public class PixelPoint implements Serializable {
     public float x;
     public float y1;
     public float y2;
