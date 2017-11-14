@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/flHello"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:id="@+id/llButtons"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        >
+        <TextView
+            android:id="@+id/tvAdd"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:background="#1a6eff"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="ADD"
+            />
+        <TextView
+            android:id="@+id/tvReplace"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:background="#1a6eff"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="REP"
+            />
+        <TextView
+            android:id="@+id/tvHide"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:background="#1a6eff"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="HIDE"
+            />
+        <TextView
+            android:id="@+id/tvShow"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:background="#1a6eff"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            android:gravity="center"
+            android:text="SHO"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

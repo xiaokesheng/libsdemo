@@ -56,6 +56,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     Button btnTestVolley;
     Button btnTestHistogram;
 
+    Button btnTestFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +87,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnTestElevation = (Button) findViewById(R.id.btnTestElevation);
         btnTestVolley = (Button) findViewById(R.id.btTestVolley);
         btnTestHistogram = (Button) findViewById(R.id.btnTestHistogram);
+        btnTestFragment = (Button) findViewById(R.id.btnTestFragment);
 
         Resources res = getResources();
 
@@ -126,7 +129,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Util.setClickListener(this, btnTestSDCardPath, btnTestViewPager, btnTestHorizontalView);
         Util.setClickListener(this, btnTestLineBgView, btnTestView, btnTestBitmap, btnTestMedia, btnTestMux);
         Util.setClickListener(this, btnTextMix, btnTestTouchView, btnTestRangeBar, btnTestArrayPoints, btnTestWifi);
-        Util.setClickListener(this, btnTestElevation, btnTestVolley, btnTestHistogram, btnTestColor);
+        Util.setClickListener(this, btnTestElevation, btnTestVolley, btnTestHistogram, btnTestColor, btnTestFragment);
     }
 
     @Override
@@ -203,6 +206,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnTestColor:
                 startActivity(new Intent(this, TestColorActiity.class));
+                break;
+            case R.id.btnTestFragment:
+                startActivity(new Intent(this, TestHelloActivity.class));
                 break;
         }
     }

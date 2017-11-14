@@ -221,6 +221,13 @@
                 android:text="Test elevation"
                 />
 
+            <Button
+                android:id="@+id/btnTestFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test fragment"
+                />
+
         </LinearLayout>
 
     </ScrollView>

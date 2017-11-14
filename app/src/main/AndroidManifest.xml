@@ -66,6 +66,7 @@
         <activity android:name=".activity.TestAudioMixActivity" />
         <activity android:name=".activity.TestTouchViewActivity" />
         <activity android:name=".activity.TestColorActiity"/>
+        <activity android:name=".activity.TestHelloActivity"/>
         <activity
             android:name=".activity.TestRangeBarActivity"
             android:screenOrientation="sensor" />
