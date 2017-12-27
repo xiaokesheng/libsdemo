@@ -1,12 +1,14 @@
 package com.zxb.libsdemo.activity;
 
 import android.app.Fragment;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -29,10 +31,15 @@ public class TestHelloActivity extends FragmentActivity implements View.OnClickL
 
     TextView tvAdd, tvShow, tvReplace, tvHide;
 
+    WindowManager mManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.a_fragment_hello);
+
+        Resources res = getResources();
+        res.getDrawable(R.drawable.shape_blue_color);
 
         flHello = (FrameLayout) findViewById(R.id.flHello);
         tvAdd = (TextView) findViewById(R.id.tvAdd);

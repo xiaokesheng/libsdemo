@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Surface;
@@ -22,6 +23,8 @@ import com.zxb.libsdemo.view.PieChart;
 import com.zxb.libsdemo.view.TestAvoidXfermodeView;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+
+    HandlerThread thread;
 
     Button btnTestTouch;
     Button btnTestMaterial;
