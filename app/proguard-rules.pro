@@ -15,3 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+#dontwarn
+-dontwarn com.googlecode.mp4parser.**
+-dontwarn com.coremedia.**

@@ -139,6 +139,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnTestTouch:
+                Log.e("patchLog", "it's bask app");
                 startActivity(new Intent(this, TestTouchActivity.class));
                 break;
             case R.id.btnTestMaterial:

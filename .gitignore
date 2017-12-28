@@ -9,6 +9,7 @@ build/
 
 
 # IDEA
+libsdemo.iml
 *.iml
 .idea
 .iml
