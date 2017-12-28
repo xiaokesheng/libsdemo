@@ -7,7 +7,7 @@ import android.support.multidex.MultiDexApplication;
  * Created by yufangyuan on 2017/8/14.
  */
 
-public class App extends MultiDexApplication {
+public class App extends com.zxb.libsdemo.tinkerpack.app.App {
 
     public static App mApp;
 

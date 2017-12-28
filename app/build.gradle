@@ -6,52 +6,6 @@ def releaseTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }
 
-// tinker 保存 apk 的路径
-def bakPath = file("${buildDir}/bakApk")
-// tinker 的一些参数
-ext {
-    tinkerEnabled = true
-    tinkerOldApkPath = "${bakPath}/libsdemo-debug-1100.apk"
-    tinkerApplyMappingPath = "${bakPath}/libsdemo-debug-1100-mapping.txt"
-    tinkerApplyResourcePath = "${bakPath}/libsdemo-debug-1100-R.txt"
-    currentVersionAsTinkerId = "1100"
-}
-
-tinkerPatch {
-    oldApk = ext.tinkerOldApkPath
-    ignoreWarning = false
-    useSign = true
-    tinkerEnable = ext.tinkerEnabled
-    buildConfig {
-        applyMapping = ext.tinkerApplyMappingPath
-        applyResourceMapping = ext.tinkerApplyResourcePath
-        tinkerId = currentVersionAsTinkerId
-        keepDexApply = false
-        isProtectedApp = false
-        supportHotplugComponent = false
-    }
-    dex {
-        dexMode = "jar"
-        pattern = ["classes*.dex", "assets/secondary-dex-?.jar"]
-        loader = []
-    }
-    lib {
-        pattern = ["libs/*"]
-    }
-    res {
-        pattern = ["res/*", "assets/*", "resources.arsc", "AndroidManifest.xml"]
-        ignoreChange = []
-        largeModSize = 100
-    }
-    packageConfig {
-        configField("patchMessage", "i an new patch")
-        configField("platform", "all")
-        configField("patchVersion", "1100")
-    }
-    sevenZip {
-        zipArtifact = "com.tencent.mm:SevenZip:1.1.10"
-    }
-}
 
 android {
     compileSdkVersion 23
@@ -64,6 +18,14 @@ android {
         versionCode 1100
         versionName "1.1"
         multiDexEnabled true
+        buildConfigField "String", "MESSAGE", "\"I am the base apk\""
+//        buildConfigField "String", "MESSAGE", "\"I am the patch apk\""
+        /**
+         * client version would update with patch
+         * so we can get the newly git version easily!
+         */
+        buildConfigField "String", "TINKER_ID", "\"1100\""
+        buildConfigField "String", "PLATFORM", "\"all\""
     }
     signingConfigs {
         release {
@@ -130,9 +92,79 @@ dependencies {
 
     // tinker 依赖库
     compile("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
+    provided("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+}
+
+// tinker 保存 apk 的路径
+def bakPath = file("${buildDir}/bakApk/")
+// tinker 的一些参数
+ext {
+    tinkerEnabled = true
+    tinkerOldApkPath = "${bakPath}/libsdemo_v1.1_2017-12-28-1100-1228-19-14-42.apk"
+//    tinkerApplyMappingPath = "${bakPath}/libsdemo-debug-1100-mapping.txt"
+    tinkerApplyMappingPath = ""
+    tinkerApplyResourcePath = "libsdemo_v1.1_2017-12-28-1100-R-1228-19-14-42.txt"
+    currentVersionAsTinkerId = "1100"
+}
+
+def getOldApkPath() {
+    return ext.tinkerOldApkPath
+}
+
+def buildWithTinker() {
+    return ext.tinkerEnabled
+}
+
+def getApplyMappingPath() {
+    return ext.tinkerApplyMappingPath
+}
+
+def getApplyResourceMappingPath() {
+    return ext.tinkerApplyResourcePath
+}
+
+def getTinkerIdValue() {
+    return ext.currentVersionAsTinkerId
+}
+
+tinkerPatch {
+    oldApk = getOldApkPath()
+    ignoreWarning = false
+    useSign = true
+    tinkerEnable = buildWithTinker()
+    buildConfig {
+        applyMapping = getApplyMappingPath()
+        applyResourceMapping = getApplyResourceMappingPath()
+        tinkerId = getTinkerIdValue()
+        keepDexApply = false
+        isProtectedApp = false
+        supportHotplugComponent = false
+    }
+    dex {
+        dexMode = "jar"
+        pattern = ["classes*.dex", "assets/secondary-dex-?.jar"]
+        loader = []
+    }
+    lib {
+        pattern = ["libs/*"]
+    }
+    res {
+        pattern = ["res/*", "assets/*", "resources.arsc", "AndroidManifest.xml"]
+        ignoreChange = []
+        largeModSize = 100
+    }
+    packageConfig {
+        configField("patchMessage", "i an new patch")
+        configField("platform", "all")
+        configField("patchVersion", "1100")
+    }
+    sevenZip {
+        zipArtifact = "com.tencent.mm:SevenZip:1.1.10"
+    }
 }
 
 def tinkerId = 1100
+def date = new Date().format("MMdd-HH-mm-ss")
 
 android.applicationVariants.all { variant ->
     def taskName = variant.name
@@ -147,16 +179,16 @@ android.applicationVariants.all { variant ->
 //                    println "${bakPath}"
 //                    println bakPath
                 copy {
-                    def fileNamePrefix = "${project.name}-${variant.baseName}"
+                    def fileNamePrefix = "libsdemo_v${android.defaultConfig.versionName}_${releaseTime()}"
                     def newFileNamePrefix = "${fileNamePrefix}-${tinkerId}"
                     println fileNamePrefix + "--><><><><><><><><><><><><><><--" + newFileNamePrefix
                     def destPath = bakPath
-//                        println "copyFromPath--><><><><><><><><><><-->" + variant.outputs.first().outputFile
-//                        println "copyToToPath--><><><><><><><><><><-->" + destPath
+//                    println "copyFromPath--><><><><><><><><><><-->" + variant.outputs.first().outputFile
+//                    println "copyToToPath--><><><><><><><><><><-->" + destPath
                     from variant.outputs.first().outputFile
                     into destPath
                     rename { String fileName ->
-                        fileName.replace("${fileNamePrefix}.apk", "${newFileNamePrefix}.apk")
+                        fileName.replace("${fileNamePrefix}.apk", "${newFileNamePrefix}-${date}.apk")
                     }
 
                     from "${buildDir}/outputs/mapping/${variant.dirName}/mapping.txt"
@@ -168,7 +200,7 @@ android.applicationVariants.all { variant ->
                     from "${buildDir}/intermediates/symbols/${variant.dirName}/R.txt"
                     into destPath
                     rename { String fileName ->
-                        fileName.replace("R.txt", "${newFileNamePrefix}-R.txt")
+                        fileName.replace("R.txt", "${newFileNamePrefix}-R-${date}.txt")
                     }
                 }
             }
