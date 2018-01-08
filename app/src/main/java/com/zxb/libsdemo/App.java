@@ -1,23 +1,25 @@
 package com.zxb.libsdemo;
 
+
 import android.app.Application;
-import android.support.multidex.MultiDexApplication;
+
+import com.zxb.libsdemo.tinkerpack.util.SampleApplicationContext;
 
 /**
  * Created by yufangyuan on 2017/8/14.
  */
 
-public class App extends com.zxb.libsdemo.tinkerpack.app.App {
+public class App {
+//public class App extends Application {
 
-    public static App mApp;
+    public static Application mApp;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mApp = (App) getApplicationContext();
+    static {
+        mApp = SampleApplicationContext.application;
+        String aaa = mApp.getApplicationContext().getPackageName();
     }
 
-    public static App getApp() {
+    public static Application getApp() {
         return mApp;
     }
 }

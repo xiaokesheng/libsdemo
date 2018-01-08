@@ -2,28 +2,20 @@ package com.zxb.libsdemo.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.HandlerThread;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.zxb.libsdemo.R;
 import com.zxb.libsdemo.activity.testhorizontal.HorizontalTestActivity;
 import com.zxb.libsdemo.activity.view.TestMuxActivity;
-import com.zxb.libsdemo.util.ToastUtil;
 import com.zxb.libsdemo.util.Util;
-import com.zxb.libsdemo.view.HorizontalScrollViewX;
 import com.zxb.libsdemo.view.PieChart;
-import com.zxb.libsdemo.view.TestAvoidXfermodeView;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -150,7 +142,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             case R.id.btnTestTouch:
 //                Log.e("patchLog", "it's bask app");
 //                startActivity(new Intent(this, TestTouchActivity.class));
-                Toast.makeText(this, "baftere", Toast.LENGTH_SHORT).show();
+                Util.toast(this, "WHAT THE FUCK?");
                 break;
             case R.id.btnTestMaterial:
                 startActivity(new Intent(this, TestMaterialActivity.class));
@@ -213,8 +205,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 startActivity(new Intent(this, TestElevationActivity.class));
                 break;
             case R.id.btTestVolley:
-                TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
-//                startActivity(new Intent(this, TestVolleyActivity.class));
+//                TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
+                startActivity(new Intent(this, TestVolleyActivity.class));
                 break;
             case R.id.btnTestHistogram:
                 startActivity(new Intent(this, TestHistsogramViewActivity.class));

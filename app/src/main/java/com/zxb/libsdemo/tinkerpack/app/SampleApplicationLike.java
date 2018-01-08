@@ -33,6 +33,7 @@ import com.tencent.tinker.loader.shareutil.ShareConstants;
 import com.zxb.libsdemo.tinkerpack.Log.MyLogImp;
 import com.zxb.libsdemo.tinkerpack.util.SampleApplicationContext;
 import com.zxb.libsdemo.tinkerpack.util.TinkerManager;
+import com.zxb.libsdemo.util.ToastMgr;
 
 /**
  * because you can not use any other class in your application, we need to
@@ -60,6 +61,7 @@ import com.zxb.libsdemo.tinkerpack.util.TinkerManager;
                   flags = ShareConstants.TINKER_ENABLE_ALL,
                   loadVerifyFlag = false)
 public class SampleApplicationLike extends DefaultApplicationLike {
+
     private static final String TAG = "Tinker.SampleApplicationLike";
 
     public SampleApplicationLike(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag,
@@ -95,6 +97,8 @@ public class SampleApplicationLike extends DefaultApplicationLike {
         //or you can put com.tencent.tinker.** to main dex
         TinkerManager.installTinker(this);
         Tinker tinker = Tinker.with(getApplication());
+
+        ToastMgr.builder.init(getApplication());
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

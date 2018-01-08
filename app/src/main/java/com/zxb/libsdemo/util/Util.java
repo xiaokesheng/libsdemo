@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.zxb.libsdemo.model.PointC;
 import com.zxb.libsdemo.view.points.MinMax;
@@ -133,5 +134,95 @@ public class Util {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static void toast(Context c, String title, String content) {
+        toast(c, title, content, true);
+    }
+
+    /**
+     * toast （默认 时间Toast.LENGTH_SHORT）
+     */
+    public static void toast(Context c, String msg) {
+        toast(c, msg, true);
+    }
+
+    public static void toast(Context c, String msg, int duration) {
+        toast(c, msg, true, duration);
+    }
+
+
+    public static void toast(Context c, String msg, boolean show) {
+        toast(c, msg, show, Toast.LENGTH_SHORT);
+    }
+
+    public static void toast(Context c, String title, String content, boolean show) {
+        toast(c, title, content, show, Toast.LENGTH_SHORT);
+    }
+
+    public static void toast(Context c, boolean hasIcon, String title, String content) {
+        ToastMgr.builder.display(title, content, Toast.LENGTH_SHORT, hasIcon);
+    }
+
+
+    public static void toast(Context c, String msg, boolean show, int duration) {
+        if (!show)
+            return;
+        ToastMgr.builder.display(msg, duration);
+    }
+
+
+    public static void toast(Context c, String title, String content, boolean show, int duration) {
+        if (!show)
+            return;
+        ToastMgr.builder.display(title, content, duration);
+    }
+
+
+    public static void toast(Context c, int resid) {
+        toast(c, resid, true);
+    }
+
+    /**
+     * toast
+     *
+     * @param c
+     * @param resid    内容资源id
+     * @param duration 时间
+     */
+    public static void toast(Context c, int resid, int duration) {
+        toast(c, resid, true, duration);
+    }
+
+    /**
+     * toast 时间（默认 时间Toast.LENGTH_LONG）
+     *
+     * @param c
+     * @param resid 内容资源id
+     * @param show  是否显示
+     */
+    public static void toast(Context c, int resid, boolean show) {
+        toast(c, resid, show, Toast.LENGTH_LONG);
+    }
+
+    /**
+     * toast
+     *
+     * @param c
+     * @param resid    内容资源id
+     * @param show     是否显示
+     * @param duration 时间
+     */
+    public static void toast(Context c, int resid, boolean show, int duration) {
+        if (!show)
+            return;
+        ToastMgr.builder.display(resid, duration);
+    }
+
+    public static void toast(Context c, String msg, boolean show, int duration, int position,
+                             int yOffset) {
+        if (!show)
+            return;
+        ToastMgr.builder.display(msg, duration, position, yOffset);
     }
 }

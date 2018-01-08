@@ -37,7 +37,7 @@ public class TestVolleyActivity extends Activity implements View.OnClickListener
 
         Util.setClickListener(this, tvRequest);
 
-        new MyAsyncTask().execute();
+//        new MyAsyncTask().execute();
     }
 
     @Override
