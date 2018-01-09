@@ -86,7 +86,7 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'com.google.code.gson:gson:2.4'
     compile project(':material')
-    compile project(':android-volley')
+    compile project(':androidvolley')
     compile files('libs/isoparser-1.0.2.jar')
     compile "com.android.support:multidex:1.0.1"
 
