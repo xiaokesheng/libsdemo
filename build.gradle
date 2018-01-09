@@ -11,6 +11,7 @@ buildscript {
         // in the individual module build.gradle files
 
         // 接入 tinker
+        // 接入 tinker
         classpath "com.tencent.tinker:tinker-patch-gradle-plugin:${TINKER_VERSION}"
     }
 }
