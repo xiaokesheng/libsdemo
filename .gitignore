@@ -9,8 +9,10 @@ build/
 
 
 # IDEA
+libsdemo.iml
 *.iml
 .idea
+.iml
 
 
 # Built application files

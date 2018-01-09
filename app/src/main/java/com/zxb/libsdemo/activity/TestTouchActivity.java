@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.widget.TextView;
 
 import com.zxb.libsdemo.R;
 import com.zxb.libsdemo.view.TouchTestView;
@@ -16,6 +17,7 @@ import com.zxb.libsdemo.view.TouchTestView;
 public class TestTouchActivity extends Activity {
 
     TouchTestView ttvView;
+    TextView tvStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,33 +25,41 @@ public class TestTouchActivity extends Activity {
         setContentView(R.layout.test_touch_layout);
 
         ttvView = (TouchTestView) findViewById(R.id.ttvView);
+        tvStart = (TextView) findViewById(R.id.tvStart);
 
-        ttvView.setOnTouchListener(new View.OnTouchListener() {
+        tvStart.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                VelocityTracker velocityTracker = VelocityTracker.obtain();
-                velocityTracker.addMovement(event);
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.e("motionEvent", "TouchListener--Down");
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.e("touchEvent", "TouchListener--touching");
-                        velocityTracker.computeCurrentVelocity(1000);
-                        int xVelocity = (int) velocityTracker.getXVelocity();
-                        int yVelocity = (int) velocityTracker.getYVelocity();
-                        Log.e("touchEvent", "xVelocity: " + String.valueOf(xVelocity));
-                        Log.e("touchEvent", "yVelocity: " + String.valueOf(yVelocity));
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.e("motionEvent", "TouchListener--UP");
-                        velocityTracker.clear();
-                        velocityTracker.recycle();
-                        break;
-                }
-                return true;
+            public void onClick(View v) {
+                ttvView.smoothScrollTo(-1000, 0);
             }
         });
+
+//        ttvView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                VelocityTracker velocityTracker = VelocityTracker.obtain();
+//                velocityTracker.addMovement(event);
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        Log.e("motionEvent", "TouchListener--Down");
+//                        break;
+//                    case MotionEvent.ACTION_MOVE:
+//                        Log.e("touchEvent", "TouchListener--touching");
+//                        velocityTracker.computeCurrentVelocity(1000);
+//                        int xVelocity = (int) velocityTracker.getXVelocity();
+//                        int yVelocity = (int) velocityTracker.getYVelocity();
+//                        Log.e("touchEvent", "xVelocity: " + String.valueOf(xVelocity));
+//                        Log.e("touchEvent", "yVelocity: " + String.valueOf(yVelocity));
+//                        break;
+//                    case MotionEvent.ACTION_UP:
+//                        Log.e("motionEvent", "TouchListener--UP");
+//                        velocityTracker.clear();
+//                        velocityTracker.recycle();
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
 
 //        ttvView.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -62,19 +72,19 @@ public class TestTouchActivity extends Activity {
 
 
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                Log.e("motionEvent", "Activity--Down");
-                break;
-            case MotionEvent.ACTION_MOVE:
-                Log.e("touchEvent", "Activity--touching");
-                break;
-            case MotionEvent.ACTION_UP:
-                Log.e("motionEvent", "Activity--UP");
-                break;
-        }
-        return super.onTouchEvent(event);
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                Log.e("motionEvent", "Activity--Down");
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                Log.e("touchEvent", "Activity--touching");
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                Log.e("motionEvent", "Activity--UP");
+//                break;
+//        }
+//        return super.onTouchEvent(event);
+//    }
 }

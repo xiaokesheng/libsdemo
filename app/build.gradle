@@ -1,31 +1,209 @@
 apply plugin: 'com.android.application'
+// tinker 插件
+apply plugin: 'com.tencent.tinker.patch'
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.zxb.libsdemo"
-        minSdkVersion 14
+        minSdkVersion 18
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 1100
+        versionName "1.1"
+        multiDexEnabled true
+        buildConfigField "String", "MESSAGE", "\"I am the base apk\""
+//        buildConfigField "String", "MESSAGE", "\"I am the patch apk\""
+        /**
+         * client version would update with patch
+         * so we can get the newly git version easily!
+         */
+        buildConfigField "String", "TINKER_ID", "\"1100\""
+        buildConfigField "String", "PLATFORM", "\"all\""
+    }
+    signingConfigs {
+        release {
+            storeFile file("../keystore/keystore.jks")
+            storePassword "akrucn"
+            keyAlias "libsdemo"
+            keyPassword "akrucn"
+        }
     }
     buildTypes {
         release {
-            minifyEnabled false
+            // 是否混淆
+            minifyEnabled true
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称为libsdemo_v1.0_2017-12-25.apk
+                        def fileName = "libsdemo_v${defaultConfig.versionName}_${releaseTime()}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
         }
     }
 }
 
+def getVersionNameAdvanced() {
+    def xmlFile = project.file("src/main/AndroidManifest.xml")
+    def rootManifest = new XmlSlurper().parse(xmlFile)
+    return rootManifest['@android:versionName']
+}
+
+buildscript {
+    repositories {
+        mavenCentral() // or jcenter()
+    }
+
+    dependencies {
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.1'
+    }
+}
+
+// make sure this line comes *after* you apply the Android plugin
+apply plugin: 'com.getkeepsafe.dexcount'
+
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:cardview-v7:23.3.0'
     compile 'commons-io:commons-io:2.4'
+    compile 'com.google.code.gson:gson:2.4'
     compile project(':material')
-    compile files('libs/aspectjrt-1.7.3.jar')
+    compile project(':android-volley')
     compile files('libs/isoparser-1.0.2.jar')
-    compile files('libs/guava-r09.jar')
+    compile "com.android.support:multidex:1.0.1"
+
+    // tinker 依赖库
+    compile("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
+    provided("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+}
+
+// tinker 保存 apk 的路径
+def bakPath = file("${buildDir}/bakApk/")
+// tinker 的一些参数
+ext {
+    tinkerEnabled = true
+    tinkerOldApkPath = "${bakPath}/libsdemo_v1.1_2017-12-28-1100-1228-19-14-42.apk"
+//    tinkerApplyMappingPath = "${bakPath}/libsdemo-debug-1100-mapping.txt"
+    tinkerApplyMappingPath = ""
+    tinkerApplyResourcePath = "libsdemo_v1.1_2017-12-28-1100-R-1228-19-14-42.txt"
+    currentVersionAsTinkerId = "1100"
+}
+
+def getOldApkPath() {
+    return ext.tinkerOldApkPath
+}
+
+def buildWithTinker() {
+    return ext.tinkerEnabled
+}
+
+def getApplyMappingPath() {
+    return ext.tinkerApplyMappingPath
+}
+
+def getApplyResourceMappingPath() {
+    return ext.tinkerApplyResourcePath
+}
+
+def getTinkerIdValue() {
+    return ext.currentVersionAsTinkerId
+}
+
+tinkerPatch {
+    oldApk = getOldApkPath()
+    ignoreWarning = false
+    useSign = true
+    tinkerEnable = buildWithTinker()
+    buildConfig {
+        applyMapping = getApplyMappingPath()
+        applyResourceMapping = getApplyResourceMappingPath()
+        tinkerId = getTinkerIdValue()
+        keepDexApply = false
+        isProtectedApp = false
+        supportHotplugComponent = false
+    }
+    dex {
+        dexMode = "jar"
+        pattern = ["classes*.dex", "assets/secondary-dex-?.jar"]
+        loader = []
+    }
+    lib {
+        pattern = ["libs/*"]
+    }
+    res {
+        pattern = ["res/*", "assets/*", "resources.arsc", "AndroidManifest.xml"]
+        ignoreChange = []
+        largeModSize = 100
+    }
+    packageConfig {
+        configField("patchMessage", "i an new patch")
+        configField("platform", "all")
+        configField("patchVersion", "1100")
+    }
+    sevenZip {
+        zipArtifact = "com.tencent.mm:SevenZip:1.1.10"
+    }
+}
+
+def tinkerId = 1100
+def date = new Date().format("MMdd-HH-mm-ss")
+
+android.applicationVariants.all { variant ->
+    def taskName = variant.name
+//        println "aaaaaaaaa------" + taskName
+
+    tasks.all {
+//            println "bbbbbbbb--------" + it.name
+        if ("assemble${taskName.capitalize()}".equalsIgnoreCase(it.name)) {
+//                println "cccccccc--------" + it.name
+            it.doLast {
+                println "realDo--------------------------" + it.name
+//                    println "${bakPath}"
+//                    println bakPath
+                copy {
+                    def fileNamePrefix = "libsdemo_v${android.defaultConfig.versionName}_${releaseTime()}"
+                    def newFileNamePrefix = "${fileNamePrefix}-${tinkerId}"
+                    println fileNamePrefix + "--><><><><><><><><><><><><><><--" + newFileNamePrefix
+                    def destPath = bakPath
+//                    println "copyFromPath--><><><><><><><><><><-->" + variant.outputs.first().outputFile
+//                    println "copyToToPath--><><><><><><><><><><-->" + destPath
+                    from variant.outputs.first().outputFile
+                    into destPath
+                    rename { String fileName ->
+                        fileName.replace("${fileNamePrefix}.apk", "${newFileNamePrefix}-${date}.apk")
+                    }
+
+                    from "${buildDir}/outputs/mapping/${variant.dirName}/mapping.txt"
+                    into destPath
+                    rename { String fileName ->
+                        fileName.replace("mapping.txt", "${newFileNamePrefix}-mapping.txt")
+                    }
+
+                    from "${buildDir}/intermediates/symbols/${variant.dirName}/R.txt"
+                    into destPath
+                    rename { String fileName ->
+                        fileName.replace("R.txt", "${newFileNamePrefix}-R-${date}.txt")
+                    }
+                }
+            }
+        }
+    }
 }

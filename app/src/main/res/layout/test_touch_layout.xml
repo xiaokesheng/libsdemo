@@ -3,15 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <com.zxb.libsdemo.view.TouchTestView
-        android:id="@+id/ttvView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="15dp"
-        android:paddingTop="25dp"
-        android:paddingBottom="35dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#ff0000"
+        >
+
+        <com.zxb.libsdemo.view.TouchTestView
+            android:id="@+id/ttvView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvStart"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="start"
+        android:background="#38a2ff"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:gravity="center"
         />
 
 </LinearLayout>

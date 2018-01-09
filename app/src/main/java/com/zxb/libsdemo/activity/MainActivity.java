@@ -2,10 +2,9 @@ package com.zxb.libsdemo.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -15,13 +14,12 @@ import android.widget.Button;
 import com.zxb.libsdemo.R;
 import com.zxb.libsdemo.activity.testhorizontal.HorizontalTestActivity;
 import com.zxb.libsdemo.activity.view.TestMuxActivity;
-import com.zxb.libsdemo.util.ToastUtil;
 import com.zxb.libsdemo.util.Util;
-import com.zxb.libsdemo.view.HorizontalScrollViewX;
 import com.zxb.libsdemo.view.PieChart;
-import com.zxb.libsdemo.view.TestAvoidXfermodeView;
 
 public class MainActivity extends Activity implements View.OnClickListener {
+
+    HandlerThread thread;
 
     Button btnTestTouch;
     Button btnTestMaterial;
@@ -48,6 +46,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     Button btnTestRangeBar;
 
+    Button btnTestArrayPoints;
+    Button btnTestColor;
+    Button btnTestWifi;
+
+    Button btnTestElevation;
+    Button btnTestVolley;
+    Button btnTestHistogram;
+
+    Button btnTestFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +79,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnTextMix = (Button) findViewById(R.id.btnTextMix);
         btnTestTouchView = (Button) findViewById(R.id.btnTestTouchView);
         btnTestRangeBar = (Button) findViewById(R.id.btnTestRangeBar);
+        btnTestArrayPoints = (Button) findViewById(R.id.btnTestArrayPoints);
+        btnTestColor = (Button) findViewById(R.id.btnTestColor);
+        btnTestWifi = (Button) findViewById(R.id.btnTestWifi);
+        btnTestElevation = (Button) findViewById(R.id.btnTestElevation);
+        btnTestVolley = (Button) findViewById(R.id.btTestVolley);
+        btnTestHistogram = (Button) findViewById(R.id.btnTestHistogram);
+        btnTestFragment = (Button) findViewById(R.id.btnTestFragment);
 
         Resources res = getResources();
 
@@ -79,7 +94,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         pie.addItem("Bocephus", 3.5f, res.getColor(R.color.chartreuse));
         pie.addItem("Calliope", 2.5f, res.getColor(R.color.emerald));
         pie.addItem("Daedalus", 3, res.getColor(R.color.bluegrass));
-        pie.addItem("Euripides", 1, res. getColor(R.color.turquoise));
+        pie.addItem("Euripides", 1, res.getColor(R.color.turquoise));
         pie.addItem("Ganymede", 3, res.getColor(R.color.slate));
 
         ((Button) findViewById(R.id.Reset)).setOnClickListener(new View.OnClickListener() {
@@ -111,14 +126,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Util.setClickListener(this, btnTestFileSystem, btnTestGallery, btnTestLineView);
         Util.setClickListener(this, btnTestSDCardPath, btnTestViewPager, btnTestHorizontalView);
         Util.setClickListener(this, btnTestLineBgView, btnTestView, btnTestBitmap, btnTestMedia, btnTestMux);
-        Util.setClickListener(this, btnTextMix, btnTestTouchView, btnTestRangeBar);
+        Util.setClickListener(this, btnTextMix, btnTestTouchView, btnTestRangeBar, btnTestArrayPoints, btnTestWifi);
+        Util.setClickListener(this, btnTestElevation, btnTestVolley, btnTestHistogram, btnTestColor, btnTestFragment);
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
+//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnTestTouch:
-                startActivity(new Intent(this, TestTouchActivity.class));
+//                Log.e("patchLog", "it's bask app");
+//                startActivity(new Intent(this, TestTouchActivity.class));
+                Util.toast(this, "WHAT THE FUCK?");
                 break;
             case R.id.btnTestMaterial:
                 startActivity(new Intent(this, TestMaterialActivity.class));
@@ -170,6 +194,28 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnTestRangeBar:
                 startActivity(new Intent(this, TestRangeBarActivity.class));
+                break;
+            case R.id.btnTestArrayPoints:
+                startActivity(new Intent(this, TestArrayPointsLineActivity.class));
+                break;
+            case R.id.btnTestWifi:
+                startActivity(new Intent(this, TestWifiActivity.class));
+                break;
+            case R.id.btnTestElevation:
+                startActivity(new Intent(this, TestElevationActivity.class));
+                break;
+            case R.id.btTestVolley:
+//                TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
+                startActivity(new Intent(this, TestVolleyActivity.class));
+                break;
+            case R.id.btnTestHistogram:
+                startActivity(new Intent(this, TestHistsogramViewActivity.class));
+                break;
+            case R.id.btnTestColor:
+                startActivity(new Intent(this, TestColorActiity.class));
+                break;
+            case R.id.btnTestFragment:
+                startActivity(new Intent(this, TestHelloActivity.class));
                 break;
         }
     }

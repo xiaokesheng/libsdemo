@@ -39,6 +39,14 @@
             >
 
             <Button
+                android:id="@+id/btTestVolley"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="Volley"
+                />
+
+            <Button
                 android:id="@+id/Reset"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,8 +58,8 @@
                 android:id="@+id/btnTestTouch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#ffffff"
-                android:visibility="gone"
+                android:textColor="#000000"
+                android:visibility="visible"
                 android:text="Test Touch"
                 />
             <Button
@@ -176,6 +184,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Test Rangebar"
+                />
+
+            <Button
+                android:id="@+id/btnTestArrayPoints"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test ArrayPoints"
+                />
+
+            <Button
+                android:id="@+id/btnTestColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Color"
+                />
+
+            <Button
+                android:id="@+id/btnTestWifi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test WIFI"
+                />
+
+            <Button
+                android:id="@+id/btnTestElevation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test elevation"
+                />
+
+            <Button
+                android:id="@+id/btnTestHistogram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test elevation"
+                />
+
+            <Button
+                android:id="@+id/btnTestFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test fragment"
                 />
 
         </LinearLayout>
