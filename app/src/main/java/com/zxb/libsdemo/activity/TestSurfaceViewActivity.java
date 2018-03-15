@@ -13,7 +13,7 @@ import android.view.SurfaceView;
 /**
  * Created by mrzhou on 16/5/28.
  */
-public class TestSurfaceViewActivity extends Activity {
+public class TestSurfaceViewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

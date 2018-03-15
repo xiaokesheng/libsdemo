@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 /**
  * Created by mrzhou on 16/6/17.
  */
-public class TestSdCardPathActivity extends Activity {
+public class TestSdCardPathActivity extends BaseActivity {
 
     TextView tvSdcardPath;
 

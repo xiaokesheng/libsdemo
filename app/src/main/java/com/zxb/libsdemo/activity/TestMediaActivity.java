@@ -27,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by mrzhou on 17/3/10.
  */
-public class TestMediaActivity extends Activity {
+public class TestMediaActivity extends BaseActivity {
 
     private static final String TAG = "TestMediaActivity";
 

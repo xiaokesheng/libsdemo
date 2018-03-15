@@ -13,7 +13,7 @@ import com.zxb.libsdemo.util.J;
  * Created by yufangyuan on 2018/3/13.
  */
 
-public class TestWebViewActivity extends Activity {
+public class TestWebViewActivity extends BaseActivity {
 
     WebView wvContent;
 

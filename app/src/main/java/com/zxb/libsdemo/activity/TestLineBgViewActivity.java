@@ -11,7 +11,7 @@ import com.zxb.libsdemo.view.LineWithBgView;
 /**
  * Created by mrzhou on 16/11/23.
  */
-public class TestLineBgViewActivity extends Activity {
+public class TestLineBgViewActivity extends BaseActivity {
 
     LinearLayout llContainer;
     TextView tv;

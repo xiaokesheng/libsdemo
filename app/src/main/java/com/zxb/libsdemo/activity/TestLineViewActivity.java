@@ -22,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by mrzhou on 16/5/31.
  */
-public class TestLineViewActivity extends Activity implements View.OnClickListener {
+public class TestLineViewActivity extends BaseActivity implements View.OnClickListener {
 
     private NewLineView nlvTest;
     private TextView tvZoomLittle;

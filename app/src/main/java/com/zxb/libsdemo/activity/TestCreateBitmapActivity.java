@@ -20,7 +20,7 @@ import java.util.Random;
 /**
  * Created by mrzhou on 17/3/6.
  */
-public class TestCreateBitmapActivity extends Activity {
+public class TestCreateBitmapActivity extends BaseActivity {
 
     ImageView ivBitmap;
     TextView tvBitmap;

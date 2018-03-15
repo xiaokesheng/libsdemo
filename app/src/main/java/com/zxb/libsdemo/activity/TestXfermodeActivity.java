@@ -8,7 +8,7 @@ import com.zxb.libsdemo.R;
 /**
  * Created by mrzhou on 16/5/25.
  */
-public class TestXfermodeActivity extends Activity {
+public class TestXfermodeActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -14,7 +14,7 @@ import com.zxb.libsdemo.R;
  * Created by yufangyuan on 2017/6/20.
  */
 
-public class TestWifiActivity extends Activity {
+public class TestWifiActivity extends BaseActivity {
 
     Handler mHandler;
     ScrollView sv;

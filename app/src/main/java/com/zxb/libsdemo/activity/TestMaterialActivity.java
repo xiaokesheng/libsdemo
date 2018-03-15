@@ -10,7 +10,7 @@ import com.zxb.libsdemo.R;
 /**
  * Created by mrzhou on 16/5/20.
  */
-public class TestMaterialActivity extends Activity {
+public class TestMaterialActivity extends BaseActivity {
 
     LinearLayout llTest;
 

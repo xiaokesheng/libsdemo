@@ -17,7 +17,7 @@ import com.zxb.libsdemo.view.SyncLinearLayout;
 /**
  * Created by mrzhou on 16/11/2.
  */
-public class TestHorizontalScrollViewActivity extends Activity {
+public class TestHorizontalScrollViewActivity extends BaseActivity {
 
     RecyclerView rvTest;
     RecyclerView rvLeft;

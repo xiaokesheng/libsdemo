@@ -17,7 +17,7 @@ import com.zxb.libsdemo.util.Util;
  * Created by yufangyuan on 2017/7/26.
  */
 
-public class TestElevationActivity extends Activity {
+public class TestElevationActivity extends BaseActivity {
 
     TextView tvTest;
     LinearLayout llContainer;

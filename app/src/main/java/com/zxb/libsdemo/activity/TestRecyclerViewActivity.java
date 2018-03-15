@@ -8,7 +8,7 @@ import com.zxb.libsdemo.R;
 /**
  * Created by mrzhou on 2017/3/31.
  */
-public class TestRecyclerViewActivity extends Activity {
+public class TestRecyclerViewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

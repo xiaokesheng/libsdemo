@@ -1,10 +1,8 @@
 package com.zxb.libsdemo.activity;
 
-import android.app.Fragment;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
@@ -20,7 +18,7 @@ import com.zxb.libsdemo.util.Util;
  * Created by yufangyuan on 2017/11/14.
  */
 
-public class TestHelloActivity extends FragmentActivity implements View.OnClickListener {
+public class TestHelloActivity extends BaseActivity implements View.OnClickListener {
 
     FrameLayout flHello;
 

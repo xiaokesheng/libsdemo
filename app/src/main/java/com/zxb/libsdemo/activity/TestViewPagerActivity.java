@@ -15,7 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by mrzhou on 16/7/21.
  */
-public class TestViewPagerActivity extends FragmentActivity {
+public class TestViewPagerActivity extends BaseActivity {
 
     ViewPager vpTest;
 

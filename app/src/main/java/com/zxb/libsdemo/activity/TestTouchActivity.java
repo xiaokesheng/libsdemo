@@ -14,7 +14,7 @@ import com.zxb.libsdemo.view.TouchTestView;
 /**
  * Created by mrzhou on 16/5/19.
  */
-public class TestTouchActivity extends Activity {
+public class TestTouchActivity extends BaseActivity {
 
     TouchTestView ttvView;
     TextView tvStart;

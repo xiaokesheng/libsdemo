@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by yufangyuan on 2017/8/21.
  */
 
-public class TestHistsogramViewActivity extends Activity {
+public class TestHistsogramViewActivity extends BaseActivity {
 
     HistogramAndLineView hlvView;
     LinearLayout llHLArea;

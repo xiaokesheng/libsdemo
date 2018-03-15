@@ -17,7 +17,7 @@ import java.util.Random;
 /**
  * Created by mrzhou on 17/2/10.
  */
-public class TestViewActivity extends Activity implements View.OnClickListener {
+public class TestViewActivity extends BaseActivity implements View.OnClickListener {
 
     TextView tvTestScroller;
 

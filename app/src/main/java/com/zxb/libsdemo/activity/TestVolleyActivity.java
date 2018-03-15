@@ -19,7 +19,7 @@ import com.zxb.libsdemo.util.Util;
  * Created by yufangyuan on 2017/8/14.
  */
 
-public class TestVolleyActivity extends Activity implements View.OnClickListener {
+public class TestVolleyActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = "TestVolleyActivity";
     TextView tvRequest;

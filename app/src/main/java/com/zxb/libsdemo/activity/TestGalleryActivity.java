@@ -26,7 +26,7 @@ import java.util.ArrayList;
 /**
  * Created by mrzhou on 16/5/30.
  */
-public class TestGalleryActivity extends Activity implements View.OnClickListener {
+public class TestGalleryActivity extends BaseActivity implements View.OnClickListener {
 
     GalleryX gyTest;
 

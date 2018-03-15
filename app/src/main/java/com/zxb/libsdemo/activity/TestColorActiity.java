@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by mrzhou on 2017/5/15.
  */
-public class TestColorActiity extends Activity {
+public class TestColorActiity extends BaseActivity {
 
     ListView lvColor;
 

@@ -33,7 +33,7 @@ import com.zxb.libsdemo.R;
 /**
  * Created by mrzhou on 17/3/12.
  */
-public class TestAudioMixActivity extends Activity implements View.OnClickListener {
+public class TestAudioMixActivity extends BaseActivity implements View.OnClickListener {
 
     boolean isProcessingOn = false;
     int RECORDER_SAMPLERATE;

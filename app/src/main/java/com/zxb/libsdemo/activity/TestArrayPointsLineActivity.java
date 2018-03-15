@@ -22,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by mrzhou on 2017/4/12.
  */
-public class TestArrayPointsLineActivity extends Activity {
+public class TestArrayPointsLineActivity extends BaseActivity {
 
     ArrayPointsTestView aptvLine;
 
