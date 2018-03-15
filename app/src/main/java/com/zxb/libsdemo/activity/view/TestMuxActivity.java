@@ -94,8 +94,13 @@ public class TestMuxActivity extends FragmentActivity implements LoaderCallbacks
         findViewById(R.id.crop).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Thread thread = new Thread(convert);
-                thread.start();
+//                Thread thread = new Thread(convert);
+//                thread.start();
+                StringBuffer deviceInfo = new StringBuffer();
+                deviceInfo.append(android.os.Build.MODEL).append("/");
+                deviceInfo.append(android.os.Build.VERSION.SDK).append("/");
+                deviceInfo.append(getVersionName(TestMuxActivity.this));
+                Log.i("deviceInfo: ", deviceInfo.toString());
             }
         });
 
@@ -469,6 +474,7 @@ public class TestMuxActivity extends FragmentActivity implements LoaderCallbacks
 
         return path;
     }
+
     /**
      * 获取应用版本号
      *

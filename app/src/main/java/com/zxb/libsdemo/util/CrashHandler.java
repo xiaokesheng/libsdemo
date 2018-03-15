@@ -1,8 +1,6 @@
 package com.zxb.libsdemo.util;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.util.Log;
 
@@ -76,19 +74,33 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             mDefaultHandler.uncaughtException(thread, ex);
             return;
         }
-        String logMessage = String
-                .format("CustomUncaughtExceptionHandler.uncaughtException: Thread %d Message %s track %s",
-                        thread.getId(), ex.getMessage(), Log.getStackTraceString(ex));
+        String logMessage;
+//        String logMessage = String
+//                .format("CustomUncaughtExceptionHandler.uncaughtException: Thread %d \nMessage: \n%s \ntrack \n%s",
+//                        thread.getId(), ex.getMessage(), Log.getStackTraceString(ex));
+        String cause = Log.getStackTraceString(ex.getCause());
         PrintWriter printWriter = null;
         try {
             printWriter = new PrintWriter(new FileWriter(savePathFile, true));
-//            logMessage = String.format("%s\r\n\r\n%s\r\n\r\nThread:% d\r\n\r\nMessage:\r\n\r\n % s\r\n\r\nStack Trace:\r\n\r\n % s ",
-//                    geDeviceInfo(mContext), new Date(),
-//                    thread.getId(), ex.getMessage(),
-//                    Log.getStackTraceString(ex));
-//            logMessage = "abcdefg";
-            printWriter.print(logMessage);
-            printWriter.print("\n\n-------------------------------------------------\n\n");
+            logMessage = String.format("崩溃时间: %s\r\nThread: %d\r\nMessage: \r\n%s\r\nStack Trace:\r\n%s",
+                    new Date(),
+                    thread.getId(), ex.getMessage(),
+                    Log.getStackTraceString(ex));
+            printWriter.println(logMessage);
+            printWriter.println("-----------------------------------------------------");
+            printWriter.println(DeviceInfoUtil.getDeviceInfo(mContext));
+            printWriter.println("cause:");
+            printWriter.println(cause);
+            printWriter.println("LocalizedMessage:");
+            printWriter.println(ex.getLocalizedMessage());
+            printWriter.println("StackTrace:");
+            for (StackTraceElement item : ex.getStackTrace()) {
+                printWriter.println(item);
+                printWriter.println("-");
+            }
+            printWriter.println(SPUtil.getValue(mContext, SPUtil.SPNAME_LOG_MODULE, SPUtil.SPKEY_LOG_KEY1));
+            printWriter.println(SPUtil.getValue(mContext, SPUtil.SPNAME_LOG_MODULE, SPUtil.SPKEY_LOG_KEY2));
+            printWriter.println("\n\n-------------------------------------------------\n\n");
         } catch (Throwable tr2) {
             //最后回抛出异常，所以这里就可以不用处理了。
         } finally {
@@ -97,48 +109,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             }
         }
         mDefaultHandler.uncaughtException(thread, ex);
-    }
-
-    /**
-     * 获取设备信息
-     *
-     * @param ctx
-     * @return String  设备信息
-     */
-    public String geDeviceInfo(Context ctx) {
-        StringBuffer deviceInfo = new StringBuffer();
-        deviceInfo.append(android.os.Build.MODEL).append("/");
-        deviceInfo.append(android.os.Build.VERSION.SDK).append("/");
-        deviceInfo.append(getVersionName(ctx));
-        return deviceInfo.toString();
-    }
-
-    /**
-     * 获取应用版本号
-     *
-     * @param context
-     * @return String  应用版本号
-     */
-    public String getVersionName(Context context) {
-        String version = "";
-        if (context == null) {
-            return version;
-        }
-        try {
-            // 获取packagemanager的实例
-            PackageManager packageManager = context.getPackageManager();
-            // getPackageName()是你当前类的包名，0代表是获取版本信息
-            if (packageManager != null) {
-                PackageInfo packInfo;
-                packInfo = packageManager.getPackageInfo(context.getPackageName(),
-                        0);
-                if (packInfo != null) {
-                    version = packInfo.versionName;
-                }
-            }
-        } catch (Exception e) {
-        }
-        return version;
     }
 
     /**
@@ -157,7 +127,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                 + "/Android/data/" + ctx.getPackageName()
                 + "/files/error/"
                 + android.os.Build.MODEL + "_"
-                + getVersionName(ctx) + simpleDateFormat.format(new Date()) + ".log";
+                + PackageUtil.getVersionName(ctx) + simpleDateFormat.format(new Date()) + ".log";
 
         File path = new File(pathName);
         if (!path.getParentFile().exists()) {
