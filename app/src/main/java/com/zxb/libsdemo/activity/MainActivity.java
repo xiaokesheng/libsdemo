@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.zxb.libsdemo.R;
+import com.zxb.libsdemo.activity.nettest.TestOkhttpActivity;
 import com.zxb.libsdemo.activity.testhorizontal.HorizontalTestActivity;
 import com.zxb.libsdemo.activity.view.TestMuxActivity;
+import com.zxb.libsdemo.util.Constants;
 import com.zxb.libsdemo.util.Util;
 import com.zxb.libsdemo.view.PieChart;
 
@@ -52,9 +54,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     Button btnTestElevation;
     Button btnTestVolley;
+    Button btnTestOkhttp;
     Button btnTestHistogram;
 
     Button btnTestFragment;
+    Button btnTestWebView;
+
+    int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +92,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         btnTestVolley = (Button) findViewById(R.id.btTestVolley);
         btnTestHistogram = (Button) findViewById(R.id.btnTestHistogram);
         btnTestFragment = (Button) findViewById(R.id.btnTestFragment);
+        btnTestOkhttp = (Button) findViewById(R.id.btnTestOkhttp);
+        btnTestWebView = (Button) findViewById(R.id.btnTestWebView);
 
         Resources res = getResources();
 
@@ -128,6 +136,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         Util.setClickListener(this, btnTestLineBgView, btnTestView, btnTestBitmap, btnTestMedia, btnTestMux);
         Util.setClickListener(this, btnTextMix, btnTestTouchView, btnTestRangeBar, btnTestArrayPoints, btnTestWifi);
         Util.setClickListener(this, btnTestElevation, btnTestVolley, btnTestHistogram, btnTestColor, btnTestFragment);
+        Util.setClickListener(this, btnTestOkhttp, btnTestWebView);
     }
 
 //    @Override
@@ -216,6 +225,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
             case R.id.btnTestFragment:
                 startActivity(new Intent(this, TestHelloActivity.class));
+                break;
+            case R.id.btnTestOkhttp:
+                startActivity(new Intent(this, TestOkhttpActivity.class));
+                break;
+            case R.id.btnTestWebView:
+                if (i++ % 2 == 0) {
+                    Constants.testUrl = "http://wtest.1758.com/play/test/302test1";
+                } else {
+                    Constants.testUrl = "http://wtest.1758.com/play/test/302test2";
+                }
+                startActivity(new Intent(this, TestWebViewActivity.class));
                 break;
         }
     }

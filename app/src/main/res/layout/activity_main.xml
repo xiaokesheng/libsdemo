@@ -218,7 +218,7 @@
                 android:id="@+id/btnTestHistogram"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test elevation"
+                android:text="Test Histogram"
                 />
 
             <Button
@@ -227,6 +227,20 @@
                 android:layout_height="wrap_content"
                 android:text="Test fragment"
                 />
+
+            <Button
+                android:id="@+id/btnTestOkhttp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Okhttp"
+                />
+            <Button
+                android:id="@+id/btnTestWebView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Test Webview"
+                />
+
 
         </LinearLayout>
 

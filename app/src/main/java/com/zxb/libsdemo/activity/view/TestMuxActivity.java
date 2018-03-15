@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.WritableByteChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,6 +30,8 @@ import com.zxb.libsdemo.R;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
@@ -33,6 +39,7 @@ import android.media.MediaMuxer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.AsyncTaskLoader;
@@ -57,11 +64,30 @@ public class TestMuxActivity extends FragmentActivity implements LoaderCallbacks
         findViewById(R.id.append).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String root = Environment.getExternalStorageDirectory().getPath();
-                String audio = root + "/" + "liudong.m4a";
-                String video = root + "/" + "ouput_lightmoon.mp4";
-                String output = root + "/" + "ouput_with_audio.mp4";
-                mux(video, audio, output);
+//                int a = 1 / 0;
+                String a = null;
+                if (a.equals("abc")) {
+                    Log.e("tag", "never happend");
+                }
+
+//                File savePathFile = getLogFilePath(TestMuxActivity.this);
+//                PrintWriter printWriter = null;
+//                try {
+//                    printWriter = new PrintWriter(new FileWriter(savePathFile, true));
+//                    printWriter.print("abc + " + String.valueOf(SystemClock.currentThreadTimeMillis()));
+//                    printWriter.print("\n\n-------------------------------------------------\n\n");
+//                } catch (Throwable e) {
+//                } finally {
+//                    if (printWriter != null) {
+//                        printWriter.close();
+//                    }
+//                }
+
+//                String root = Environment.getExternalStorageDirectory().getPath();
+//                String audio = root + "/" + "liudong.m4a";
+//                String video = root + "/" + "ouput_lightmoon.mp4";
+//                String output = root + "/" + "ouput_with_audio.mp4";
+//                mux(video, audio, output);
             }
         });
 
@@ -418,4 +444,58 @@ public class TestMuxActivity extends FragmentActivity implements LoaderCallbacks
         }
     };
 
+    /**
+     * 获取日志保存路径
+     *
+     * @param ctx
+     * @return String  日志保存路径
+     */
+    public File getLogFilePath(Context ctx) {
+        String sdStatus = Environment.getExternalStorageState();
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
+            return null;
+        }
+
+        String pathName = Environment.getExternalStorageDirectory().getPath()
+                + "/Android/data/" + ctx.getPackageName()
+                + "/files/error/"
+                + android.os.Build.MODEL + "_"
+                + getVersionName(ctx) + simpleDateFormat.format(new Date()) + ".log";
+
+        File path = new File(pathName);
+        if (!path.getParentFile().exists()) {
+            path.getParentFile().mkdirs();
+        }
+
+        return path;
+    }
+    /**
+     * 获取应用版本号
+     *
+     * @param context
+     * @return String  应用版本号
+     */
+    public String getVersionName(Context context) {
+        String version = "";
+        if (context == null) {
+            return version;
+        }
+        try {
+            // 获取packagemanager的实例
+            PackageManager packageManager = context.getPackageManager();
+            // getPackageName()是你当前类的包名，0代表是获取版本信息
+            if (packageManager != null) {
+                PackageInfo packInfo;
+                packInfo = packageManager.getPackageInfo(context.getPackageName(),
+                        0);
+                if (packInfo != null) {
+                    version = packInfo.versionName;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return version;
+    }
+
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss");
 }

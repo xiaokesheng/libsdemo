@@ -80,6 +80,8 @@
         <activity
             android:name=".activity.TestHistsogramViewActivity"
             android:screenOrientation="landscape" />
+        <activity android:name=".activity.nettest.TestOkhttpActivity"/>
+        <activity android:name=".activity.TestWebViewActivity"/>
     </application>
 
 </manifest>
