@@ -1,12 +1,12 @@
 package com.zxb.libsdemo.util;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
+import com.zxb.libsdemo.util.file.LogType;
+import com.zxb.libsdemo.util.file.StorageUtil;
+
 import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -68,73 +68,38 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             System.exit(0);
             return;
         }
-        File savePathFile = getLogFilePath(mContext);
+        File savePathFile = StorageUtil.getDiskCacheDir(mContext, "crash" + File.separator + "upload");
         if (savePathFile == null) {
             //抛出异常
             mDefaultHandler.uncaughtException(thread, ex);
             return;
         }
-        String logMessage;
-//        String logMessage = String
-//                .format("CustomUncaughtExceptionHandler.uncaughtException: Thread %d \nMessage: \n%s \ntrack \n%s",
-//                        thread.getId(), ex.getMessage(), Log.getStackTraceString(ex));
         String cause = Log.getStackTraceString(ex.getCause());
-        PrintWriter printWriter = null;
+        StringBuilder crashMsg = new StringBuilder();
         try {
-            printWriter = new PrintWriter(new FileWriter(savePathFile, true));
-            logMessage = String.format("崩溃时间: %s\r\nThread: %d\r\nMessage: \r\n%s\r\nStack Trace:\r\n%s",
+            crashMsg.append(String.format("崩溃时间: %s\r\nThread: %d\r\nMessage: \r\n%s\r\nStack Trace:\r\n%s",
                     new Date(),
                     thread.getId(), ex.getMessage(),
-                    Log.getStackTraceString(ex));
-            printWriter.println(logMessage);
-            printWriter.println("-----------------------------------------------------");
-            printWriter.println(DeviceInfoUtil.getDeviceInfo(mContext));
-            printWriter.println("cause:");
-            printWriter.println(cause);
-            printWriter.println("LocalizedMessage:");
-            printWriter.println(ex.getLocalizedMessage());
-            printWriter.println("StackTrace:");
+                    Log.getStackTraceString(ex)));
+            crashMsg.append("-----------------------------------------------------");
+            crashMsg.append(DeviceInfoUtil.getDeviceInfo(mContext));
+            crashMsg.append("cause:");
+            crashMsg.append(cause);
+            crashMsg.append("LocalizedMessage:");
+            crashMsg.append(ex.getLocalizedMessage());
+            crashMsg.append("StackTrace:");
             for (StackTraceElement item : ex.getStackTrace()) {
-                printWriter.println(item);
-                printWriter.println("-");
+                crashMsg.append(item);
+                crashMsg.append("-");
             }
-            printWriter.println(SPUtil.getValue(mContext, SPUtil.SPNAME_LOG_MODULE, SPUtil.SPKEY_LOG_KEY1));
-            printWriter.println(SPUtil.getValue(mContext, SPUtil.SPNAME_LOG_MODULE, SPUtil.SPKEY_LOG_KEY2));
-            printWriter.println("\n\n-------------------------------------------------\n\n");
+            crashMsg.append(SPUtil.getValue(mContext, SPUtil.SPNAME_LOG_MODULE, SPUtil.SPKEY_LOG_KEY1));
+            crashMsg.append(SPUtil.getValue(mContext, SPUtil.SPNAME_LOG_MODULE, SPUtil.SPKEY_LOG_KEY2));
+            crashMsg.append("\n\n-------------------------------------------------\n\n");
+            LogFileUtil.writeToFile(mContext, crashMsg.toString(), LogType.CRASH);
         } catch (Throwable tr2) {
             //最后回抛出异常，所以这里就可以不用处理了。
         } finally {
-            if (printWriter != null) {
-                printWriter.close();
-            }
         }
         mDefaultHandler.uncaughtException(thread, ex);
     }
-
-    /**
-     * 获取日志保存路径
-     *
-     * @param ctx
-     * @return String  日志保存路径
-     */
-    public File getLogFilePath(Context ctx) {
-        String sdStatus = Environment.getExternalStorageState();
-        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
-            return null;
-        }
-
-        String pathName = Environment.getExternalStorageDirectory().getPath()
-                + "/Android/data/" + ctx.getPackageName()
-                + "/files/error/"
-                + android.os.Build.MODEL + "_"
-                + PackageUtil.getVersionName(ctx) + simpleDateFormat.format(new Date()) + ".log";
-
-        File path = new File(pathName);
-        if (!path.getParentFile().exists()) {
-            path.getParentFile().mkdirs();
-        }
-
-        return path;
-    }
-
 }

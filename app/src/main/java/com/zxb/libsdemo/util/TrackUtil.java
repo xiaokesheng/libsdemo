@@ -3,6 +3,8 @@ package com.zxb.libsdemo.util;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.zxb.libsdemo.util.file.LogType;
+
 /**
  * Created by yufangyuan on 2018/3/15.
  */
@@ -31,7 +33,7 @@ public class TrackUtil {
 
     public void trackPage(Context context, String page, String action) {
         String log = getLog(page, action);
-        LogFileUtil.writeToFile(context, log);
+        LogFileUtil.writeToFile(context, log, LogType.TRACE);
     }
 
     private String getLog(String page, String action) {

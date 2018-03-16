@@ -3,6 +3,8 @@ package com.zxb.libsdemo.util;
 import android.content.Context;
 import android.os.Environment;
 
+import com.zxb.libsdemo.util.file.StorageUtil;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,11 +13,12 @@ import java.io.PrintWriter;
 /**
  * Created by yufangyuan on 2018/3/15.
  */
-
 public class LogFileUtil {
 
-    public static void writeToFile(Context context, String log) {
-        File savePathFile = getLogFilePath(context);
+    public static final int FILE_MAX_LEGNTH = 48 * 1024;
+
+    public static void writeToFile(Context context, String log, String tag) {
+        File savePathFile = getLogFilePath(context, tag);
         PrintWriter printWriter = null;
         try {
             printWriter = new PrintWriter(new FileWriter(savePathFile, true));
@@ -33,19 +36,18 @@ public class LogFileUtil {
      * @param ctx
      * @return String  日志保存路径
      */
-    public static File getLogFilePath(Context ctx) {
+    public static File getLogFilePath(Context ctx, String tag) {
         String sdStatus = Environment.getExternalStorageState();
         if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
             return null;
         }
 
-        String pathName = Environment.getExternalStorageDirectory().getPath()
-                + "/Android/data/" + ctx.getPackageName()
-                + "/files/trace/"
-                + android.os.Build.MODEL + "_"
-                + PackageUtil.getVersionName(ctx) + ".log";
+        StringBuilder sb = new StringBuilder(StorageUtil.getDiskCacheDir(ctx, tag).toString());
+        // TODO 补全文件名
+        sb.append(File.separator);
+        sb.append("32312.log");
 
-        File path = new File(pathName);
+        File path = new File(sb.toString());
         if (!path.getParentFile().exists()) {
             path.getParentFile().mkdirs();
         }

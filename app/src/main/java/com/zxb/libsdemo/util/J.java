@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import com.zxb.libsdemo.util.file.LogType;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,12 +21,15 @@ import java.util.Locale;
  */
 public class J {
 
+    private static Context mContext;
+
     private static String TAG = "J";
     private static String logPath = null;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);//日期格式;
     private static Date date = new Date();//因为log日志是使用日期命名的，使用静态成员变量主要是为了在整个程序运行期间只存在一个.log文件中;
 
     public static void init(Context context) {
+        mContext = context;
         logPath = getFilePath(context) + "/Logs";//获得文件储存路径,在后面加"/Logs"建立子文件夹
     }
 
@@ -44,7 +49,8 @@ public class J {
 
     public static void j(String tag, String str) {
         Log.e(tag, str);
-        writeToFile('e', tag, str);
+//        writeToFile('e', tag, str);
+        LogFileUtil.writeToFile(mContext, str, LogType.ERROR);
     }
 
     public static void j(float[] pts) {
