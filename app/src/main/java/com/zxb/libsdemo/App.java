@@ -18,6 +18,7 @@ import com.zxb.libsdemo.tinkerpack.util.SampleApplicationContext;
 import com.zxb.libsdemo.tinkerpack.util.TinkerManager;
 import com.zxb.libsdemo.util.CrashHandler;
 import com.zxb.libsdemo.util.J;
+import com.zxb.libsdemo.util.Loggers;
 import com.zxb.libsdemo.util.ToastMgr;
 
 /**
@@ -61,7 +62,7 @@ public class App extends DefaultApplicationLike {
         ToastMgr.builder.init(getApplication());
         mApp = getApplication();
 
-        CrashHandler.getInstance().init(mApp);
+        Loggers.getInstance().init(mApp);
         J.init(mApp);
     }
 

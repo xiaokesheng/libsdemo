@@ -22,6 +22,7 @@ import com.zxb.libsdemo.activity.nettest.TestOkhttpActivity;
 import com.zxb.libsdemo.activity.testhorizontal.HorizontalTestActivity;
 import com.zxb.libsdemo.activity.view.TestMuxActivity;
 import com.zxb.libsdemo.util.Constants;
+import com.zxb.libsdemo.util.Loggers;
 import com.zxb.libsdemo.util.SPUtil;
 import com.zxb.libsdemo.util.ToastUtil;
 import com.zxb.libsdemo.util.Util;
@@ -86,6 +87,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Loggers.getInstance().init(this);
 
         btnTestTouch = (Button) findViewById(R.id.btnTestTouch);
         btnTestMaterial = (Button) findViewById(R.id.btnTestMaterial);
@@ -238,7 +241,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 break;
             case R.id.btTestVolley:
 //                TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
-                startActivity(new Intent(this, TestVolleyActivity.class));
+//                startActivity(new Intent(this, TestVolleyActivity.class));
+                Loggers.getInstance().clearAllCacheFiles();
                 break;
             case R.id.btnTestHistogram:
                 startActivity(new Intent(this, TestHistsogramViewActivity.class));

@@ -42,7 +42,7 @@ public class TrackUtil {
         if (!TextUtils.isEmpty(lastTime) && lastTime.equals(currentTime)) {
         } else {
             lastTime = currentTime;
-            log.append("TIME:").append(lastTime).append("\r\n");
+            log.append("TIME:::").append(lastTime).append("\r\n");
         }
         log.append(page).append("-->").append(action).append("\r\n");
         return log.toString();
@@ -52,6 +52,6 @@ public class TrackUtil {
      * @return hh:mm::ss
      */
     private String getCurrentLogTime() {
-        return TimeUtil.getTimeInHHMMSS();
+        return TimeUtil.getTimeInYyyyMMddHHmmss();
     }
 }

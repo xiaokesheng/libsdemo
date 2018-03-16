@@ -5,10 +5,16 @@ import android.util.Log;
 
 import com.zxb.libsdemo.util.file.LogType;
 import com.zxb.libsdemo.util.file.StorageUtil;
+import com.zxb.libsdemo.util.file.collector.CrashLogCollector;
+import com.zxb.libsdemo.util.file.collector.DeviceLogCollector;
+import com.zxb.libsdemo.util.file.collector.ErrorTraceCollector;
+import com.zxb.libsdemo.util.file.collector.LogCollector;
+import com.zxb.libsdemo.util.file.collector.PageTraceCollector;
+import com.zxb.libsdemo.util.file.collector.UserInfoCollector;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
 /**
  * Created by yufangyuan on 2018/3/11.
@@ -27,6 +33,8 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         }
         return crashHandler;
     }
+
+    private List<LogCollector> logCollectorList;
 
     // 系统默认的UncaughtException处理类实例
     private Thread.UncaughtExceptionHandler mDefaultHandler;
@@ -56,6 +64,10 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
+    public void initLogCollectors(List<LogCollector> collectorList) {
+        this.logCollectorList = collectorList;
+    }
+
     /**
      * 调用Thread.setDefaultUncaughtExceptionHandler(this);后，this实现了
      * UncaughtExceptionHandler，所以crash会进入到这里的回调。
@@ -74,26 +86,14 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             mDefaultHandler.uncaughtException(thread, ex);
             return;
         }
-        String cause = Log.getStackTraceString(ex.getCause());
         StringBuilder crashMsg = new StringBuilder();
         try {
-            crashMsg.append(String.format("崩溃时间: %s\r\nThread: %d\r\nMessage: \r\n%s\r\nStack Trace:\r\n%s",
-                    new Date(),
-                    thread.getId(), ex.getMessage(),
-                    Log.getStackTraceString(ex)));
-            crashMsg.append("-----------------------------------------------------");
-            crashMsg.append(DeviceInfoUtil.getDeviceInfo(mContext));
-            crashMsg.append("cause:");
-            crashMsg.append(cause);
-            crashMsg.append("LocalizedMessage:");
-            crashMsg.append(ex.getLocalizedMessage());
-            crashMsg.append("StackTrace:");
-            for (StackTraceElement item : ex.getStackTrace()) {
-                crashMsg.append(item);
-                crashMsg.append("-");
-            }
-            crashMsg.append(SPUtil.getValue(mContext, SPUtil.SPNAME_LOG_MODULE, SPUtil.SPKEY_LOG_KEY1));
-            crashMsg.append(SPUtil.getValue(mContext, SPUtil.SPNAME_LOG_MODULE, SPUtil.SPKEY_LOG_KEY2));
+            crashMsg.append(new CrashLogCollector(mContext, thread, ex).getLog(mContext));
+            crashMsg.append(new DeviceLogCollector().getLog(mContext));
+            crashMsg.append(new PageTraceCollector().getLog(mContext));
+            crashMsg.append(new UserInfoCollector().getLog(mContext));
+            crashMsg.append(new ErrorTraceCollector().getLog(mContext));
+            // TODO 其它
             crashMsg.append("\n\n-------------------------------------------------\n\n");
             LogFileUtil.writeToFile(mContext, crashMsg.toString(), LogType.CRASH);
         } catch (Throwable tr2) {

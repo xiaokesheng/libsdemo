@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Created by yufangyuan on 2018/3/15.
@@ -52,5 +53,10 @@ public class LogFileUtil {
             path.getParentFile().mkdirs();
         }
         return path;
+    }
+
+    public static List<String> getLogFromFile(Context ctx, String logType, int secondPeriod) {
+
+        return null;
     }
 }
