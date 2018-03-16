@@ -53,10 +53,10 @@ public class TimeUtil {
 
     /**
      * 计算 first 和当前时间的差值
-     * @param first
+     * @param second
      * @return
      */
-    public static int getSecondDelta(String first) {
-        return getSecondDelta(first, getTimeInYyyyMMddHHmmss());
+    public static int getSecondDelta(String second) {
+        return getSecondDelta(getTimeInYyyyMMddHHmmss(), second);
     }
 }

@@ -57,6 +57,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * @param context
      */
     public void init(Context context) {
+        if (null != mContext && null != mDefaultHandler) {
+            return;
+        }
         mContext = context;
         // 获取系统默认的UncaughtException处理器
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
@@ -94,6 +97,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
             crashMsg.append(new UserInfoCollector().getLog(mContext));
             crashMsg.append(new ErrorTraceCollector().getLog(mContext));
             // TODO 其它
+
             crashMsg.append("\n\n-------------------------------------------------\n\n");
             LogFileUtil.writeToFile(mContext, crashMsg.toString(), LogType.CRASH);
         } catch (Throwable tr2) {

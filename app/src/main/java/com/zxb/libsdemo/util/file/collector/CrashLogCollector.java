@@ -23,7 +23,6 @@ public class CrashLogCollector implements LogCollector {
                 thread.getId(), ex.getMessage(),
                 Log.getStackTraceString(ex)));
         crashMsg.append("-----------------------------------------------------");
-        crashMsg.append(DeviceInfoUtil.getDeviceInfo(context));
         crashMsg.append("cause:");
         crashMsg.append(cause);
         crashMsg.append("LocalizedMessage:");

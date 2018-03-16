@@ -2,6 +2,7 @@ package com.zxb.libsdemo.util;
 
 import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.zxb.libsdemo.util.file.LogType;
@@ -22,6 +23,11 @@ import java.util.Locale;
 public class J {
 
     private static Context mContext;
+
+    /**
+     * 格式 yyyy-MM-dd hh:mm:ss
+     */
+    public static String lastTime;
 
     private static String TAG = "J";
     private static String logPath = null;
@@ -49,53 +55,20 @@ public class J {
 
     public static void j(String tag, String str) {
         Log.e(tag, str);
-//        writeToFile('e', tag, str);
-        LogFileUtil.writeToFile(mContext, str, LogType.ERROR);
+        StringBuilder log = new StringBuilder();
+        String currentTime = TimeUtil.getTimeInYyyyMMddHHmmss();;
+        if (!TextUtils.isEmpty(lastTime) && lastTime.equals(currentTime)) {
+        } else {
+            lastTime = currentTime;
+            log.append("TIME:::").append(lastTime).append("\r\n");
+        }
+        log.append(str + "\r\n");
+        LogFileUtil.writeToFile(mContext, log.toString(), LogType.ERROR);
     }
 
     public static void j(float[] pts) {
         for (float i : pts) {
             Log.e("Points_Log", String.valueOf(i));
         }
-    }
-
-    private static void writeToFile(char type, String tag, String msg) {
-
-        if (null == logPath) {
-            Log.e(TAG, "logPath == null ，未初始化LogToFile");
-            return;
-        }
-
-        String fileName = logPath + "/log_" + dateFormat.format(new Date()) + ".log";//log日志名，使用时间命名，保证不重复
-        String log = dateFormat.format(date) + " " + type + " " + tag + " " + msg + "\n";//log日志内容，可以自行定制
-
-        //如果父路径不存在
-        File file = new File(logPath);
-        if (!file.exists()) {
-            file.mkdirs();//创建父路径
-        }
-
-        FileOutputStream fos = null;//FileOutputStream会自动调用底层的close()方法，不用关闭
-        BufferedWriter bw = null;
-        try {
-
-            fos = new FileOutputStream(fileName, true);//这里的第二个参数代表追加还是覆盖，true为追加，flase为覆盖
-            bw = new BufferedWriter(new OutputStreamWriter(fos));
-            bw.write(log);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (bw != null) {
-                    bw.close();//关闭缓冲流
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 }

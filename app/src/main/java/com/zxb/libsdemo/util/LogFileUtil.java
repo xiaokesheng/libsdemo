@@ -27,7 +27,9 @@ public class LogFileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            printWriter.close();
+            if (null != printWriter) {
+                printWriter.close();
+            }
         }
     }
 

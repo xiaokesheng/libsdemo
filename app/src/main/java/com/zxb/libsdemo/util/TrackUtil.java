@@ -12,7 +12,7 @@ import com.zxb.libsdemo.util.file.LogType;
 public class TrackUtil {
 
     /**
-     * 格式 hh:mm:ss
+     * 格式 yyyy-MM-dd hh:mm:ss
      */
     public String lastTime;
 
