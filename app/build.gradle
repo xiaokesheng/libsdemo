@@ -26,6 +26,10 @@ android {
          */
         buildConfigField "String", "TINKER_ID", "\"1100\""
         buildConfigField "String", "PLATFORM", "\"all\""
+
+        ndk {
+            abiFilters 'armeabi'
+        }
     }
     signingConfigs {
         release {
@@ -94,6 +98,10 @@ dependencies {
     // tinker 依赖库
     compile("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}") { changing = true }
     provided("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}") { changing = true }
+
+    // bugly 依赖库
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
 }
 
 // tinker 保存 apk 的路径

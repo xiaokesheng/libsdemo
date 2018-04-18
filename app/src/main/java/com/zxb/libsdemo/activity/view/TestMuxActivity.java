@@ -25,6 +25,7 @@ import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
 import com.googlecode.mp4parser.authoring.tracks.TextTrackImpl;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.zxb.libsdemo.R;
 
 import android.annotation.TargetApi;
@@ -96,21 +97,23 @@ public class TestMuxActivity extends FragmentActivity implements LoaderCallbacks
             public void onClick(View v) {
 //                Thread thread = new Thread(convert);
 //                thread.start();
-                StringBuffer deviceInfo = new StringBuffer();
-                deviceInfo.append(android.os.Build.MODEL).append("/");
-                deviceInfo.append(android.os.Build.VERSION.SDK).append("/");
-                deviceInfo.append(getVersionName(TestMuxActivity.this));
-                Log.i("deviceInfo: ", deviceInfo.toString());
+//                StringBuffer deviceInfo = new StringBuffer();
+//                deviceInfo.append(android.os.Build.MODEL).append("/");
+//                deviceInfo.append(android.os.Build.VERSION.SDK).append("/");
+//                deviceInfo.append(getVersionName(TestMuxActivity.this));
+//                Log.i("deviceInfo: ", deviceInfo.toString());
+                CrashReport.testJavaCrash();
             }
         });
 
         findViewById(R.id.sub_title).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mProgressDialog = ProgressDialog.show(self, null, null);
-                Bundle args = new Bundle();
-                args.putInt("type", 2);
-                getSupportLoaderManager().initLoader(0, args, self);
+//                mProgressDialog = ProgressDialog.show(self, null, null);
+//                Bundle args = new Bundle();
+//                args.putInt("type", 2);
+//                getSupportLoaderManager().initLoader(0, args, self);
+                CrashReport.testNativeCrash();
             }
         });
 

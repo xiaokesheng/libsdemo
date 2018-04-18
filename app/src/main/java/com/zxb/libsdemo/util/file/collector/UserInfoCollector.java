@@ -10,6 +10,8 @@ import com.zxb.libsdemo.util.SPUtil;
 
 public class UserInfoCollector implements LogCollector {
 
+    // TODO，业务类中实现
+
     @Override
     public String getLog(Context context) {
         StringBuilder result = new StringBuilder();

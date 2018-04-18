@@ -3,8 +3,6 @@ package com.zxb.libsdemo.util.file.collector;
 import android.content.Context;
 import android.util.Log;
 
-import com.zxb.libsdemo.util.DeviceInfoUtil;
-
 import java.util.Date;
 
 /**

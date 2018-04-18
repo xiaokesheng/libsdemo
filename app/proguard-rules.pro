@@ -19,3 +19,6 @@
 #dontwarn
 -dontwarn com.googlecode.mp4parser.**
 -dontwarn com.coremedia.**
+
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
